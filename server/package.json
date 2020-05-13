@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
+    "auto": "export NODE_ENV=development && npm run build && npm run start",
     "test": "mocha './dist/**/*.test.js'"
   },
   "author": "",
@@ -13,12 +14,15 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.30",
     "@types/dateformat": "^3.0.1",
+    "@types/hapi__joi": "^17.1.0",
     "@types/koa": "^2.11.3",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-router": "^7.4.0",
+    "@types/koa-session": "^5.10.2",
     "@types/koa2-cors": "^2.0.1",
     "@types/lodash": "^4.14.150",
     "@types/module-alias": "^2.0.0",
+    "@types/moment": "^2.13.0",
     "@types/node": "^14.0.1",
     "@types/redis": "^2.8.20",
     "@types/validator": "^13.0.0",
@@ -38,18 +42,23 @@
     "@routes": "dist/routes"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "dateformat": "^3.0.3",
     "koa": "^2.11.0",
+    "koa-body": "^4.1.1",
     "koa-logger": "^3.2.1",
     "koa-router": "^8.0.8",
+    "koa-session": "^6.0.0",
     "koa2-cors": "^2.0.6",
     "lodash": "^4.17.15",
     "module-alias": "^2.2.2",
+    "moment": "^2.25.3",
     "mysql2": "^2.1.0",
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^5.21.8",
     "sequelize-typescript": "^1.1.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "winston-rsyslog": "0.0.2"
   }
 }

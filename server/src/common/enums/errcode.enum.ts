@@ -1,0 +1,6 @@
+export enum ErrCode {
+  BAD_PARAMS = 400,
+  UNAUTHORIZATION = 401,
+  FORBIDDEN = 403,
+  SERVER_ERROR = 500,
+};
