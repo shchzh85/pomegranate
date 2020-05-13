@@ -1,0 +1,55 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "mocha './dist/**/*.test.js'"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bluebird": "^3.5.30",
+    "@types/dateformat": "^3.0.1",
+    "@types/koa": "^2.11.3",
+    "@types/koa-logger": "^3.1.1",
+    "@types/koa-router": "^7.4.0",
+    "@types/koa2-cors": "^2.0.1",
+    "@types/lodash": "^4.14.150",
+    "@types/module-alias": "^2.0.0",
+    "@types/node": "^14.0.1",
+    "@types/redis": "^2.8.20",
+    "@types/validator": "^13.0.0",
+    "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.2"
+  },
+  "_moduleAliases": {
+    "@store": "dist/store",
+    "@common": "dist/common",
+    "@controller": "dist/controller",
+    "@service": "dist/service",
+    "@middlewares": "dist/middlewares",
+    "@lib": "dist/lib",
+    "@config": "dist/config",
+    "@models": "dist/models",
+    "@routes": "dist/routes"
+  },
+  "dependencies": {
+    "dateformat": "^3.0.3",
+    "koa": "^2.11.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^8.0.8",
+    "koa2-cors": "^2.0.6",
+    "lodash": "^4.17.15",
+    "module-alias": "^2.2.2",
+    "mysql2": "^2.1.0",
+    "redis": "^3.0.2",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^5.21.8",
+    "sequelize-typescript": "^1.1.0",
+    "winston": "^3.2.1"
+  }
+}
