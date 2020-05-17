@@ -11,6 +11,10 @@ class UserController extends BaseController {
     return await userService.hello();
   }
 
+  public async findUser(ctx: Context) {
+    return await userService.hello();
+  }
+
 }
 
 export const userController = new UserController();

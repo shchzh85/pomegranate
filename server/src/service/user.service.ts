@@ -9,6 +9,10 @@ class UserService extends BaseService {
     return { world: true };
   }
 
+  public async findUser() {
+    return { user: {name:"小明",age:13} };
+  }
+
   public async updateSession(id: number, key: string, sess: any) {
     // TODO
     return;

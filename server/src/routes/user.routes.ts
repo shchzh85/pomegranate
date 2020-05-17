@@ -14,6 +14,13 @@ const routes: Route[] = [
     method: RequestMethod.GET,
     middlewares: [],
     action: user.userController.hello
+  },
+  {
+    name: 'findUser',
+    path: '/oauth/findUser',
+    method: RequestMethod.GET,
+    middlewares: [],
+    action: user.userController.findUser
   }
 ];
 

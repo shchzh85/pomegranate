@@ -7,7 +7,7 @@ import {
 } from 'sequelize-typescript';
 
 @Table({
-  tableName: 'user',
+  tableName: 'tpz_admin_user',
 })
 export class UserModel extends Model<UserModel> {
 
