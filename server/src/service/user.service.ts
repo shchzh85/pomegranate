@@ -14,7 +14,7 @@ class UserService extends BaseService {
     console.log("this is a demo route")
 
 
-    return { user: {name:"小明",age:13} };
+    return { user: {name:"小明",age:1444} };
   }
 
   public async updateSession(id: number, key: string, sess: any) {
