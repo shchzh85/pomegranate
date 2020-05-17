@@ -10,6 +10,10 @@ class UserService extends BaseService {
   }
 
   public async findUser() {
+
+    console.log("this is a demo route")
+
+
     return { user: {name:"小明",age:13} };
   }
 
