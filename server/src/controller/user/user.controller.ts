@@ -12,7 +12,7 @@ class UserController extends BaseController {
   }
 
   public async findUser(ctx: Context) {
-    return await userService.hello();
+    return await userService.findUser();
   }
 
 }
