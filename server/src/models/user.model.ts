@@ -7,36 +7,33 @@ import {
 
 @Table({
     tableName: 'tpz_admin_user',
+
 })
 export class UserModel extends Model<UserModel> {
 
-    // id
-    @Column({
-        field: 'id',
-        type: DataType.NUMBER(),
-        allowNull: false,
-
-    })
-    public phone!: number;
     // username
     @Column({
         field: 'username',
-        type: DataType.STRING(),
-        allowNull: false
+        type: DataType.STRING(255),
+        allowNull: false,
+        comment: '用户名'
     })
     public username!: string;
     // password
     @Column({
         field: 'password',
-        type: DataType.STRING(),
-        allowNull: false
+        type: DataType.STRING(255),
+        allowNull: false,
+        comment: '用户密码'
     })
     public password!: string;
     // ustatus
     @Column({
         field: 'ustatus',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+
+
     })
     public ustatus!: number;
     // lastlog
@@ -49,7 +46,7 @@ export class UserModel extends Model<UserModel> {
     // wallet
     @Column({
         field: 'wallet',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: false
     })
     public wallet!: string;
@@ -63,7 +60,7 @@ export class UserModel extends Model<UserModel> {
     // tops
     @Column({
         field: 'tops',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: false
     })
     public tops!: string;
@@ -77,14 +74,14 @@ export class UserModel extends Model<UserModel> {
     // invitecode
     @Column({
         field: 'invitecode',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public invitecode!: string;
     // imgurl
     @Column({
         field: 'imgurl',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public imgurl!: string;
@@ -92,7 +89,7 @@ export class UserModel extends Model<UserModel> {
     // nickname
     @Column({
         field: 'nickname',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: false
     })
     public nickname!: string;
@@ -100,7 +97,7 @@ export class UserModel extends Model<UserModel> {
     // utel
     @Column({
         field: 'utel',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public utel!: string;
@@ -108,7 +105,7 @@ export class UserModel extends Model<UserModel> {
     // token
     @Column({
         field: 'token',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public token!: string;
@@ -124,7 +121,7 @@ export class UserModel extends Model<UserModel> {
     // uilang
     @Column({
         field: 'uilang',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: false
     })
     public uilang!: string;
@@ -132,7 +129,7 @@ export class UserModel extends Model<UserModel> {
     // reason
     @Column({
         field: 'reason',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public reason!: string;
@@ -140,7 +137,7 @@ export class UserModel extends Model<UserModel> {
     // zfb
     @Column({
         field: 'zfb',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public zfb!: string;
@@ -148,7 +145,7 @@ export class UserModel extends Model<UserModel> {
     // mz
     @Column({
         field: 'mz',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public mz!: string;
@@ -156,7 +153,7 @@ export class UserModel extends Model<UserModel> {
     // bankname
     @Column({
         field: 'bankname',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public bankname!: string;
@@ -164,7 +161,7 @@ export class UserModel extends Model<UserModel> {
     // zhihang
     @Column({
         field: 'zhihang',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public zhihang!: string;
@@ -172,7 +169,7 @@ export class UserModel extends Model<UserModel> {
     // cardno
     @Column({
         field: 'cardno',
-        type: DataType.STRING(),
+        type: DataType.STRING(255),
         allowNull: true
     })
     public cardno!: string;
@@ -236,7 +233,7 @@ export class UserModel extends Model<UserModel> {
     // sunshine
     @Column({
         field: 'sunshine',
-        type: DataType.INTEGER,
+        type: DataType.DECIMAL(65, 4),
         allowNull: false
     })
     public sunshine!: number;
@@ -244,7 +241,7 @@ export class UserModel extends Model<UserModel> {
     // sunshine_1
     @Column({
         field: 'sunshine_1',
-        type: DataType.INTEGER,
+        type: DataType.DECIMAL(65, 4),
         allowNull: false
     })
     public sunshine_1!: number;
@@ -252,7 +249,7 @@ export class UserModel extends Model<UserModel> {
     // today_in
     @Column({
         field: 'today_in',
-        type: DataType.DECIMAL,
+        type: DataType.DECIMAL(65, 4),
         allowNull: false
     })
     public today_in!: number;
