@@ -16,7 +16,8 @@ export class UserModel extends Model<UserModel> {
         field: 'username',
         type: DataType.STRING(255),
         allowNull: false,
-        comment: '用户名'
+        comment: '用户名',
+        unique: true
     })
     public username!: string;
     // password
@@ -32,7 +33,7 @@ export class UserModel extends Model<UserModel> {
         field: 'ustatus',
         type: DataType.INTEGER,
         allowNull: false,
-
+        defaultValue: 0
 
     })
     public ustatus!: number;
@@ -40,7 +41,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'lastlog',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public lastlog!: number;
     // wallet
@@ -68,14 +70,16 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'userlevel',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public userlevel!: number;
     // invitecode
     @Column({
         field: 'invitecode',
         type: DataType.STRING(255),
-        allowNull: true
+        allowNull: true,
+        unique: true
     })
     public invitecode!: string;
     // imgurl
@@ -170,7 +174,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'cardno',
         type: DataType.STRING(255),
-        allowNull: true
+        allowNull: true,
+        unique: true
     })
     public cardno!: string;
 
