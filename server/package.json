@@ -7,7 +7,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "auto": "export NODE_ENV=development && npm run build && npm run start",
-    "test": "mocha './dist/**/*.test.js'"
+    "test": "mocha './dist/**/*.test.js'",
+    "initdb": "node dist/tools/initdb.js"
   },
   "author": "",
   "license": "ISC",
