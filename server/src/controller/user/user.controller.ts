@@ -8,11 +8,11 @@ import { ErrCode } from '@common/enums';
 class UserController extends BaseController {
 
   public async hello(ctx: Context) {
-    return await userService.hello();
+    return userService.hello();
   }
 
   public async findUser(ctx: Context) {
-    return await userService.findUser();
+    return  userService.findUser();
   }
 
 }
