@@ -13,7 +13,7 @@ const routes: Route[] = [
     path: '/oauth/hello',
     method: RequestMethod.GET,
     middlewares: [],
-    action: user.userController.hello
+    action: user.userController.hello,
   },
   {
     name: 'findUser',
@@ -21,6 +21,13 @@ const routes: Route[] = [
     method: RequestMethod.GET,
     middlewares: [],
     action: user.userController.findUser
+  },
+  {
+    name: 'register',
+    path: '/oauth/register',
+    method: RequestMethod.GET,
+    middlewares: [],
+    action: user.userController.register
   }
 ];
 

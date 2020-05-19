@@ -12,7 +12,11 @@ class UserController extends BaseController {
   }
 
   public async findUser(ctx: Context) {
-    return  userService.findUser();
+    return userService.findUser();
+  }
+
+  public async register(ctx: Context) {
+    return userService.register();
   }
 
 }

@@ -32,6 +32,11 @@ class UserService extends BaseService {
         return;
     }
 
+    public async register() {
+        // TODO
+        return;
+    }
+
 }
 
 export const userService = new UserService();
