@@ -67,6 +67,8 @@ class UserStore extends BaseStore {
 
     const wallets = await userRepository.findAll();
 
+    console.log('进入了store');
+
     console.log(wallets);
 
   }
