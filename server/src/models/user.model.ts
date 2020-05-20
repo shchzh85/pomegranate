@@ -1,3 +1,4 @@
+
 import {
     Table,
     Column,
@@ -28,7 +29,7 @@ export class UserModel extends Model<UserModel> {
         comment: '用户密码'
     })
     public password!: string;
-        // password
+    // password
     @Column({
         field: 'dpassword',
         type: DataType.STRING(255),
