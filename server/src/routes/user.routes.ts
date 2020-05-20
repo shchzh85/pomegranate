@@ -20,7 +20,6 @@ const routes: Route[] = [
     path: '/oauth/register',
     method: RequestMethod.POST,
     middlewares: [],
-<<<<<<< HEAD
     params: Joi.object({
       username: Joi
         .string()
@@ -51,15 +50,6 @@ const routes: Route[] = [
         .required()
         .error(new Error(fieldReg.smsCode.message({ len: 6 }))),      
     }),
-=======
-    action: user.userController.findUser
-  },
-  {
-    name: 'register',
-    path: '/oauth/register',
-    method: RequestMethod.GET,
-    middlewares: [],
->>>>>>> 3eea63d95b2829b78ca39ece0fbb639561f8977d
     action: user.userController.register
   }
 ];
