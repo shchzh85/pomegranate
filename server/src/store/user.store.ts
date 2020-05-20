@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Transaction, UniqueConstraintError, Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import BaseStore from './base.store';
-import { userRepository } from '@models/index'
+import { userRepository, coinKindRepository } from '@models/index'
 import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import { sequelize } from '@common/dbs';
@@ -65,7 +65,7 @@ class UserStore extends BaseStore {
    */
   public async walletCreate() {
 
-    const wallets = await userRepository.findAndCountAll();
+    const wallets = await coinKindRepository.findAndCountAll();
 
     console.log('进入了User store!');
 

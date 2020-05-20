@@ -6,6 +6,6 @@ import { WalletModel } from './wallet.model';
 import { CoinKindModel } from './coin_kind.model';
 
 export const userRepository = sequelize.getRepository<UserModel>(UserModel);
-export const walletModel = sequelize.getRepository<WalletModel>(WalletModel);
-export const coinKindModel = sequelize.getRepository<CoinKindModel>(CoinKindModel);
+export const walletRepository = sequelize.getRepository<WalletModel>(WalletModel);
+export const coinKindRepository = sequelize.getRepository<CoinKindModel>(CoinKindModel);
 
