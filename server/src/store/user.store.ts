@@ -65,11 +65,11 @@ class UserStore extends BaseStore {
    */
   public async walletCreate() {
 
-    const wallets = await coinKindRepository.findAndCountAll();
+    const wallets = await coinKindRepository.findAll();
 
     console.log('进入了User store!');
 
-    console.log(wallets.rows);
+    console.log(wallets);
 
   }
 }
