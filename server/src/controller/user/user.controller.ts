@@ -11,6 +11,7 @@ class UserController extends BaseController {
     return userService.hello();
   }
 
+<<<<<<< HEAD
   public async register(ctx: Context) {
     const { username, password, dpassword, invitecode, messagecode } = ctx.params;
 
@@ -22,6 +23,14 @@ class UserController extends BaseController {
     const user = await userService.register({ username, password, dpassword, invitecode });
     if (ctx.session)
       ctx.session.uid = user.id;
+=======
+  public async findUser(ctx: Context) {
+    return userService.findUser();
+  }
+
+  public async register(ctx: Context) {
+    return userService.register();
+>>>>>>> 3eea63d95b2829b78ca39ece0fbb639561f8977d
   }
 
 }

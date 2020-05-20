@@ -28,8 +28,14 @@ class UserService extends BaseService {
         return;
     }
 
+<<<<<<< HEAD
     public register(params: RegisterParams) {
         return userStore.create(params);
+=======
+    public async register() {
+        // TODO
+        return;
+>>>>>>> 3eea63d95b2829b78ca39ece0fbb639561f8977d
     }
 
 }
