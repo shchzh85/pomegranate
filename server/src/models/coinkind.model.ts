@@ -10,7 +10,7 @@ import {
   tableName: 'tpz_coinkind',
 
 })
-export class CoinKind extends Model<CoinKind> {
+export class CoinKindModel extends Model<CoinKindModel> {
 
   @Column({
     field: 'coinname',
