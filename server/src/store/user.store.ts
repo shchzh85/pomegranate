@@ -21,28 +21,31 @@ class UserStore extends BaseStore {
     const parent = await userRepository.findOne({ where: { invitecode } });
     if (!parent)
       throw new Exception(ErrCode.INVALID_INVITE_CODE, '邀请码未找到');
-    
-    let transaction: Transaction;
  
     do {
-        const code = _.random(10000000, 99999999);
-        try {
-            transaction = await sequelize.transaction();
-            const u = await userRepository.create({
-                username, password, dpassword, invitecode: code
-            }, { transaction });
+      const code = _.random(10000000, 99999999);
+      let transaction;
+      try {
+        transaction = await sequelize.transaction();
+        const u = await userRepository.create({
+          username, password, dpassword, invitecode: code,
+          pid: parent.id, tops: parent.tops + ',' + parent.id
+        }, { transaction });
 
-            await transaction.commit();
-            return u;
-        } catch (e) {
-            await transaction?.rollback();
-            if (e instanceof UniqueConstraintError) {
-                console.log(e.fields);
-                throw new Exception(ErrCode.USERNAME_EXIST, '账号已存在');
-            }
-
-            throw new Exception(e.code || ErrCode.SERVER_ERROR, e.code ? e.message : 'server error.');
+        await transaction.commit();
+        return u;
+      } catch (e) {
+        console.log(e);
+        await transaction?.rollback();
+        if (e instanceof UniqueConstraintError) {
+          if (_.get(e.fields, 'username'))
+            throw new Exception(ErrCode.USERNAME_EXIST, '账号已存在');
+          else if (_.get(e.fields, 'invitecode'))
+            continue;
         }
+
+        throw new Exception(e.code || ErrCode.SERVER_ERROR, e.code ? e.message : 'server error.');
+      }
     } while (true);
   }
 }
