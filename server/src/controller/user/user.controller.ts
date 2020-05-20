@@ -20,8 +20,7 @@ class UserController extends BaseController {
 
 
     const user = await userService.register({ username, password, dpassword, invitecode });
-    if (ctx.session)
-      ctx.session.uid = user.id;
+    //ctx.session?.uid = user.id;
   }
 }
 

@@ -1,6 +1,7 @@
 
 import * as _ from 'lodash';
-import { Transaction, UniqueConstraintError } from 'sequelize';
+import { Transaction, UniqueConstraintError, Op } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import BaseStore from './base.store';
 import { userRepository } from '@models/index'
 import { Exception } from '@common/exceptions';
@@ -21,7 +22,10 @@ class UserStore extends BaseStore {
     const parent = await userRepository.findOne({ where: { invitecode } });
     if (!parent)
       throw new Exception(ErrCode.INVALID_INVITE_CODE, '邀请码未找到');
- 
+
+    const ids = parent.tops.split(',');
+    ids.push(parent.id);
+
     do {
       const code = _.random(10000000, 99999999);
       let transaction;
@@ -32,10 +36,15 @@ class UserStore extends BaseStore {
           pid: parent.id, tops: parent.tops + ',' + parent.id
         }, { transaction });
 
+        const up = await userRepository.update({
+          group_member_num: Sequelize.literal('group_member_num+1')
+        }, { where: { id: { [Op.in]: ids } }, transaction });
+
+        // TODO: create wallet here
+
         await transaction.commit();
         return u;
       } catch (e) {
-        console.log(e);
         await transaction?.rollback();
         if (e instanceof UniqueConstraintError) {
           if (_.get(e.fields, 'username'))
