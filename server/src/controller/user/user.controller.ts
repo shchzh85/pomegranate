@@ -8,6 +8,7 @@ import { ErrCode } from '@common/enums';
 class UserController extends BaseController {
 
   public async hello(ctx: Context) {
+    console.log('进入user控制器!');
     return userService.hello();
   }
 

@@ -10,6 +10,7 @@ import { sequelize } from '@common/dbs';
 class UserService extends BaseService {
 
     public async hello() {
+        console.log('进入userService!');
         return userStore.walletCreate();
     }
 
