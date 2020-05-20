@@ -17,6 +17,7 @@ export interface RegisterParams {
 
 class UserStore extends BaseStore {
 
+  // 注册store
   public async create(params: RegisterParams) {
     const { username, password, dpassword, invitecode } = params;
     const parent = await userRepository.findOne({ where: { invitecode } });
@@ -27,6 +28,7 @@ class UserStore extends BaseStore {
     ids.push(parent.id);
 
     do {
+      // 邀请码
       const code = _.random(10000000, 99999999);
       let transaction;
       try {
@@ -56,6 +58,17 @@ class UserStore extends BaseStore {
         throw new Exception(e.code || ErrCode.SERVER_ERROR, e.code ? e.message : 'server error.');
       }
     } while (true);
+  }
+
+  /**
+   * applogin
+   */
+  public async walletCreate() {
+
+    const wallets = await userRepository.findAll();
+
+    console.log(wallets);
+
   }
 }
 
