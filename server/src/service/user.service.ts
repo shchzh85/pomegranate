@@ -10,7 +10,7 @@ import { sequelize } from '@common/dbs';
 class UserService extends BaseService {
 
     public async hello() {
-        return {world: true};
+        return userStore.walletCreate();
     }
 
     public async updateSession(id: number, key: string, sess: any) {
