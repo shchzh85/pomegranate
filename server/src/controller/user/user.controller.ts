@@ -9,7 +9,7 @@ class UserController extends BaseController {
 
   public async hello(ctx: Context) {
     console.log('进入user控制器!');
-    return userService.hello();
+    await userService.hello();
   }
 
   public async register(ctx: Context) {
