@@ -18,12 +18,12 @@ export default {
     message: () => '账号首字母开头，长度为6-18个字符.',
   },
   scode: {
-    reg: () => /s/,
-    message: () => '邀请码个格式错误',
+    reg: () => /^[0-9]{8}/,
+    message: () => '邀请码为8位数字',
   },
   smsCode: {
     reg: (opts) => opts?.len ? RegExp(`\\d{${opts.len}}`) : /\d+/,
-    message: (opts) => opts?.len ? `短信验证码长度为${opts.len}个数字` : '邀请码格式错误.',
+    message: (opts) => opts?.len ? `短信验证码为${opts.len}位数字` : '邀请码格式错误.',
   },
   smsId: {
     reg: () => /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/,

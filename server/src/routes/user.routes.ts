@@ -16,11 +16,41 @@ const routes: Route[] = [
     action: user.userController.hello
   },
   {
-    name: 'findUser',
-    path: '/oauth/findUser',
-    method: RequestMethod.GET,
+    name: 'register',
+    path: '/oauth/register',
+    method: RequestMethod.POST,
     middlewares: [],
-    action: user.userController.findUser
+    params: Joi.object({
+      username: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.phone.reg())
+        .required()
+        .error(new Error(fieldReg.phone.message())),
+      password: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message())),
+      dpassword: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message())),
+      invitecode: Joi
+        .string()
+        .pattern(fieldReg.scode.reg())
+        .required()
+        .error(new Error(fieldReg.scode.message())),
+      messagecode: Joi
+        .string()
+        .pattern(fieldReg.smsCode.reg({ len: 6 }))
+        .required()
+        .error(new Error(fieldReg.smsCode.message({ len: 6 }))),      
+    }),
+    action: user.userController.register
   }
 ];
 

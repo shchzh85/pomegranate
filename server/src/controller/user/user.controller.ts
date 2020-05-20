@@ -11,8 +11,17 @@ class UserController extends BaseController {
     return userService.hello();
   }
 
-  public async findUser(ctx: Context) {
-    return  userService.findUser();
+  public async register(ctx: Context) {
+    const { username, password, dpassword, invitecode, messagecode } = ctx.params;
+
+    // 1. 判断注册开关
+
+    // 2. 判断短信验证码
+
+
+    const user = await userService.register({ username, password, dpassword, invitecode });
+    if (ctx.session)
+      ctx.session.uid = user.id;
   }
 
 }

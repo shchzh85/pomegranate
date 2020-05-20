@@ -1,20 +1,16 @@
+
+import { Transaction } from 'sequelize';
 import _ from 'lodash';
 import {Exception} from '@common/exceptions';
 import {ErrCode} from '@common/enums';
 import BaseService from './base.service';
+import { userStore, RegisterParams } from '@store/index';
+import { sequelize } from '@common/dbs';
 
 class UserService extends BaseService {
 
     public async hello() {
         return {world: true};
-    }
-
-    public async findUser() {
-
-        console.log('this is a demo route')
-
-
-        return {user: {name: '小明', age: 1444}};
     }
 
     public async updateSession(id: number, key: string, sess: any) {
@@ -30,6 +26,10 @@ class UserService extends BaseService {
     public async destorySession(key: string) {
         // TODO
         return;
+    }
+
+    public register(params: RegisterParams) {
+        return userStore.create(params);
     }
 
 }
