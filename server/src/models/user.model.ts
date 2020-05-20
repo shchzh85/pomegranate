@@ -28,6 +28,14 @@ export class UserModel extends Model<UserModel> {
         comment: '用户密码'
     })
     public password!: string;
+        // password
+    @Column({
+        field: 'dpassword',
+        type: DataType.STRING(255),
+        allowNull: false,
+        comment: '用户密码'
+    })
+    public dpassword!: string;
     // ustatus
     @Column({
         field: 'ustatus',
@@ -49,7 +57,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'wallet',
         type: DataType.STRING(255),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public wallet!: string;
     // pid
@@ -94,7 +103,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'nickname',
         type: DataType.STRING(255),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public nickname!: string;
 
@@ -102,7 +112,7 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'utel',
         type: DataType.STRING(255),
-        allowNull: true
+        allowNull: true,
     })
     public utel!: string;
 
@@ -126,7 +136,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'uilang',
         type: DataType.STRING(255),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'zh'
     })
     public uilang!: string;
 
@@ -184,6 +195,7 @@ export class UserModel extends Model<UserModel> {
         field: 'shiming',
         type: DataType.INTEGER,
         allowNull: false,
+        defaultValue: 0
     })
     public shiming!: number;
 
@@ -191,7 +203,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'is_error',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public is_error!: number;
 
@@ -199,7 +212,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'is_shifang',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public is_shifang!: number;
 
@@ -207,7 +221,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'member_flg',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public member_flg!: number;
 
@@ -215,7 +230,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'zhitui_num',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public zhitui_num!: number;
 
@@ -223,7 +239,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'group_member_num',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public group_member_num!: number;
 
@@ -231,7 +248,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'weifukuan_num',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public weifukuan_num!: number;
 
@@ -239,7 +257,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'sunshine',
         type: DataType.DECIMAL(65, 4),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public sunshine!: number;
 
@@ -247,7 +266,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'sunshine_1',
         type: DataType.DECIMAL(65, 4),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public sunshine_1!: number;
 
@@ -255,7 +275,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'today_in',
         type: DataType.DECIMAL(65, 4),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public today_in!: number;
 
@@ -264,7 +285,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'c2c_flg',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public c2c_flg!: number;
 
@@ -273,7 +295,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'fee',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public fee!: number;
 
@@ -289,7 +312,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'nlevel',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public nlevel!: number;
 
@@ -297,7 +321,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'today_in_own',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public today_in_own!: number;
 
@@ -305,7 +330,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'is_new',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 1
     })
     public is_new!: number;
 
@@ -313,7 +339,8 @@ export class UserModel extends Model<UserModel> {
     @Column({
         field: 'sell_times',
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
     })
     public sell_times!: number;
 
