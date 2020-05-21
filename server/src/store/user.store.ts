@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { Transaction, UniqueConstraintError, Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import BaseStore from './base.store';
-import { userRepository, coinKindRepository } from '@models/index'
+import { userRepository, coinKindRepository, walletRepository } from '@models/index'
 import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import { sequelize } from '@common/dbs';
@@ -43,6 +43,15 @@ class UserStore extends BaseStore {
         }, { where: { id: { [Op.in]: ids } }, transaction });
 
         // TODO: create wallet here
+        // 取出所有钱包
+        const wallets = await coinKindRepository.findAll();
+
+        // 给所有钱包写入0
+        wallets.forEach(async element => {
+          let w1 = await walletRepository.create({
+            uid: u, coinid: element.id, num: 0, address: 0, item1: 0, freeze: 0
+          }, { transaction });
+        });
 
         await transaction.commit();
         return u;
@@ -63,13 +72,7 @@ class UserStore extends BaseStore {
   /**
    * applogin
    */
-  public async walletCreate() {
-
-    const wallets = await coinKindRepository.findAll();
-
-    console.log('进入了User store!');
-
-    console.log(wallets);
+  public async walletCreate(uid: string) {
 
   }
 }
