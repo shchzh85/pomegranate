@@ -11,7 +11,7 @@ class UserService extends BaseService {
 
     public async hello() {
         console.log('进入userService!');
-        return userStore.walletCreate();
+        return 0;
     }
 
     public async updateSession(id: number, key: string, sess: any) {
