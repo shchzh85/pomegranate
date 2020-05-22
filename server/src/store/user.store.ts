@@ -27,8 +27,11 @@ class UserStore extends BaseStore {
     const ids = parent.tops.split(',');
     ids.push(parent.id);
 
+    const wallets = await coinKindRepository.findAll();
+    if (_.isEmpty(wallets))
+      throw new Exception(ErrCode.SERVER_ERROR, '钱包配置未找到');
+
     do {
-      // 邀请码
       const code = _.random(10000000, 99999999);
       let transaction;
       try {
@@ -38,21 +41,23 @@ class UserStore extends BaseStore {
           pid: parent.id, tops: parent.tops + ',' + parent.id
         }, { transaction });
 
+        const uid = u.id;
         const up = await userRepository.update({
           group_member_num: Sequelize.literal('group_member_num+1')
         }, { where: { id: { [Op.in]: ids } }, transaction });
 
-        // TODO: create wallet here
-        // 取出所有钱包
-        const wallets = await coinKindRepository.findAll();
-
-        // 给所有钱包写入0
-        wallets.forEach(async element => {
-          let w1 = await walletRepository.create({
-            uid: u, coinid: element.id, num: 0, address: 0, item1: 0, freeze: 0
-          }, { transaction });
+        const ws = wallets.map(v => {
+          return {
+            uid,
+            coinid: v.id,
+            num: 0,
+            address: 0,
+            item1: 0,
+            freeze: 0
+          };
         });
 
+        await walletRepository.bulkCreate(ws, { transaction });
         await transaction.commit();
         return u;
       } catch (e) {
