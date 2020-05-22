@@ -4,16 +4,15 @@ import _ from 'lodash';
 import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import BaseService from './base.service';
-import { seedsStore, RegisterParams } from '@store/index';
+import { seedsStore, GetFTParams } from '@store/index';
 import { sequelize } from '@common/dbs';
-
 class SeedsService extends BaseService {
 
 
-
-    public async getFT(uid: number, dpassword: string, qid: number) {
+    //购买福田
+    public async getFT(params: GetFTParams) {
         // TODO
-        return;
+        seedsStore.getFT(params);
     }
 
 

@@ -10,7 +10,7 @@ class SeedsController extends BaseController {
 
   public async getFT(ctx: Context) {
     const { uid, dpassword, qid} = ctx.params;
-    return await seedsService.getFT(uid, dpassword, qid);
+    return seedsService.getFT({uid, dpassword, qid});
   }
 
   public async levelup(ctx: Context) {
