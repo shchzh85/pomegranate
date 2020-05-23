@@ -3,8 +3,9 @@ require('module-alias/register');
 import * as _ from 'lodash';
 import { sequelize, redisClient } from '@common/dbs';
 import { userRepository } from '@models/index';
+import { redisStore } from '@store/index'; 
 
-const limit = 20;
+const limit = 50;
 const SET = 'cy:uset';
 
 async function loaduser(start: number, end?: number) {
@@ -16,7 +17,7 @@ async function loaduser(start: number, end?: number) {
     do {
         console.log('page: ' + offset / limit);
         const us = await userRepository.findAll({
-            attributes: [ 'id', 'sunshine_1', 'pid' ],
+            attributes: [ 'id', 'sunshine_1', 'tops' ],
             offset,
             limit
         });
@@ -27,8 +28,12 @@ async function loaduser(start: number, end?: number) {
 	const usv = _.filter(us, v => v.sunshine_1 != 0);
 
         if (_.size(usv) > 0) {
-            const cmds = usv.map(u => [ 'zincrby', SET, u.sunshine_1, u.pid ]);
-            await redisClient.multi(cmds).exec();
+            const cmds = usv.map(u => {
+                const ids = u.tops.split(',');
+                return ids.map(id => [ 'zincrby', SET, u.sunshine_1, id ]);
+            });
+
+            await redisClient.multi(_.flatten(cmds)).exec();
         }
 
         if (_.isNumber(end) && offset >= end * limit)
@@ -59,7 +64,7 @@ async function update(start: number, end ?: number) {
 
         for (let i = 0; i < cnt; i++) {
             const u = us[i];
-            const score = await redisClient.zscore(SET, u.id);
+            const score = await redisStore.zscore(SET, u.id);
             await userRepository.update({
                 sunshine: _.defaultTo(score, 0)
             }, { where: { id: u.id } });

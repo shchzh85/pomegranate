@@ -23,7 +23,7 @@ const sequelize = new Sequelize({
   },
 
   define: {
-    timestamps: true,
+    timestamps: false,
     paranoid: false,
     underscored: true,
     charset: 'utf8',
