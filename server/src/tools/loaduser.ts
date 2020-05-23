@@ -7,7 +7,7 @@ import { userRepository } from '@models/index';
 const limit = 20;
 const SET = 'cy:uset';
 
-async function loaduser(start: number) {
+async function loaduser(start: number, end?: number) {
 
     let offset = start * limit;
 
@@ -16,7 +16,7 @@ async function loaduser(start: number) {
     do {
         console.log('page: ' + offset / limit);
         const us = await userRepository.findAll({
-            attributes: [ 'id', 'sunshine1', 'pid' ],
+            attributes: [ 'id', 'sunshine_1', 'pid' ],
             offset,
             limit
         });
@@ -24,8 +24,15 @@ async function loaduser(start: number) {
         if (_.isEmpty(us))
             break;
 
-        const cmds = us.map(u => [ 'zincrby', SET, u.sunshine1, u.pid ]);
-        await redisClient.multi(cmds).exec();
+	const usv = _.filter(us, v => v.sunshine_1 != 0);
+
+        if (_.size(usv) > 0) {
+            const cmds = usv.map(u => [ 'zincrby', SET, u.sunshine_1, u.pid ]);
+            await redisClient.multi(cmds).exec();
+        }
+
+        if (_.isNumber(end) && offset >= end * limit)
+            break;
 
         offset += limit;
     } while (true);
@@ -33,7 +40,7 @@ async function loaduser(start: number) {
     console.log('Load done.');
 }
 
-async function update(start: number) {
+async function update(start: number, end ?: number) {
     let offset = start * limit;
 
     console.log('Update User...');
@@ -57,6 +64,11 @@ async function update(start: number) {
                 sunshine: _.defaultTo(score, 0)
             }, { where: { id: u.id } });
         }
+
+        if (_.isNumber(end) && offset >= end * limit)
+            break;
+
+        offset += limit;
     } while (true);
 
     console.log('Update done.');
@@ -66,15 +78,17 @@ async function parse(data: string) {
     const words = data.split(' ');
     const cmd = words[0];
 
-    if (words.length !== 2) {
+    console.log('enter parse: ' + cmd);
+
+    if (words.length < 2) {
         console.log('input error');
         return;
     }
 
     if (cmd == 'load') {
-        await loaduser(Number(words[1]));
+        await loaduser(Number(words[1]), words[2] ? Number(words[2]) : undefined);
     } else if (cmd == 'update') {
-        await update(Number(words[1]));
+        await update(Number(words[1]), words[2] ? Number(words[2]) : undefined);
     }
 }
 
