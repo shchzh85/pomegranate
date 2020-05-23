@@ -77,9 +77,81 @@ class UserStore extends BaseStore {
   /**
    * applogin
    */
-  public async walletCreate(uid: string) {
+  public async login(params: LoginParams) {
+
+    /**
+     * 接受参数
+     * {username,password,yzm,version}
+     * //验证服务器是否关闭
+     * web_status = select web_status from config where name = 'web_status'
+     * 
+     * ver =  select web_status from config where name = 'version'
+     * 
+     * if(web_status == 0){
+     *    return 服务器关闭
+     * }
+     * 
+     * if(ver!=params.version){
+     *    return 版本已经更新,请手动下载最新版本
+     * }
+     * 
+     * if(验证码不匹配){
+     *    return 图形验证码错误
+     * }
+     * 
+     * if(!判断登陆){   加密方式 md5(user.password + user.utime)
+     *    return 登陆失败
+     * }else{
+     *    更新登陆时间  user表 lastlog字段
+     *    生成token,持续时间,写入redis,以及user表中的token,lasttime字段
+     *    message = select * from message
+     *    config = select * from config
+     *    
+     *    返回 {message:登陆成功,allConfig:config,message:message,uilang:zh,token:token,code:S0001}
+     * }
+     */
+  }
+  //登陆后修改密码
+  public async function updatePass() {
+    /**
+     * {"token":"...","password":"1","dpassword":"1","type":"1"}
+     * {"token":"...","password":"1","yzm":"123456","type":"2"}
+     * 1.判断登陆状态
+     * 2.判断参数中的 type, 为1修改登陆密码(user表  password字段),为2修改交易密码(user表  dpassword字段)
+     *    2.1修改登陆密码
+     *        判断传入的dpassword是否匹配,如果匹配,则用新密码替换旧密码,修改成功
+     *    2.2修改交易密码
+     *        判断传入的短信验证码(yzm)是否正确,如果正确,则用新交易密码替换旧交易密码,修改成功
+     * 
+     */
+  }
+
+  //找回登陆密码
+  public async function forgotPass() { 
+
+    /**
+     * {"username":"15172611264","password":"1","yzm":"1234"}
+     * 1.判断找回的账号是否存在.
+     * 2.判断传入的短信验证码是否正确.
+     * 3.如果正确,用新登陆密码替换旧的.
+     * 
+     */
 
   }
+
+  //返回当前的版本号
+  public function getVer()
+  {
+    //返回当前版本号 config表里的 version 字段
+  }
+
+  //返回图形验证码
+  public function yanzhengma()
+  {
+  }
+
+
+
 }
 
 export const userStore = new UserStore();
