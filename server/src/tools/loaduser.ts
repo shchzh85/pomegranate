@@ -1,5 +1,9 @@
 
 require('module-alias/register');
+
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
+
 import * as _ from 'lodash';
 import { sequelize, redisClient } from '@common/dbs';
 import { userRepository } from '@models/index';
