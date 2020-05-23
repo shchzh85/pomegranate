@@ -20,7 +20,7 @@ class SeedsStore extends BaseStore {
   //增加任务共通函数
   private async addQuest(params: GetFTParams) {
 
-    const quests = await .findAll();
+    //const quests = await .findAll();
 
     // let transaction;
     // try {
@@ -143,7 +143,7 @@ class SeedsStore extends BaseStore {
 
   }
 
-  public async zhifu(params:ZhifuParams){
+  public async zhifu(params: /*ZhifuParams*/ any){
     /*
     判断用户是否过期
 

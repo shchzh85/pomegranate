@@ -8,7 +8,8 @@
     "start": "node dist/server.js",
     "auto": "export NODE_ENV=development && npm run build && npm run start",
     "test": "mocha './dist/**/*.test.js'",
-    "initdb": "node dist/tools/initdb.js"
+    "initdb": "node dist/tools/initdb.js",
+    "loaduser": "node dist/tools/loaduser.js"
   },
   "author": "",
   "license": "ISC",

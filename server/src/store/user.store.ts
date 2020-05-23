@@ -77,7 +77,7 @@ class UserStore extends BaseStore {
   /**
    * applogin
    */
-  public async login(params: LoginParams) {
+  public async login(params: /*LoginParams*/ any) {
 
     /**
      * 接受参数
@@ -112,7 +112,7 @@ class UserStore extends BaseStore {
      */
   }
   //登陆后修改密码
-  public async function updatePass() {
+  public async updatePass() {
     /**
      * {"token":"...","password":"1","dpassword":"1","type":"1"}
      * {"token":"...","password":"1","yzm":"123456","type":"2"}
@@ -127,7 +127,7 @@ class UserStore extends BaseStore {
   }
 
   //找回登陆密码
-  public async function forgotPass() { 
+  public async forgotPass() { 
 
     /**
      * {"username":"15172611264","password":"1","yzm":"1234"}
@@ -140,13 +140,13 @@ class UserStore extends BaseStore {
   }
 
   //返回当前的版本号
-  public function getVer()
+  public getVer()
   {
     //返回当前版本号 config表里的 version 字段
   }
 
   //返回图形验证码
-  public function yanzhengma()
+  public yanzhengma()
   {
   }
 
