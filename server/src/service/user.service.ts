@@ -34,7 +34,10 @@ class UserService extends BaseService {
         return userStore.create(params);
     }
 
-    public login() {
+    public async login(params: {
+        username: string,
+        password: string
+    }) {
         /**
      * 接受参数
      * {username,password,yzm,version}
@@ -66,6 +69,18 @@ class UserService extends BaseService {
      *    返回 {message:登陆成功,allConfig:config,message:message,uilang:zh,token:token,code:S0001}
      * }
      */
+      const { username, password } = params;
+      const user = await userStore.login(username, password);
+      
+      // TODO
+
+      
+
+      return { user };
+    }
+
+    public async logout(uid: string) {
+      
     }
 }
 

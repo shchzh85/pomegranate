@@ -44,6 +44,34 @@ const routes: Route[] = [
         .error(new Error(fieldReg.smsCode.message({ len: 6 }))),      
     }),
     action: user.userController.register
+  },
+  {
+    name: 'login',
+    path: 'oauth/login',
+    method: RequestMethod.POST,
+    middlewares: [],
+    params: Joi.object({
+      username: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.phone.reg())
+        .required()
+        .error(new Error(fieldReg.phone.message())),
+      password: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message()))
+    }),
+    action: user.userController.login
+  },
+  {
+    name: 'logout',
+    path: 'oauth/logout',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: user.userController.logout
   }
 ];
 

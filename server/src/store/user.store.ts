@@ -1,12 +1,13 @@
 
 import * as _ from 'lodash';
-import { Transaction, UniqueConstraintError, Op } from 'sequelize';
+import { UniqueConstraintError, Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import BaseStore from './base.store';
 import { userRepository, coinKindRepository, walletRepository } from '@models/index'
 import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import { sequelize } from '@common/dbs';
+import { md5 } from '@common/utils';
 
 export interface RegisterParams {
   username: string;
@@ -36,7 +37,10 @@ class UserStore extends BaseStore {
       try {
         transaction = await sequelize.transaction();
         const u = await userRepository.create({
-          username, password, dpassword, invitecode: code,
+          username,
+          password: md5(password),
+          dpassword: md5(dpassword),
+          invitecode: code,
           pid: parent.id, tops: parent.tops + ',' + parent.id
         }, { transaction });
 
@@ -73,8 +77,18 @@ class UserStore extends BaseStore {
     } while (true);
   }
 
-  public async login(params: /*LoginParams*/ any) {
+  public async login(username: string, password: string) {
+    const user = await userRepository.findOne({
+      where: { username }
+    });
 
+    if (!user)
+      throw new Exception(ErrCode.USERNAME_NOT_FOUND, '账号不存在');
+
+    if (password !== md5(user.password))
+      throw new Exception(ErrCode.INVALID_PASSWORD, '密码错误');
+
+    return user;
   }
 
   public async logout() {
