@@ -10,7 +10,12 @@ const EXPIRE_SECONDS = 60 * 60 * 24;
 
 class UserService extends BaseService {
 
-    public async updateSession(uid: number, token: string) {
+    public async updateSession(uid: string, token: string) {
+        const key = PREFIX + token;
+        const us = await userSessionStore.find(uid);
+        if (us)
+            await redisStore.del(key);
+
         await userSessionStore.update(uid, token);
         await redisStore.setex(PREFIX + token, '' + uid, EXPIRE_SECONDS);
     }

@@ -5,7 +5,11 @@ import BaseStore from './base.store';
 
 class UserSessionStore extends BaseStore {
 
-  public async update(uid: number, token: string) {
+  public find(uid: string) {
+    return userSessionRepository.findOne({ where: { uid } });
+  }
+
+  public async update(uid: string, token: string) {
     await userSessionRepository.upsert({ uid, token });
   }
 
