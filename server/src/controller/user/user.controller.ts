@@ -23,7 +23,7 @@ class UserController extends BaseController {
   public async login(ctx: Context) {
     const ret = await userService.login(ctx.params);
     const uid = _.get(ret, 'user.id');
-    if (!_.isEmpty(uid))
+    if (!_.isEmpty(uid) && ctx.session)
       ctx.session.uid = '' + uid;
 
     return ret;
