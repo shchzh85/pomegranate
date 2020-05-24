@@ -18,7 +18,15 @@ class RedisStore extends BaseStore {
   }
 
   public async del(key: string) {
-    return promisify(redisClient.del).bind(redisClient)(key);
+    return new Promise((resolve, rejects) => {
+      redisClient.del(key, (err, reply) => {
+        if (err) {
+          rejects(err);
+        } else {
+          resolve(reply);
+        }
+      });
+    });
   }
 
   public async incr(key: string) {

@@ -9,13 +9,6 @@ const prefix = '/user';
 
 const routes: Route[] = [
   {
-    name: 'hello world例子',
-    path: '/oauth/hello',
-    method: RequestMethod.GET,
-    middlewares: [],
-    action: user.userController.hello,
-  },
-  {
     name: 'register',
     path: '/oauth/register',
     method: RequestMethod.POST,

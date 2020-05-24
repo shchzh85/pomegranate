@@ -7,11 +7,6 @@ import { ErrCode } from '@common/enums';
 
 class UserController extends BaseController {
 
-  public async hello(ctx: Context) {
-    console.log('进入user控制器!');
-    await userService.hello();
-  }
-
   public async register(ctx: Context) {
     const { username, password, dpassword, invitecode, messagecode } = ctx.params;
 
