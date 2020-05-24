@@ -47,7 +47,7 @@ const routes: Route[] = [
   },
   {
     name: 'login',
-    path: 'oauth/login',
+    path: '/oauth/login',
     method: RequestMethod.POST,
     middlewares: [],
     params: Joi.object({
@@ -68,7 +68,7 @@ const routes: Route[] = [
   },
   {
     name: 'logout',
-    path: 'oauth/logout',
+    path: '/oauth/logout',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: user.userController.logout

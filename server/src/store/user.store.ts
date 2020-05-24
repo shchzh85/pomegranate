@@ -85,7 +85,7 @@ class UserStore extends BaseStore {
     if (!user)
       throw new Exception(ErrCode.USERNAME_NOT_FOUND, '账号不存在');
 
-    if (password !== md5(user.password))
+    if (md5(password) !== user.password)
       throw new Exception(ErrCode.INVALID_PASSWORD, '密码错误');
 
     return user;

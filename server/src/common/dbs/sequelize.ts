@@ -26,8 +26,8 @@ const sequelize = new Sequelize({
     timestamps: false,
     paranoid: false,
     underscored: true,
-    charset: 'utf8',
-    initialAutoIncrement: '1000',
+    //initialAutoIncrement: '1000',
+    charset: 'utf8'
   },
 
   pool: {

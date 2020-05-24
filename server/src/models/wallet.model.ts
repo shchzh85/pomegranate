@@ -37,7 +37,7 @@ export class WalletModel extends Model<WalletModel> {
   @Column({
     field: 'address',
     allowNull: false,
-    default: '',
+    defaultValue: '',
     comment: '资产钱包地址'
   })
   public address!: string;
