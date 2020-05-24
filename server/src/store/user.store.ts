@@ -17,7 +17,6 @@ export interface RegisterParams {
 
 class UserStore extends BaseStore {
 
-  // 注册store
   public async create(params: RegisterParams) {
     const { username, password, dpassword, invitecode } = params;
     const parent = await userRepository.findOne({ where: { invitecode } });
@@ -74,43 +73,14 @@ class UserStore extends BaseStore {
     } while (true);
   }
 
-  /**
-   * applogin
-   */
   public async login(params: /*LoginParams*/ any) {
 
-    /**
-     * 接受参数
-     * {username,password,yzm,version}
-     * //验证服务器是否关闭
-     * web_status = select web_status from config where name = 'web_status'
-     * 
-     * ver =  select web_status from config where name = 'version'
-     * 
-     * if(web_status == 0){
-     *    return 服务器关闭
-     * }
-     * 
-     * if(ver!=params.version){
-     *    return 版本已经更新,请手动下载最新版本
-     * }
-     * 
-     * if(验证码不匹配){
-     *    return 图形验证码错误
-     * }
-     * 
-     * if(!判断登陆){   加密方式 md5(user.password + user.utime)
-     *    return 登陆失败
-     * }else{
-     *    更新登陆时间  user表 lastlog字段
-     *    生成token,持续时间,写入redis,以及user表中的token,lasttime字段
-     *    message = select * from message
-     *    config = select * from config
-     *    
-     *    返回 {message:登陆成功,allConfig:config,message:message,uilang:zh,token:token,code:S0001}
-     * }
-     */
   }
+
+  public async logout() {
+
+  }
+
   //登陆后修改密码
   public async updatePass() {
     /**

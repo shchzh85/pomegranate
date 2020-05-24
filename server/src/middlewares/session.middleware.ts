@@ -1,6 +1,7 @@
+
+import * as _ from 'lodash';
 import koaSession from 'koa-session';
 import Koa from 'koa';
-
 import { userService } from '@service/index';
 
 const START_SERVER = process.env.START_SERVER || 'user';
@@ -29,25 +30,20 @@ class Store {
 
   public getService(key: string) {
     if (prefix === 'user_') {
-      return { service: userService, name: 'user' };
+      return { service: userService };
     } else {
       throw new Error(`key is invalid, get key: ${key}`);
     }
   }
 
   public async get(key: string) {
-    const { service, name } = this.getService(key);
-    const sess = await service.getSession(key);
-    if (!sess) {
-      return undefined;
-    }
-
-    return { ...sess.sess, [name]: sess.user };
+    const { service } = this.getService(key);
+    return await service.getSession(key);
   }
 
   public async set(key: string, sess: any) {
-    const { service, name } = this.getService(key);
-    await service.updateSession(sess[name].id, key, sess);
+    const { service } = this.getService(key);
+    await service.updateSession(sess.uid, key);
   }
 
   public async destroy(key: string) {

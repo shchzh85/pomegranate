@@ -2,12 +2,14 @@
 import { sequelize } from '@common/dbs';
 
 import { UserModel } from './user.model';
+import { UserSessionModel } from './user_session.model';
 import { WalletModel } from './wallet.model';
 import { CoinKindModel } from './coin_kind.model';
 import { QuestsModel } from './quests.model';
 //import { QuestKindModel } from './quest_kind.model';
 
 export const userRepository = sequelize.getRepository<UserModel>(UserModel);
+export const userSessionRepository = sequelize.getRepository<UserSessionModel>(UserSessionModel);
 export const walletRepository = sequelize.getRepository<WalletModel>(WalletModel);
 export const coinKindRepository = sequelize.getRepository<CoinKindModel>(CoinKindModel);
 export const questsRepository = sequelize.getRepository<QuestsModel>(QuestsModel);

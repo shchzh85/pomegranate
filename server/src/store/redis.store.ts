@@ -9,8 +9,16 @@ class RedisStore extends BaseStore {
     return promisify(redisClient.set).bind(redisClient)(key, value);
   }
 
+  public async setex(key: string, value: string, seconds: number) {
+    return promisify(redisClient.setex).bind(redisClient)(key, seconds, value);
+  }
+
   public async get(key: string) {
     return promisify(redisClient.get).bind(redisClient)(key);
+  }
+
+  public async del(key: string) {
+    return promisify(redisClient.del).bind(redisClient)(key);
   }
 
   public async incr(key: string) {
