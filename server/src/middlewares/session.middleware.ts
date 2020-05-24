@@ -22,7 +22,7 @@ export function session(app: Koa, opts?: Opts) {
     store: new Store(),
     secure: false,
     prefix,
-    domain,
+    //domain,
   }, app);
 }
 
