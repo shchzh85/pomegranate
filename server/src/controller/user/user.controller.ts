@@ -37,6 +37,14 @@ class UserController extends BaseController {
     if (!_.isNil(ctx.session))
       ctx.session = null;
   }
+
+  public updateLoginPasswd(ctx: Context) {
+    return userService.updateLoginPasswd(ctx.params);
+  }
+
+  public updateTradePasswd(ctx: Context) {
+    return userService.updateTradePasswd(ctx.params);
+  }
 }
 
 export const userController = new UserController();

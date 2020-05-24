@@ -94,48 +94,6 @@ class UserStore extends BaseStore {
   public async logout() {
 
   }
-
-  //登陆后修改密码
-  public async updatePass() {
-    /**
-     * {"token":"...","password":"1","dpassword":"1","type":"1"}
-     * {"token":"...","password":"1","yzm":"123456","type":"2"}
-     * 1.判断登陆状态
-     * 2.判断参数中的 type, 为1修改登陆密码(user表  password字段),为2修改交易密码(user表  dpassword字段)
-     *    2.1修改登陆密码
-     *        判断传入的dpassword是否匹配,如果匹配,则用新密码替换旧密码,修改成功
-     *    2.2修改交易密码
-     *        判断传入的短信验证码(yzm)是否正确,如果正确,则用新交易密码替换旧交易密码,修改成功
-     * 
-     */
-  }
-
-  //找回登陆密码
-  public async forgotPass() { 
-
-    /**
-     * {"username":"15172611264","password":"1","yzm":"1234"}
-     * 1.判断找回的账号是否存在.
-     * 2.判断传入的短信验证码是否正确.
-     * 3.如果正确,用新登陆密码替换旧的.
-     * 
-     */
-
-  }
-
-  //返回当前的版本号
-  public getVer()
-  {
-    //返回当前版本号 config表里的 version 字段
-  }
-
-  //返回图形验证码
-  public yanzhengma()
-  {
-  }
-
-
-
 }
 
 export const userStore = new UserStore();

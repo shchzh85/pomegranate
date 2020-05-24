@@ -72,6 +72,47 @@ const routes: Route[] = [
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: user.userController.logout
+  },
+  {
+    name: 'updateLoginPasswd',
+    path: '/oauth/updateLoginPasswd',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+       password: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message())),
+       dpassword: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message()))
+    }),
+    action: user.userController.updateLoginPasswd
+  },
+  {
+    name: 'updateTradePasswd',
+    path: '/oauth/updateTradePasswd',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+       dpassword: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message())),
+      messagecode: Joi
+        .string()
+        .pattern(fieldReg.smsCode.reg({ len: 6 }))
+        .required()
+        .error(new Error(fieldReg.smsCode.message({ len: 6 })))
+    }),
+    action: user.userController.updateTradePasswd
   }
 ];
 
