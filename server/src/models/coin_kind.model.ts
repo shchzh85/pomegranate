@@ -6,8 +6,7 @@ import {
 } from 'sequelize-typescript';
 
 @Table({
-  tableName: 'tpz_coinkind',
-
+  tableName: 'tpz_coinkind'
 })
 export class CoinKindModel extends Model<CoinKindModel> {
 
@@ -30,11 +29,11 @@ export class CoinKindModel extends Model<CoinKindModel> {
 
   @Column({
     field: 'price',
-    type: DataType.DECIMAL(65, 4),
+    type: DataType.DECIMAL(20, 2),
     allowNull: false,
     comment: '货币价格'
   })
-  public price!: string;
+  public price!: number;
 
   @Column({
     field: 'rpcip',
@@ -62,39 +61,37 @@ export class CoinKindModel extends Model<CoinKindModel> {
 
   @Column({
     field: 'buyfee',
-    type: DataType.DECIMAL(65, 4),
+    type: DataType.DECIMAL(20, 2),
     allowNull: false,
     comment: '购买手续费',
     defaultValue: 0
   })
-  public buyfee!: string;
+  public buyfee!: number;
 
   @Column({
     field: 'sellfee',
-    type: DataType.DECIMAL(65, 4),
+    type: DataType.DECIMAL(20, 2),
     allowNull: false,
     comment: '卖出手续费',
     defaultValue: 0
   })
-  public sellfee!: string;
+  public sellfee!: number;
 
   @Column({
     field: 'status',
-    type: DataType.INTEGER,
     allowNull: false,
     comment: '货币状态',
     defaultValue: 0
   })
-  public status!: string;
+  public status!: number;
 
   @Column({
     field: 'jumpid',
-    type: DataType.INTEGER,
     allowNull: false,
     comment: '钱包类型',
     defaultValue: 1
   })
-  public jumpid!: string;
+  public jumpid!: number;
 
   @Column({
     field: 'iconpath',
@@ -106,52 +103,51 @@ export class CoinKindModel extends Model<CoinKindModel> {
 
   @Column({
     field: 'recharge_flg',
-    type: DataType.INTEGER,
     allowNull: false,
+    defaultValue: 1,
     comment: '是否允许充币'
   })
   public recharge_flg!: string;
 
   @Column({
     field: 'send_flg',
-    type: DataType.INTEGER,
     allowNull: false,
+    defaultValue: 0,
     comment: '是否允转币'
   })
-  public send_flg!: string;
+  public send_flg!: number;
 
   @Column({
     field: 'c2c_flg',
-    type: DataType.INTEGER,
     allowNull: false,
+    defaultValue: 0,
     comment: '是否允许C2C'
   })
-  public c2c_flg!: string;
+  public c2c_flg!: number;
 
   @Column({
     field: 'chongLimit',
-    type: DataType.DECIMAL(65, 4),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
+    defaultValue: 0,
     comment: '到账标准'
   })
-  public chongLimit!: string;
+  public chongLimit!: number;
 
   @Column({
     field: 'gjaddress',
     type: DataType.STRING(255),
     allowNull: false,
+    defaultValue: '',
     comment: '归集地址'
   })
   public gjaddress!: string;
 
   @Column({
     field: 'offset',
-    type: DataType.INTEGER,
     allowNull: false,
+    defaultValue: 0,
     comment: '上次区块扫描地址位置'
   })
-  public offset!: string;
-
-
+  public offset!: number;
 }
-
