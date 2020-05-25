@@ -257,7 +257,7 @@ export class UserModel extends Model<UserModel> {
     // sunshine
     @Column({
         field: 'sunshine',
-        type: DataType.DECIMAL(65, 4),
+        type: DataType.DECIMAL(20, 2),
         allowNull: false,
         defaultValue: 0
     })
@@ -266,7 +266,7 @@ export class UserModel extends Model<UserModel> {
     // sunshine_1
     @Column({
         field: 'sunshine_1',
-        type: DataType.DECIMAL(65, 4),
+        type: DataType.DECIMAL(20, 2),
         allowNull: false,
         defaultValue: 0
     })
