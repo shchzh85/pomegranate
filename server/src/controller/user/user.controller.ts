@@ -39,11 +39,11 @@ class UserController extends BaseController {
   }
 
   public updateLoginPasswd(ctx: Context) {
-    return userService.updateLoginPasswd(ctx.params);
+    return userService.updateLoginPasswd(ctx.uid, ctx.params);
   }
 
   public updateTradePasswd(ctx: Context) {
-    return userService.updateTradePasswd(ctx.params);
+    return userService.updateTradePasswd(ctx.uid, ctx.params);
   }
 }
 

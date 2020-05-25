@@ -94,6 +94,17 @@ class UserStore extends BaseStore {
   public async logout() {
 
   }
+
+  public async updateLoginPasswd(uid: string, password: string, dpassword: string) {
+    const [ rows ] = await userRepository.update({ password }, {
+      where: {
+        id: uid,
+        dpassword: md5(dpassword)
+      }
+    });
+
+    return rows === 1;
+  }
 }
 
 export const userStore = new UserStore();

@@ -88,21 +88,15 @@ class UserService extends BaseService {
     }
 
     //登陆后修改密码
-    public async updateLoginPasswd(params: {
+    public updateLoginPasswd(uid: string, params: {
       password: string,
       dpassword: string,
     }) {
-      /**
-       * {"token":"...","password":"1","dpassword":"1","type":"1"}
-       * 1.判断登陆状态
-       * 2.判断参数中的 type, 为1修改登陆密码(user表  password字段),为2修改交易密码(user表  dpassword字段)
-       *    2.1修改登陆密码
-       *        判断传入的dpassword是否匹配,如果匹配,则用新密码替换旧密码,修改成功
-       * 
-       */
+      const { password, dpassword } = params;
+      return userStore.updateLoginPasswd(uid, password, dpassword);
     }
 
-    public async updateTradePasswd(params: {
+    public async updateTradePasswd(uid: string, params: {
         dpassword: string,
         yzm: string
     }) {
