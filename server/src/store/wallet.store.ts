@@ -1,6 +1,6 @@
 
 import BaseStore from './base.store';
-import { walletRepository } from '@models/';
+import { walletRepository } from '@models/index';
 import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import { Transaction, Op } from 'sequelize';
@@ -20,7 +20,7 @@ class WalletStore extends BaseStore {
         if (count <= 0)
             throw new Exception(ErrCode.SERVER_ERROR, '扣除余额不大于0');
 
-        const { affectedCount } = await walletRepository.update({
+        const [ affectedCount ] = await walletRepository.update({
             num: Sequelize.literal('num-' + count)
         }, {
             where: { uid, coinid, num: { [Op.gte]: count } },

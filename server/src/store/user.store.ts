@@ -134,7 +134,7 @@ class UserStore extends BaseStore {
 
   public async getSunshine2(pid: string) {
     const us = await userRepository.findAll({
-      attrubites: [ 'sunshine', 'sunshine_1' ],
+      attributes: [ 'sunshine', 'sunshine_1' ],
       where: { pid }
     });
 

@@ -78,11 +78,14 @@ class SeedsService extends BaseService {
 
         const price = questKind.quest_price;
         const wallets = await walletStore.findByUid(uid);
-        const balance = _.sumBy(wallets, v => v.num);
+        const balance = _.sumBy(wallets, (v: any) => v.num);
         if (balance < price)
             throw new Exception(ErrCode.BALANCE_NOT_ENOUGH, '余额不足');
 
         const bankWallet = _.find(wallets, v => v.coinid == 1);
+        if (!bankWallet)
+            throw new Exception(ErrCode.SERVER_ERROR, '钱包未找到');
+
         const useBank = bankWallet.num >= price;
         const uppers = user.tops.split(',');
 
@@ -148,6 +151,9 @@ class SeedsService extends BaseService {
 
         const sunshine2 = zhitui_num >= 3 ? (await userStore.getSunshine2(uid)) : 0;
         const bankWallet = await walletStore.find(uid, 1);
+        if (!bankWallet)
+            throw new Exception(ErrCode.SERVER_ERROR, '钱包未找到');
+
         const questKinds = await questKindStore.findAll();
 
         let balance = bankWallet.num;

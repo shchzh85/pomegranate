@@ -7,7 +7,7 @@ import { Transaction, Op } from 'sequelize';
 class QuestTimesStore extends BaseStore {
 
     public async findOrCreate(uid: string, quest_id: number, quest_times: number) {
-        const { result, created } = await questTimesRepository.findOrCreate({
+        const [ result, created ] = await questTimesRepository.findOrCreate({
             where: { uid, quest_id },
             defaults: { uid, quest_id, quest_times }
         });
@@ -16,7 +16,7 @@ class QuestTimesStore extends BaseStore {
     }
 
     public async decTimes(uid: string, quest_id: number, transaction?: Transaction) {
-        const { affectedCount } = await questTimesRepository.update({
+        const [ affectedCount ] = await questTimesRepository.update({
             quest_times: Sequelize.literal('quest_times-1')
         }, {
             where: { uid, quest_id, quest_times: { [Op.gte]: 1 } },

@@ -1,7 +1,7 @@
 
 import { Transaction } from 'sequelize';
 import BaseStore from './base.store';
-import { questLevelBonusRepository } from '@models/';
+import { questLevelBonusRepository } from '@models/index';
 
 class QuestLevelBonusStore extends BaseStore {
 
