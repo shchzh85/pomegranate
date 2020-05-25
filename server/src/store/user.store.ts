@@ -1,6 +1,6 @@
 
 import * as _ from 'lodash';
-import { UniqueConstraintError, Op } from 'sequelize';
+import { UniqueConstraintError, Op, Transaction } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import BaseStore from './base.store';
 import { userRepository, coinKindRepository, walletRepository } from '@models/index'
@@ -18,6 +18,10 @@ export interface RegisterParams {
 }
 
 class UserStore extends BaseStore {
+
+  public findById(uid: string) {
+    return userRepository.findByPk(Number(uid));
+  }
 
   public async create(params: RegisterParams) {
     const { username, password, dpassword, invitecode } = params;
@@ -135,6 +139,41 @@ class UserStore extends BaseStore {
     return rows === 1;
   }
 
+  public async addSunshine(uids: string[], cnt: number, transaction?: Transaction) {
+    const [ affectedCount ] = await userRepository.update({
+      sunshine: Sequelize.literal('sunshine+' + cnt)
+    }, {
+      where: { id: uids },
+      transaction
+    });
+
+    return affectedCount === _.size(uids);
+  }
+
+  public async addSunshine1(uids: string[], cnt: number, transaction?: Transaction) {
+    const [ affectedCount ] = await userRepository.update({
+      sunshine_1: Sequelize.literal('sunshine_1+' + cnt)
+    }, {
+      where: { id: uids },
+      transaction
+    });
+
+    return affectedCount === _.size(uids);
+  }
+
+  public async getSunshine2(pid: string) {
+    const us = await userRepository.findAll({
+      attributes: [ 'sunshine', 'sunshine_1' ],
+      where: { pid }
+    });
+
+    const cnt = _.size(us);
+    if (cnt <= 2)
+      return 0;
+
+    const scores = us.map(u => u.sunshine + u.sunshine_1).slice(2);
+    return _.sum(scores);
+  }
 }
 
 export const userStore = new UserStore();

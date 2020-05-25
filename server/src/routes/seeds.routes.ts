@@ -12,12 +12,8 @@ const routes: Route[] = [
     name: '购买福田',
     path: '/business/getFT',
     method: RequestMethod.POST,
-    middlewares: [],
+    middlewares: [ userAuth() ],
     params: Joi.object({
-      uid: Joi
-        .number()
-        .required()
-        .error(new Error('uid不能为空')),
       dpassword: Joi
         .string()
         .trim()
@@ -29,15 +25,14 @@ const routes: Route[] = [
         .required()
         .error(new Error('qid不能为空')),
     }),
-    action: seeds.seedsController.getFT,
+    action: seeds.seedsController.getFT
   },
-
   {
     name: '升级',
     path: '/business/levelup',
     method: RequestMethod.POST,
-    middlewares: [],
-    action: seeds.seedsController.levelup,
+    middlewares: [ userAuth() ],
+    action: seeds.seedsController.levelUp
   },
 
   {

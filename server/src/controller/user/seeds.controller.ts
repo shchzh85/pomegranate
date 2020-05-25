@@ -8,13 +8,13 @@ import { ErrCode } from '@common/enums';
 
 class SeedsController extends BaseController {
 
-  public async getFT(ctx: Context) {
-    //const { uid, dpassword, qid} = ctx.params;
-    //return seedsService.getFT({uid, dpassword, qid});
+  public getFT(ctx: Context) {
+    const uid = ctx.uid;
+    return seedsService.getFT({ uid, ...ctx.params });
   }
 
-  public async levelup(ctx: Context) {
-    //return await seedsService.levelup();
+  public levelUp(ctx: Context) {
+    return seedsService.levelUp(ctx.uid);
   }
 
   public async appGetQuestList(ctx: Context) {
