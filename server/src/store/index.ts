@@ -5,3 +5,6 @@ export * from './user_session.store';
 export * from './quest_kind.store';
 export * from './quests.store';
 export * from './wallet.store';
+export * from './quest_times.store';
+export * from './quest_reward.store';
+export * from './quest_level_bonus.store';

@@ -40,6 +40,12 @@ class QuestsStore extends BaseStore {
         const data = transfer(uid, qs);
         return questsRepository.bulkCreate(data, { transaction });
     }
+
+    public findByUid(uid: string) {
+        return questsRepository.findAll({
+            where: { uid }
+        });
+    }
 }
 
 export const questsStore = new QuestsStore();

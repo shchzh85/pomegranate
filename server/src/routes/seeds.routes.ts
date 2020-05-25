@@ -34,58 +34,51 @@ const routes: Route[] = [
     middlewares: [ userAuth() ],
     action: seeds.seedsController.levelUp
   },
-
   {
     name: '福田列表',
     path: '/business/appGetQuestList',
     method: RequestMethod.POST,
-    middlewares: [],
+    middlewares: [ userAuth() ],
     action: seeds.seedsController.appGetQuestList,
   },
-
   {
     name: '我的福田',
     path: '/business/appGetMyQuestList',
     method: RequestMethod.POST,
-    middlewares: [],
+    middlewares: [ userAuth() ],
     action: seeds.seedsController.appGetMyQuestList,
   },
-
   {
     name: '实名申请',
     path: '/business/shiming_sq',
     method: RequestMethod.POST,
-    middlewares: [],
+    middlewares: [ userAuth() ],
     action: seeds.seedsController.shiming_sq,
   },
-
   {
     name: '水滴记录',
     path: '/business/waterlist',
     method: RequestMethod.POST,
-    middlewares: [],
-    action: seeds.seedsController.waterlist,
+    middlewares: [ userAuth() ],
+    action: seeds.seedsController.waterList,
   },
-
   {
     name: '仓储记录',
     path: '/business/appGetSeedBankList',
     method: RequestMethod.POST,
-    middlewares: [],
-    action: seeds.seedsController.appGetSeedBankList,
+    middlewares: [ userAuth() ],
+    action: seeds.seedsController.seedBankList,
   },
-
   {
     name: '我的团队',
     path: '/business/appGetSeedMyGroupList',
     method: RequestMethod.POST,
-    middlewares: [],
-    action: seeds.seedsController.appGetSeedMyGroupList,
+    middlewares: [ userAuth() ],
+    action: seeds.seedsController.myGroup,
   },
-
   {
     name: '异步通知未到,查询接口',
-    path: '/business/check_pay_face',
+    path: '/business/appCheckPay',
     method: RequestMethod.POST,
     middlewares: [],
     action: seeds.seedsController.check_pay_face,
