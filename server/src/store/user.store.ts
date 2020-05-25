@@ -8,6 +8,7 @@ import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import { sequelize } from '@common/dbs';
 import { md5 } from '@common/utils';
+import { redisStore } from './redis.store';
 
 export interface RegisterParams {
   username: string;
@@ -100,12 +101,40 @@ class UserStore extends BaseStore {
   }
 
   public async updateLoginPasswd(uid: string, password: string, dpassword: string) {
-    const [ rows ] = await userRepository.update({ password }, {
+    const [rows] = await userRepository.update({ password }, {
       where: {
         id: uid,
         dpassword: md5(dpassword)
       }
     });
+
+    return rows === 1;
+  }
+
+  public async updateTradePasswd(uid: string, yzm: string, dpassword: string) {
+    const [rows] = await userRepository.update({ dpassword }, {
+      where: {
+        id: uid,
+        ddpassword: md5(dpassword)
+      }
+    });
+
+    return rows === 1;
+  }
+
+  public async forgotPassword(uid: string, password: string) {
+
+    var utime = redisStore.get(uid).utime;
+    const [rows] = await userRepository.update({ password }, {
+      where: {
+        id: uid,
+        password: md5(password + utime)
+      }
+    });
+
+    if (rows === 0) {
+      throw new Exception(ErrCode.SERVER_ERROR, '用户不存在');
+    }
 
     return rows === 1;
   }
