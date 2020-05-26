@@ -174,6 +174,14 @@ class UserStore extends BaseStore {
     const scores = us.map(u => u.sunshine + u.sunshine_1).slice(2);
     return _.sum(scores);
   }
+
+  public findAll(options?: any) {
+    return userRepository.findAll(options);
+  }
+
+  public findAndCount(options?: any) {
+    return userRepository.findAndCount(options);
+  }
 }
 
 export const userStore = new UserStore();

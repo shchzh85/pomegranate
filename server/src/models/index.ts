@@ -9,6 +9,7 @@ import { QuestKindModel } from './quest_kind.model';
 import { QuestTimesModel } from './quest_times.model';
 import { QuestLevelBonusModel } from './quest_level_bonus.model';
 import { CoinLogModel } from './coin_log.model';
+import { QuestRewardModel } from './quest_reward.model';
 
 export const userRepository = sequelize.getRepository<UserModel>(UserModel);
 export const userSessionRepository = sequelize.getRepository<UserSessionModel>(UserSessionModel);
@@ -19,3 +20,4 @@ export const questKindRepository = sequelize.getRepository<QuestKindModel>(Quest
 export const questTimesRepository = sequelize.getRepository<QuestTimesModel>(QuestTimesModel);
 export const questLevelBonusRepository = sequelize.getRepository<QuestLevelBonusModel>(QuestLevelBonusModel);
 export const coinLogModelRepository = sequelize.getRepository<CoinLogModel>(CoinLogModel);
+export const questRewardRepository = sequelize.getRepository<QuestRewardModel>(QuestRewardModel);

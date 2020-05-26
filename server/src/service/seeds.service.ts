@@ -1,14 +1,11 @@
 
-import { Transaction } from 'sequelize';
 import _ from 'lodash';
 import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import BaseService from './base.service';
-import { seedsStore, userStore, questKindStore, questsStore, walletStore } from '@store/index';
+import { userStore, questKindStore, questsStore, walletStore, questRewardStore, questTimesStore, questLevelBonusStore } from '@store/index';
 import { sequelize } from '@common/dbs';
 import { md5 } from '@common/utils';
-import { questTimesStore } from '@store/quest_times.store';
-import { questLevelBonusStore } from '@store/quest_level_bonus.store';
 
 interface LevelContext {
     cost: number;
@@ -214,6 +211,69 @@ class SeedsService extends BaseService {
             await transaction?.rollback();
             throw e;
         }
+    }
+
+    public appGetQuestList() {
+        return questKindStore.findAll({
+            where: { actived: 0 },
+            limit: 20
+        });
+    }
+
+    public appGetMyQuestList(uid: string) {
+        return questsStore.findByUid(uid);
+    }
+
+    public async waterList(uid: string, params: any) {
+        const start = _.defaultTo(params.start, 0);
+        const len = _.defaultTo(params.len, 20);
+        const user = await userStore.findById(uid);
+        if (!user)
+            throw new Exception(ErrCode.USERNAME_NOT_FOUND, '用户不存在');
+
+        const { rows, count } = await userStore.findAndCount({
+            where: { pid: uid, member_flg: 1 },
+            offset: start, limit: len,
+            order: [ 'member_flg' ]
+        });
+
+        return {
+            start,
+            len,
+            list: rows,
+            max: count
+        };
+    }
+
+    public async seedBankList(uid: string, params: any) {
+        const start = _.defaultTo(params.start, 0);
+        const len = _.defaultTo(params.len, 20);
+        const list = await questRewardStore.findAll({
+            where: { uid },
+            offset: start,
+            limit: len,
+            order: [ 'id', 'DESC' ]
+        });
+
+        return { list, start, len, max: 0 };
+    }
+
+    public async myGroup(uid: string, params: any) {
+        const start = _.defaultTo(params.start, 0);
+        const len = _.defaultTo(params.len, 20);
+        const { rows, count } = await userStore.findAndCount({
+            attributes: [ 'mz', 'group_member_num', 'sunshine', 'username' ],
+            where: { pid: uid },
+            offset: start,
+            limit: len,
+            order: [ 'member_flg' ]
+        });
+
+        return {
+            max: count,
+            start, len,
+            list: rows
+        };
     }
 }
 

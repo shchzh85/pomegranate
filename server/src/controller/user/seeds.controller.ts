@@ -17,28 +17,28 @@ class SeedsController extends BaseController {
     return seedsService.levelUp(ctx.uid);
   }
 
-  public async appGetQuestList(ctx: Context) {
-    //return await seedsService.appGetQuestList();
+  public appGetQuestList(ctx: Context) {
+    return seedsService.appGetQuestList();
   }
 
-  public async appGetMyQuestList(ctx: Context) {
-    //return await seedsService.appGetMyQuestList();
+  public appGetMyQuestList(ctx: Context) {
+    return seedsService.appGetMyQuestList(ctx.uid);
   }
 
   public async shiming_sq(ctx: Context) {
     //return await seedsService.shiming_sq();
   }
 
-  public async waterlist(ctx: Context) {
-    //return await seedsService.waterlist();
+  public waterList(ctx: Context) {
+    return seedsService.waterList(ctx.uid, ctx.params);
   }
 
-  public async appGetSeedBankList(ctx: Context) {
-    //return await seedsService.appGetSeedBankList();
+  public seedBankList(ctx: Context) {
+    return seedsService.seedBankList(ctx.uid, ctx.params);
   }
 
-  public async appGetSeedMyGroupList(ctx: Context) {
-    //return await seedsService.appGetSeedMyGroupList();
+  public myGroup(ctx: Context) {
+    return seedsService.myGroup(ctx.uid, ctx.params);
   }
 
   public async check_pay_face(ctx: Context) {

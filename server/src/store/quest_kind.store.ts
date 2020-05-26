@@ -9,8 +9,8 @@ class QuestKindStore extends BaseStore {
         return questKindRepository.findByPk(id);
     }
 
-    public findAll() {
-        return questKindRepository.findAll();
+    public findAll(options?: any) {
+        return questKindRepository.findAll(options);
     }
 }
 
