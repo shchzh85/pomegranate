@@ -5,9 +5,8 @@ import userRoutes from './user.routes';
 import { response, paramValidate } from '@middlewares/index';
 import seedsRoutes from './seeds.routes';
 
-
 // 这里需要加
-const routes: Route[] = [ ...userRoutes ];
+const routes: Route[] = [ ...userRoutes, ...seedsRoutes, ];
 
 const router = new Router();
 

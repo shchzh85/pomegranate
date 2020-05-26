@@ -8,3 +8,7 @@ export * from './wallet.store';
 export * from './quest_times.store';
 export * from './quest_reward.store';
 export * from './quest_level_bonus.store';
+export * from './config.store';
+export * from './deal.store';
+export * from './c2c_order.store';
+export * from './c2c_shiming.store';

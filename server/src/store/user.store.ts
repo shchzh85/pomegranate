@@ -182,6 +182,17 @@ class UserStore extends BaseStore {
   public findAndCount(options?: any) {
     return userRepository.findAndCount(options);
   }
+
+  public async addSellTimes(uid: string, transaction?: Transaction) {
+    const [ affectedCount ] = await userRepository.update({
+      sell_times: Sequelize.literal('sell_times+1')
+    },{
+      where: { id: uid, sell_times: { [Op.lt]: 1000 } },
+      transaction
+    });
+
+    return affectedCount === 1;
+  }
 }
 
 export const userStore = new UserStore();

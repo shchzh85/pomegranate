@@ -10,6 +10,10 @@ import { QuestTimesModel } from './quest_times.model';
 import { QuestLevelBonusModel } from './quest_level_bonus.model';
 import { CoinLogModel } from './coin_log.model';
 import { QuestRewardModel } from './quest_reward.model';
+import { ConfigModel } from './config.model';
+import { C2COrderModel } from './c2c_order.model';
+import { C2CShimingModel } from './c2c_shiming.model';
+import { DealModel } from './deal.model';
 
 export const userRepository = sequelize.getRepository<UserModel>(UserModel);
 export const userSessionRepository = sequelize.getRepository<UserSessionModel>(UserSessionModel);
@@ -21,3 +25,7 @@ export const questTimesRepository = sequelize.getRepository<QuestTimesModel>(Que
 export const questLevelBonusRepository = sequelize.getRepository<QuestLevelBonusModel>(QuestLevelBonusModel);
 export const coinLogModelRepository = sequelize.getRepository<CoinLogModel>(CoinLogModel);
 export const questRewardRepository = sequelize.getRepository<QuestRewardModel>(QuestRewardModel);
+export const configRepository = sequelize.getRepository<ConfigModel>(ConfigModel);
+export const dealRepository = sequelize.getRepository<DealModel>(DealModel);
+export const c2cOrderRepository = sequelize.getRepository<C2COrderModel>(C2COrderModel);
+export const c2cShimingRepository = sequelize.getRepository<C2CShimingModel>(C2CShimingModel);

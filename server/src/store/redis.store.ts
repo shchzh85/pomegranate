@@ -5,6 +5,17 @@ import { redisClient } from '@common/dbs';
 
 class RedisStore extends BaseStore {
 
+  public async exists(key: string) {
+    return new Promise((resolve, rejects) => {
+      redisClient.exists(key, (err, reply) => {
+        if (err)
+          rejects(err);
+        else
+          resolve(reply);
+      });
+    });
+  }
+
   public async set(key: string, value: string) {
     return promisify(redisClient.set).bind(redisClient)(key, value);
   }
@@ -77,6 +88,17 @@ class RedisStore extends BaseStore {
         } else {
           resolve(reply);
         }
+      });
+    });
+  }
+
+  public async hmset(key: string, args: { [key: string]: string | number }) {
+    return new Promise<string[]>((resolve, rejects) => {
+      redisClient.hmset(key, args, (err, reply) => {
+        if (err)
+          rejects(err);
+        else
+          resolve(reply);
       });
     });
   }

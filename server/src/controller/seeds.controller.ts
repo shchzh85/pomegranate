@@ -1,10 +1,6 @@
 import { Context } from 'koa';
-
 import BaseController from '@controller/base.controller';
 import { seedsService } from '@service/index';
-import { Exception } from '@common/exceptions';
-import { ErrCode } from '@common/enums';
-
 
 class SeedsController extends BaseController {
 
