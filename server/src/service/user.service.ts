@@ -39,83 +39,41 @@ class UserService extends BaseService {
   }
 
   public async login(params: any) {
-    /**
- * 接受参数
- * {username,password,yzm,version}
- * //验证服务器是否关闭
- * web_status = select web_status from config where name = 'web_status'
- * 
- * ver =  select web_status from config where name = 'version'
- * 
- * if(web_status == 0){
- *    return 服务器关闭
- * }
- * 
- * if(ver!=params.version){
- *    return 版本已经更新,请手动下载最新版本
- * }
- * 
- * if(验证码不匹配){
- *    return 图形验证码错误
- * }
- * 
- * if(!判断登陆){   加密方式 md5(user.password + user.utime)
- *    return 登陆失败
- * }else{
- *    更新登陆时间  user表 lastlog字段
- *    生成token,持续时间,写入redis,以及user表中的token,lasttime字段
- *    message = select * from message
- *    config = select * from config
- *    
- *    返回 {message:登陆成功,allConfig:config,message:message,uilang:zh,token:token,code:S0001}
- * }
- */
     const { version, username, password, yzm } = params;
 
-    const webStatus = configStore.getNumber('web_status');
+    const webStatus = await configStore.getNumber('web_status');
     if (webStatus == 0)
-      throw new Exception(SERVER_ERROR, '服务器维护中');
+      throw new Exception(ErrCode.SERVER_ERROR, '服务器维护中');
 
     const ver = configStore.get('version');
     if (version != ver)
-      throw new Exception(SERVER_ERROR, '版本已经更新,请手动下载最新版本！');
+      throw new Exception(ErrCode.SERVER_ERROR, '版本已经更新,请手动下载最新版本！');
 
     // TODO: 验证码匹配
 
     const user = await userStore.login(username, password);
 
-    
+    // TODO: get message
 
+    const allConfig = await configStore.all();
 
-
-    return { user };
+    return { user, allConfig };
   }
 
   public async logout(uid: string) {
 
   }
 
-  //登陆后修改密码
-  public updateLoginPasswd(uid: string, params: {
-    password: string,
-    dpassword: string,
-  }) {
+  public updateLoginPasswd(uid: string, params: any) {
     const { password, dpassword } = params;
     return userStore.updateLoginPasswd(uid, password, dpassword);
   }
 
-  public async updateTradePasswd(uid: string, params: {
-    dpassword: string,
-    yzm: string
-  }) {
-
+  public async updateTradePasswd(uid: string, params: any) {
     const { dpassword, yzm } = params;
-    return userStore.updateTradePasswd(uid, dpassword, yzm);
+    // TODO: check yzm
 
-    /* {"token":"...","dpassword":"1","yzm":"123456","type":"2"}
-    *    2.2修改交易密码
-    *        判断传入的短信验证码(yzm)是否正确,如果正确,则用新交易密码替换旧交易密码,修改成功
-    */
+    return userStore.updateTradePasswd(uid, dpassword, yzm);
   }
 
   //找回登陆密码

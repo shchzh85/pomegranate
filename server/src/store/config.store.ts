@@ -32,6 +32,10 @@ class ConfigStore extends BaseStore {
     const v = await this.get(name);
     return !_.isEmpty(v) ? _.toNumber(v) : defaultValue;
   }
+
+  public all() {
+    return redisStore.hgetall(KEY);
+  }
 }
 
 export const configStore = new ConfigStore();

@@ -52,6 +52,10 @@ class RedisStore extends BaseStore {
     return promisify(redisClient.hget).bind(redisClient)(key, field);
   }
 
+  public async hgetall(key: string) {
+    return promisify(redisClient.hgetall).bind(redisClient)(key);
+  }
+
   public async hincrby(key: string, field: string, increment: number) {
     return promisify(redisClient.hincrby).bind(redisClient)(key, field, increment);
   }

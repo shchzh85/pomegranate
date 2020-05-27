@@ -116,22 +116,29 @@ class UserStore extends BaseStore {
   }
 
   public async updateLoginPasswd(uid: string, password: string, dpassword: string) {
-    const [rows] = await userRepository.update({ password }, {
-      where: {
-        id: uid,
-        dpassword: md5(dpassword)
-      }
+    const u = await userRepository.findByPk(uid);
+    if (!u)
+      throw new Exception(ErrCode.USER_NOT_AUTHORIZED, '用户不存在');
+
+    if (md5(dpassword + u.utime) != u.dpassword)
+      throw new Exception(ErrCode.INVALID_PASSWORD, '交易密码错误');
+
+    const [ rows ] = await userRepository.update({ password: md5(password + u.utime) }, {
+      where: { id: uid }
     });
 
     return rows === 1;
   }
 
   public async updateTradePasswd(uid: string, yzm: string, dpassword: string) {
-    const [rows] = await userRepository.update({ dpassword }, {
-      where: {
-        id: uid,
-        dpassword: md5(dpassword)
-      }
+    const u = await userRepository.findByPk(uid);
+    if (!u)
+      throw new Exception(ErrCode.USER_NOT_AUTHORIZED, '用户不存在');
+
+    const [ rows ] = await userRepository.update({
+      dpassword: md5(dpassword + u.utime)
+    }, {
+      where: { id: uid }
     });
 
     return rows === 1;
