@@ -74,6 +74,10 @@ class DealStore extends BaseStore {
 
       return affectedCount === 1;
   }
+
+  public sumInit() {
+    return dealRepository.sum('num', { where: { status: 0 } });
+  }
 }
 
 export const dealStore = new DealStore();

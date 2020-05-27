@@ -14,6 +14,7 @@ import { ConfigModel } from './config.model';
 import { C2COrderModel } from './c2c_order.model';
 import { C2CShimingModel } from './c2c_shiming.model';
 import { DealModel } from './deal.model';
+import { PriceHistoryModel } from './price_history.model';
 
 export const userRepository = sequelize.getRepository<UserModel>(UserModel);
 export const userSessionRepository = sequelize.getRepository<UserSessionModel>(UserSessionModel);
@@ -29,3 +30,4 @@ export const configRepository = sequelize.getRepository<ConfigModel>(ConfigModel
 export const dealRepository = sequelize.getRepository<DealModel>(DealModel);
 export const c2cOrderRepository = sequelize.getRepository<C2COrderModel>(C2COrderModel);
 export const c2cShimingRepository = sequelize.getRepository<C2CShimingModel>(C2CShimingModel);
+export const priceHistoryRepository = sequelize.getRepository<PriceHistoryModel>(PriceHistoryModel);

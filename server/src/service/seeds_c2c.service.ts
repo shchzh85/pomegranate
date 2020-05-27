@@ -7,6 +7,7 @@ import { ErrCode } from '@common/enums';
 import { md5 } from '@common/utils';
 import { sequelize } from '@common/dbs';
 import { c2cShimingStore } from '@store/c2c_shiming.store';
+import { priceHistoryStore } from '@store/price_history.store';
 
 class SeedsC2CService extends BaseService {
 
@@ -387,7 +388,10 @@ class SeedsC2CService extends BaseService {
   }
 
   public async getSeedPriceLine(uid: string, params: any) {
-    // TODO
+    const history = await priceHistoryStore.last(6);
+    const all_buy = await dealStore.sumInit();
+
+    return { history, all_buy };
   }
 }
 
