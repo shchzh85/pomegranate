@@ -16,7 +16,7 @@ class WalletStore extends BaseStore {
         return walletRepository.findOne({ where: { uid, coinid } });
     }
 
-    public async pay(uid: string, coinid: number, count: number, transaction?: Transaction) {
+    public async pay(uid: string | number, coinid: number, count: number, transaction?: Transaction) {
         if (count <= 0)
             throw new Exception(ErrCode.SERVER_ERROR, '扣除余额不大于0');
 
@@ -24,6 +24,20 @@ class WalletStore extends BaseStore {
             num: Sequelize.literal('num-' + count)
         }, {
             where: { uid, coinid, num: { [Op.gte]: count } },
+            transaction
+        });
+
+        return affectedCount === 1;
+    }
+
+    public async accept(uid: string | number, coinid: number, count: number, transaction?: Transaction) {
+        if (count <= 0)
+            throw new Exception(ErrCode.SERVER_ERROR, '增加余额不大于0');
+
+        const [ affectedCount ] = await walletRepository.update({
+            num: Sequelize.literal('num+' + count)
+        }, {
+            where: { uid, coinid },
             transaction
         });
 

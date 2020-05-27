@@ -1,5 +1,4 @@
 
-
 import BaseService from './base.service';
 import { configStore, userStore, c2cOrderStore, OrderStatus, DealStatus, dealStore, walletStore } from '@store/index';
 import { Exception } from '@common/exceptions';
@@ -98,7 +97,7 @@ class SeedsC2CService extends BaseService {
       if (!inc)
         throw new Exception(ErrCode.INVALID_OPERATION, '卖出次数达到上限');
 
-      const now = new Date().getTime();
+      const now = Date.now();
       // 2. 写入order
       await c2cOrderStore.create({
         uid,
@@ -110,7 +109,7 @@ class SeedsC2CService extends BaseService {
         num: order.num,
         price: order.price,
         fee: user.fee,
-        status: 7,
+        status: OrderStatus.REVIEW,
         dtime: now,
         paytype: order.paytype,
         cid: 1
@@ -169,8 +168,106 @@ class SeedsC2CService extends BaseService {
   }
 
   public async c2cConfirm(uid: string, params: any) {
+    const user = await userStore.findById(uid);
+    const { oid, dpassword } = params;
+    if (user.ustatus === 1)
+      throw new Exception(ErrCode.USER_LOCKED, '用户已冻结');
+    if (user.dpassword !== md5(dpassword))
+      throw new Exception(ErrCode.BAD_PARAMS, '交易密码错误');
 
+    const order = await c2cOrderStore.findOne({
+      id: oid, status: OrderStatus.PAID, uid
+    });
+    if (!order)
+      throw new Exception(ErrCode.ORDER_NOT_FOUND, '订单不存在或状态变化');
+
+    let transaction;
+    try {
+      transaction = await sequelize.transaction();
+      const up = await c2cOrderStore.confirm(oid, uid, transaction);
+      if (!up)
+        throw new Exception(ErrCode.INVALID_OPERATION, '订单更新失败');
+
+      const accepted = await walletStore.accept(order.toid, order.cid, order.num, transaction);
+      if (!accepted)
+        throw new Exception(ErrCode.SERVER_ERROR, '收款失败');
+
+      // TODO: coin log
+
+      await transaction.commit();
+    } catch (e) {
+      await transaction?.rollback();
+      throw e;
+    }
   }
+
+  public async c2cRevoke(uid: string, params: any) {
+    const user = await userStore.findById(uid);
+    const { oid } = params;
+    if (user.weifukuan_num >= 3)
+      throw new Exception(ErrCode.INVALID_OPERATION, '今日撤单次数已达上限');
+
+    const order = await c2cOrderStore.findOne({
+      id: oid, status: OrderStatus.MATCH, uid
+    });
+    if (!order)
+      throw new Exception(ErrCode.ORDER_NOT_FOUND, '订单不存在或状态变化');
+
+    let transaction;
+    try {
+      transaction = await sequelize.transaction();
+      const revoked = await c2cOrderStore.revoke(oid, transaction);
+      if (!revoked)
+        throw new Exception(ErrCode.ORDER_NOT_FOUND, '订单撤销失败');
+
+      const accepted = await walletStore.accept(order.uid, order.cid, order.num * (1 + order.fee), transaction);
+      if (!accepted)
+        throw new Exception(ErrCode.SERVER_ERROR, '退款失败');
+
+      const add = await userStore.addNotPayTimes(order.toid, transaction);
+      if (!add)
+        throw new Exception(ErrCode.SERVER_ERROR, '增加未付款次数失败');
+
+      // TODO: coin log
+
+      await transaction.commit();
+    } catch (e) {
+      await transaction?.rollback();
+      throw e;
+    }
+  }
+
+  public async c2cComplaint(uid: string, params: any) {
+    const user = await userStore.findById(uid);
+    const { oid } = params;
+    if (user.ustatus === 1)
+      throw new Exception(ErrCode.USER_LOCKED, '用户已冻结');
+
+    const order = await c2cOrderStore.find({
+      id: oid, status: [ OrderStatus.MATCH, OrderStatus.PAID ], uid
+    });
+    if (!order)
+      throw new Exception(ErrCode.ORDER_NOT_FOUND, '订单不存在或状态变化');
+
+    let transaction;
+    try {
+      transaction = await sequelize.trasaction();
+      const up = await c2cOrderStore.complaint(oid, uid, transaction);
+      if (!up)
+        throw new Exception(ErrCode.ORDER_NOT_FOUND, '订单投诉失败');
+  
+      const freezed = await userStore.freeze([ order.uid, order.toid ], uid + '投诉', transaction)
+      if (!freezed)
+        throw new Exception(ErrCode.USER_LOCK_FAILED, '冻结用户失败');
+
+      await transaction.commit();
+    } catch (e) {
+      await transaction?.rollback();
+      throw e;
+    }
+  }
+
+  
 }
 
 export const seedC2CService = new SeedsC2CService();

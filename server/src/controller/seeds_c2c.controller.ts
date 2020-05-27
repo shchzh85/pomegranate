@@ -44,12 +44,12 @@ class SeedsC2CController extends BaseController {
     return seedC2CService.c2cConfirm(ctx.uid, ctx.params);
   }
 
-  public async c2ctousu(ctx: Context) {
-      
+  public async c2cComplaint(ctx: Context) {
+    return seedC2CService.c2cComplaint(ctx.uid, ctx.params);
   }
 
-  public async c2cchexiao(ctx: Context) {
-      
+  public async c2cRevoke(ctx: Context) {
+    return seedC2CService.c2cRevoke(ctx.uid, ctx.params);
   }
 
   public async getSeedPriceHis(ctx: Context) {

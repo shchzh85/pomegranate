@@ -114,14 +114,14 @@ const routes: Route[] = [
     path: '/seedc2ctousu',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.c2ctousu
+    action: seedsC2CController.c2Complaint
   },
   {
     name: '匹配后撤销',
     path: '/seedc2cchexiao',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.c2cchexiao
+    action: seedsC2CController.c2cRevoke
   },
   {
     name: '价格历史',

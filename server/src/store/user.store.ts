@@ -193,6 +193,28 @@ class UserStore extends BaseStore {
 
     return affectedCount === 1;
   }
+
+  public async addNotPayTimes(uid: string | number, transaction?: Transaction) {
+    const [ affectedCount ] = await userRepository.update({
+      weifukuan_num: Sequelize.literal('weifukuan_num+1')
+    },{
+      where: { id: uid },
+      transaction
+    });
+
+    return affectedCount === 1;
+  }
+
+  public async freeze(uids: number[], reason: string, transaction?: Transaction) {
+    const [ affectedCount ] = await userRepository.update({
+      ustatus: 1, reason
+    }, {
+      where: { id: uids },
+      transaction
+    });
+
+    return affectedCount === _.size(uids);
+  }
 }
 
 export const userStore = new UserStore();
