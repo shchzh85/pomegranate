@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import BaseService from './base.service';
-import { userStore, RegisterParams, redisStore, userSessionStore } from '@store/index';
+import { userStore, RegisterParams, redisStore, userSessionStore, configStore } from '@store/index';
 
 const PREFIX = 'cy:session:';
 const EXPIRE_SECONDS = 60 * 60 * 24;
@@ -38,10 +38,7 @@ class UserService extends BaseService {
     return userStore.create(params);
   }
 
-  public async login(params: {
-    username: string,
-    password: string
-  }) {
+  public async login(params: any) {
     /**
  * 接受参数
  * {username,password,yzm,version}
@@ -73,10 +70,21 @@ class UserService extends BaseService {
  *    返回 {message:登陆成功,allConfig:config,message:message,uilang:zh,token:token,code:S0001}
  * }
  */
-    const { username, password } = params;
+    const { version, username, password, yzm } = params;
+
+    const webStatus = configStore.getNumber('web_status');
+    if (webStatus == 0)
+      throw new Exception(SERVER_ERROR, '服务器维护中');
+
+    const ver = configStore.get('version');
+    if (version != ver)
+      throw new Exception(SERVER_ERROR, '版本已经更新,请手动下载最新版本！');
+
+    // TODO: 验证码匹配
+
     const user = await userStore.login(username, password);
 
-    // TODO
+    
 
 
 

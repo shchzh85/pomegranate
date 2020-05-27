@@ -38,21 +38,28 @@ class UserStore extends BaseStore {
 
     do {
       const code = _.random(10000000, 99999999);
+      const now = Math.floor(Date.now() / 1000);
       let transaction;
       try {
         transaction = await sequelize.transaction();
         const u = await userRepository.create({
           username,
-          password: md5(password),
-          dpassword: md5(dpassword),
+          password: md5(password + now),
+          dpassword: md5(dpassword + now),
           invitecode: code,
-          pid: parent.id, tops: parent.tops + ',' + parent.id
+          is_new: 1,
+          uilang: 'zh',
+          utime: now,
+          lastlog: now,
+          today_in_own: 0,
+          pid: parent.id,
+          tops: parent.tops + ',' + parent.id
         }, { transaction });
 
         const uid = u.id;
         const up = await userRepository.update({
           group_member_num: Sequelize.literal('group_member_num+1')
-        }, { where: { id: { [Op.in]: ids } }, transaction });
+        }, { where: { id: ids }, transaction });
 
         const ws = wallets.map(v => {
           return {
@@ -89,9 +96,17 @@ class UserStore extends BaseStore {
 
     if (!user)
       throw new Exception(ErrCode.USERNAME_NOT_FOUND, '账号不存在');
-
-    if (md5(password) !== user.password)
+    if (md5(password + user.utime) !== user.password)
       throw new Exception(ErrCode.INVALID_PASSWORD, '密码错误');
+    if (user.ustatus == 1)
+      throw new Exception(ErrCode.USER_LOCKED, '用户被冻结');
+
+    const now = Math.floor(Date.now() / 1000);
+    await userRepository.update({
+      lastlog: now
+    }, {
+      where: { id: user.id }
+    })
 
     return user;
   }

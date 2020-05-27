@@ -8,344 +8,242 @@ import {
 
 @Table({
     tableName: 'tpz_admin_user',
-
+    indexes: [
+        { name: 'username', fields: [ 'username' ], unique: true },
+        { name: 'invitecode', fields: [ 'invitecode' ], unique: true },
+        { name: 'utime', fields: [ 'utime' ] },
+        { name: 'pid', fields: [ 'pid' ] }
+    ]
 })
 export class UserModel extends Model<UserModel> {
 
-    // username
     @Column({
-        field: 'username',
-        type: DataType.STRING(255),
         allowNull: false,
-        comment: '用户名',
-        unique: true
+        comment: '用户名'
     })
     public username!: string;
-    // password
+
     @Column({
-        field: 'password',
-        type: DataType.STRING(255),
         allowNull: false,
-        comment: '用户密码'
+        comment: '密码'
     })
     public password!: string;
-    // password
+
     @Column({
-        field: 'dpassword',
-        type: DataType.STRING(255),
         allowNull: false,
-        comment: '用户密码'
+        comment: '交易密码'
     })
     public dpassword!: string;
-    // ustatus
-    @Column({
-        field: 'ustatus',
-        type: DataType.INTEGER,
-        allowNull: false,
-        defaultValue: 0
 
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
+        comment: '注册时间'
+    })
+    public utime!: number;
+
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
+        comment: '0正常状态，1冻结状态'
     })
     public ustatus!: number;
-    // lastlog
+
     @Column({
-        field: 'lastlog',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '最后登录时间'
     })
     public lastlog!: number;
-    // wallet
+
     @Column({
-        field: 'wallet',
-        type: DataType.STRING(255),
         allowNull: false,
-        defaultValue: 0
+        defaultValue: '',
+        comment: '钱包地址'
     })
     public wallet!: string;
-    // pid
+
     @Column({
-        field: 'pid',
-        type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0,
+        comment: '上级'
     })
     public pid!: number;
-    // tops
+
     @Column({
-        field: 'tops',
-        type: DataType.STRING(255),
-        allowNull: false
+        type: DataType.TEXT,
+        comment: '上级们'
     })
     public tops!: string;
-    // userlevel
+
     @Column({
-        field: 'userlevel',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '个人等级'
     })
     public userlevel!: number;
-    // invitecode
-    @Column({
-        field: 'invitecode',
-        type: DataType.STRING(255),
-        allowNull: true,
-        unique: true
-    })
+
+    @Column
     public invitecode!: string;
-    // imgurl
+
     @Column({
-        field: 'imgurl',
-        type: DataType.STRING(255),
-        allowNull: true
+        comment: '头像ULR'
     })
     public imgurl!: string;
 
-    // nickname
-    @Column({
-        field: 'nickname',
-        type: DataType.STRING(255),
-        allowNull: false,
-        defaultValue: 0
-    })
+    @Column
     public nickname!: string;
 
-    // utel
     @Column({
-        field: 'utel',
-        type: DataType.STRING(255),
-        allowNull: true,
+        comment: 'Phone'
     })
     public utel!: string;
 
-    // token
     @Column({
-        field: 'token',
-        type: DataType.STRING(255),
-        allowNull: true
-    })
-    public token!: string;
-
-    // lasttime
-    @Column({
-        field: 'lasttime',
-        type: DataType.INTEGER,
-        allowNull: true
-    })
-    public lasttime!: number;
-
-    // uilang
-    @Column({
-        field: 'uilang',
-        type: DataType.STRING(255),
         allowNull: false,
         defaultValue: 'zh'
     })
     public uilang!: string;
 
-    // reason
     @Column({
-        field: 'reason',
-        type: DataType.STRING(255),
-        allowNull: true
+        allowNull: false,
+        defaultValue: ''
     })
     public reason!: string;
 
-    // zfb
-    @Column({
-        field: 'zfb',
-        type: DataType.STRING(255),
-        allowNull: true
-    })
+    @Column
     public zfb!: string;
 
-    // mz
-    @Column({
-        field: 'mz',
-        type: DataType.STRING(255),
-        allowNull: true
-    })
+    @Column
     public mz!: string;
 
-    // bankname
-    @Column({
-        field: 'bankname',
-        type: DataType.STRING(255),
-        allowNull: true
-    })
+    @Column
     public bankname!: string;
 
-    // zhihang
-    @Column({
-        field: 'zhihang',
-        type: DataType.STRING(255),
-        allowNull: true
-    })
+    @Column
     public zhihang!: string;
 
-    // cardno
-    @Column({
-        field: 'cardno',
-        type: DataType.STRING(255),
-        allowNull: true,
-        unique: true
-    })
+    @Column
     public cardno!: string;
 
-    // shiming
     @Column({
-        field: 'shiming',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '是否实名0未实名  1审核中 2已实名 4审核失败'
     })
     public shiming!: number;
 
-    // is_error
     @Column({
-        field: 'is_error',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '是否异常'
     })
     public is_error!: number;
 
-    // is_shifang
     @Column({
-        field: 'is_shifang',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '是否释放'
     })
     public is_shifang!: number;
 
-    // member_flg
     @Column({
-        field: 'member_flg',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '是否是有效会员1:是 0:不是'
     })
     public member_flg!: number;
 
-    // zhitui_num
     @Column({
-        field: 'zhitui_num',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '直推人数'
     })
     public zhitui_num!: number;
 
-    // group_member_num
     @Column({
-        field: 'group_member_num',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '团队有效人数'
     })
     public group_member_num!: number;
 
-    // weifukuan_num
     @Column({
-        field: 'weifukuan_num',
-        type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 0
     })
     public weifukuan_num!: number;
 
-    // sunshine
     @Column({
-        field: 'sunshine',
         type: DataType.DECIMAL(20, 2),
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '阳光'
     })
     public sunshine!: number;
 
-    // sunshine_1
     @Column({
-        field: 'sunshine_1',
         type: DataType.DECIMAL(20, 2),
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '自己的阳光值'
     })
     public sunshine_1!: number;
 
-    // today_in
     @Column({
-        field: 'today_in',
-        type: DataType.DECIMAL(65, 4),
+        type: DataType.DECIMAL(20, 2),
         allowNull: false,
         defaultValue: 0
     })
     public today_in!: number;
 
-
-    // c2c_flg
     @Column({
-        field: 'c2c_flg',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '免手续费标记'
     })
     public c2c_flg!: number;
 
-
-    // fee
     @Column({
-        field: 'fee',
-        type: DataType.INTEGER,
+        type: DataType.DECIMAL(20, 2),
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0.5,
+        comment: '手续费'
     })
     public fee!: number;
 
-    // shiming_time
     @Column({
         field: 'shiming_time',
-        type: DataType.INTEGER,
-        allowNull: true
+        allowNull: false,
+        defaultValue: 0,
+        comment: '实名时间'
     })
     public shiming_time!: number;
 
-    // nlevel
     @Column({
-        field: 'nlevel',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '业务等级'
     })
     public nlevel!: number;
 
-    // today_in_own
     @Column({
-        field: 'today_in_own',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: '今日任务收益'
     })
     public today_in_own!: number;
 
-    // is_new
     @Column({
-        field: 'is_new',
-        type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 1
+        defaultValue: 0,
+        comment: '是否是新会员'
     })
     public is_new!: number;
 
-    // sell_times
     @Column({
-        field: 'sell_times',
-        type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 0
     })
     public sell_times!: number;
-
-
-
 }
-
