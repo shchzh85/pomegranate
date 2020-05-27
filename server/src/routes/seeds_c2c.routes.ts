@@ -114,7 +114,7 @@ const routes: Route[] = [
     path: '/seedc2ctousu',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.c2Complaint
+    action: seedsC2CController.c2cComplaint
   },
   {
     name: '匹配后撤销',

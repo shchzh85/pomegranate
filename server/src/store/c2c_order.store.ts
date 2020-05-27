@@ -115,7 +115,7 @@ class C2COrderStore extends BaseStore {
   }
 
   public listUserOrders(uid: string, offset: number, limit: number) {
-    return c2cOrderRepository.findAndCount({
+    return c2cOrderRepository.findAndCountAll({
       where: {
         [Op.or]: [ { uid }, { toid: uid } ],
         status: { [Op.gt]: 0 }

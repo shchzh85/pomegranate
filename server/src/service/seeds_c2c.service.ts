@@ -12,6 +12,9 @@ class SeedsC2CService extends BaseService {
 
   public async c2cbuy(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    if (!user)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     const buyMax = await configStore.getNumber('buyMax', 20000);
     const buyMin = await configStore.getNumber('buyMin', 5);
     const { num, dpassword } = params;
@@ -59,6 +62,9 @@ class SeedsC2CService extends BaseService {
 
   public async c2cSellit(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    if (!user)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     const { oid, dpassword } = params;
     if (user.dpassword !== md5(dpassword))
       throw new Exception(ErrCode.BAD_PARAMS, '交易密码错误');
@@ -133,6 +139,9 @@ class SeedsC2CService extends BaseService {
 
   public async cxdd(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    if (!user)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     const { oid } = params;
     if (user.ustatus === 1)
       throw new Exception(ErrCode.USER_LOCKED, '用户已冻结');
@@ -140,7 +149,7 @@ class SeedsC2CService extends BaseService {
     const order = await dealStore.findActiveOrderById(oid);
     if (!order)
       throw new Exception(ErrCode.ORDER_NOT_FOUND, '订单不存在');
-    if (order.uid != uid)
+    if (order.uid != Number(uid))
       throw new Exception(ErrCode.INVALID_OPERATION, '不是你的订单');
     if (order.paytype == 'sell')
       throw new Exception(ErrCode.INVALID_OPERATION, '卖单无法撤销!');
@@ -152,6 +161,9 @@ class SeedsC2CService extends BaseService {
 
   public async c2cPay(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    if (!user)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     const { oid, dpassword, img } = params;
     if (user.dpassword !== md5(dpassword))
       throw new Exception(ErrCode.BAD_PARAMS, '交易密码错误');
@@ -171,6 +183,9 @@ class SeedsC2CService extends BaseService {
 
   public async c2cConfirm(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    if (!user)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     const { oid, dpassword } = params;
     if (user.ustatus === 1)
       throw new Exception(ErrCode.USER_LOCKED, '用户已冻结');
@@ -205,6 +220,9 @@ class SeedsC2CService extends BaseService {
 
   public async c2cRevoke(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    if (!user)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     const { oid } = params;
     if (user.weifukuan_num >= 3)
       throw new Exception(ErrCode.INVALID_OPERATION, '今日撤单次数已达上限');
@@ -241,11 +259,14 @@ class SeedsC2CService extends BaseService {
 
   public async c2cComplaint(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    if (!user)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     const { oid } = params;
     if (user.ustatus === 1)
       throw new Exception(ErrCode.USER_LOCKED, '用户已冻结');
 
-    const order = await c2cOrderStore.find({
+    const order = await c2cOrderStore.findOne({
       id: oid, status: [ OrderStatus.MATCH, OrderStatus.PAID ], uid
     });
     if (!order)
@@ -253,7 +274,7 @@ class SeedsC2CService extends BaseService {
 
     let transaction;
     try {
-      transaction = await sequelize.trasaction();
+      transaction = await sequelize.transaction();
       const up = await c2cOrderStore.complaint(oid, uid, transaction);
       if (!up)
         throw new Exception(ErrCode.ORDER_NOT_FOUND, '订单投诉失败');
@@ -311,6 +332,9 @@ class SeedsC2CService extends BaseService {
 
   public async shiming(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    if (!user)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     const { dpassword, mz, bank, zhihang, cardno, img1, img2 } = params;
     if (user.dpassword !== md5(dpassword))
       throw new Exception(ErrCode.BAD_PARAMS, '交易密码错误');
@@ -338,16 +362,17 @@ class SeedsC2CService extends BaseService {
     const seller = _.find(us, u => u.uid == order.uid);
     const buyer = _.find(us, u => u.uid == order.toid);
 
+    if (!seller || !buyer)
+      throw new Exception(ErrCode.USER_NOT_FOUND, '用户不存在');
+
     return {
       oid,
       amount: order.amount,
-      zfb: seller.zfb,
+      zfb: seller.zfbimg,
       mz: seller.mz,
-      bankname: seller.bankname,
+      bankname: seller.bank,
       zhihang: seller.zhihang,
-      cardno: seller.cardno,
-      sutel: seller.utel,
-      butel: buyer.utel
+      cardno: seller.cardno
     };
   }
 

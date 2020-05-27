@@ -52,7 +52,7 @@ export class DealModel extends Model<DealModel> {
   public sxf!: number;
 
   @Column({
-    type: DataType.TINYINT(2),
+    //type: DataType.TINYINT(2),
     allowNull: false,
     defaultValue: 0
   })

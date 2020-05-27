@@ -37,7 +37,7 @@ class DealStore extends BaseStore {
     if (!_.isNil(uname))
       _.assign(where, { uname });
 
-    return dealRepository.findAndCount({ where, offset, limit, order: [ 'price' ] });
+    return dealRepository.findAndCountAll({ where, offset, limit, order: [ 'price' ] });
   }
 
   public create(params: {

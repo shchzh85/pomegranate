@@ -115,7 +115,7 @@ class UserStore extends BaseStore {
     const [rows] = await userRepository.update({ dpassword }, {
       where: {
         id: uid,
-        ddpassword: md5(dpassword)
+        dpassword: md5(dpassword)
       }
     });
 
@@ -123,7 +123,7 @@ class UserStore extends BaseStore {
   }
 
   public async forgotPassword(uid: string, password: string) {
-
+/*
     var utime = redisStore.get(uid).utime;
     const [rows] = await userRepository.update({ password }, {
       where: {
@@ -137,6 +137,7 @@ class UserStore extends BaseStore {
     }
 
     return rows === 1;
+*/
   }
 
   public async addSunshine(uids: string[], cnt: number, transaction?: Transaction) {
@@ -180,7 +181,7 @@ class UserStore extends BaseStore {
   }
 
   public findAndCount(options?: any) {
-    return userRepository.findAndCount(options);
+    return userRepository.findAndCountAll(options);
   }
 
   public async addSellTimes(uid: string, transaction?: Transaction) {

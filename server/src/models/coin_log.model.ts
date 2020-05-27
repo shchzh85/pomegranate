@@ -62,14 +62,14 @@ export class CoinLogModel extends Model<CoinLogModel> {
   public target!: string;
 
   @Column({
-    type: DataType.TINYINT(2),
+    //type: DataType.TINYINT(2),
     allowNull: false,
     comment: 'coinid'
   })
   public wtype!: number;
 
   @Column({
-    type: DataType.TINYINT(2),
+    //type: DataType.TINYINT(2),
     allowNull: false,
     defaultValue: 1,
     comment: '变动类型(1增加,2减少)'

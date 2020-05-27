@@ -58,7 +58,7 @@ import {
     public amount!: number;
   
     @Column({
-      type: DataType.TINYINT(2),
+      //type: DataType.TINYINT(2),
       allowNull: false,
       defaultValue: 0,
       comment: '1:卖  2:买  3:已匹配  4:交易中 5:已完成  -1:撤单'
@@ -68,7 +68,7 @@ import {
     @Column({
       type: DataType.DECIMAL(20,2),
       allowNull: false,
-      default: 0,
+      defaultValue: 0,
       comment: '手续费，记录的是比例'
     })
     public fee!: number;

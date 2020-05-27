@@ -93,7 +93,7 @@ class RedisStore extends BaseStore {
   }
 
   public async hmset(key: string, args: { [key: string]: string | number }) {
-    return new Promise<string[]>((resolve, rejects) => {
+    return new Promise((resolve, rejects) => {
       redisClient.hmset(key, args, (err, reply) => {
         if (err)
           rejects(err);
