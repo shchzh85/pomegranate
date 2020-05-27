@@ -1,10 +1,12 @@
 
+import * as _ from 'lodash';
 import BaseService from './base.service';
 import { configStore, userStore, c2cOrderStore, OrderStatus, DealStatus, dealStore, walletStore } from '@store/index';
 import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import { md5 } from '@common/utils';
 import { sequelize } from '@common/dbs';
+import { c2cShimingStore } from '@store/c2c_shiming.store';
 
 class SeedsC2CService extends BaseService {
 
@@ -267,7 +269,101 @@ class SeedsC2CService extends BaseService {
     }
   }
 
-  
+  public async getC2CList(uid: string, params: any) {
+    const start = _.defaultTo(params.start, 0);
+    const len = _.defaultTo(params.len, 10);
+    const { listType, search } = params;
+    const data: any = {
+      paytype: listType,
+      offset: start,
+      limit: len
+    }
+
+    if (!_.isEmpty(search))
+      _.assign(data, { uname: search });
+
+    const { rows, count } = await dealStore.list(data);
+    return { max: count, start, len, list: rows };
+  }
+
+  public async getC2COrder(uid: string, params: any) {
+    const { oid } = params;
+    const order: any = await c2cOrderStore.findOne({ id: oid });
+    if (order) {
+      const us = await c2cShimingStore.findAll([ order.uid, order.toid ]);
+      order['seller'] = _.find(us, u => u.uid == order.uid);
+      order['buyer'] = _.find(us, u => u.uid == order.toid);
+    }
+
+    return order;
+  }
+
+  public async getUserC2CList(uid: string, params: any) {
+    const start = _.defaultTo(params.start, 0);
+    const len = _.defaultTo(params.len, 10);
+    const { rows, count } = await c2cOrderStore.listUserOrders(uid, start, len);
+    return {
+      max: count,
+      list: rows,
+      start, len
+    };
+  }
+
+  public async shiming(uid: string, params: any) {
+    const user = await userStore.findById(uid);
+    const { dpassword, mz, bank, zhihang, cardno, img1, img2 } = params;
+    if (user.dpassword !== md5(dpassword))
+      throw new Exception(ErrCode.BAD_PARAMS, '交易密码错误');
+      
+    await c2cShimingStore.create({
+      uid,
+      username: user.username,
+      mz,
+      bank,
+      zhihang,
+      cardno,
+      zfbimg: img1,
+      wximg: img2,
+      smdate: new Date()
+    });
+  }
+
+  public async getC2CUser(uid: string, params: any) {
+    const { oid } = params;
+    const order: any = await c2cOrderStore.findOne({ id: oid });
+    if (!order)
+      return null;
+      
+    const us = await c2cShimingStore.findAll([ order.uid, order.toid ]);
+    const seller = _.find(us, u => u.uid == order.uid);
+    const buyer = _.find(us, u => u.uid == order.toid);
+
+    return {
+      oid,
+      amount: order.amount,
+      zfb: seller.zfb,
+      mz: seller.mz,
+      bankname: seller.bankname,
+      zhihang: seller.zhihang,
+      cardno: seller.cardno,
+      sutel: seller.utel,
+      butel: buyer.utel
+    };
+  }
+
+  public async getSeedPriceHis(uid: string, params: any) {
+    const nowPrice = await configStore.getNumber('c2cPrice');
+    return { nowPrice };
+  }
+
+  public async getShiming(uid: string, params: any) {
+    const shiming = await c2cShimingStore.findByUid(uid);
+    return { shiming };
+  }
+
+  public async getSeedPriceLine(uid: string, params: any) {
+    // TODO
+  }
 }
 
 export const seedC2CService = new SeedsC2CService();

@@ -1,4 +1,5 @@
 
+import * as _ from 'lodash';
 import { Op } from 'sequelize';
 import BaseStore from './base.store';
 import { dealRepository } from '@models/index';
@@ -23,6 +24,20 @@ class DealStore extends BaseStore {
     return dealRepository.findOne({
       where: { id, status: { [Op.lt]: DealStatus.DONE } }
     });
+  }
+
+  public async list(params: {
+    paytype: string,
+    uname?: string,
+    offset: number,
+    limit: number
+  }) {
+    const { paytype, uname, offset, limit } = params;
+    const where: any = { paytype, status: { [Op.lt]: DealStatus.DONE } };
+    if (!_.isNil(uname))
+      _.assign(where, { uname });
+
+    return dealRepository.findAndCount({ where, offset, limit, order: [ 'price' ] });
   }
 
   public create(params: {

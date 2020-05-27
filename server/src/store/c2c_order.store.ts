@@ -1,6 +1,6 @@
 
 import * as _ from 'lodash';
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import BaseStore from './base.store';
 import { c2cOrderRepository } from '@models/index';
 
@@ -25,7 +25,7 @@ class C2COrderStore extends BaseStore {
   public async findOne(params: {
     uid?: string;
     toid?: number | string;
-    status: number;
+    status?: number | number[];
     id?: number;
   }) {
     const { uid, toid, status, id } = params;
@@ -101,13 +101,24 @@ class C2COrderStore extends BaseStore {
 
   public async complaint(id: number, uid: string, transaction?: Transaction) {
     const [ affectedCount ] = await c2cOrderRepository.update({
-      status: OrderStatus.COMPLAINT
+      status: OrderStatus.COMPLAINT, fktime: Date.now()
     }, {
       where: { id, uid, status: [ OrderStatus.MATCH, OrderStatus.PAID ] },
       transaction
     });
 
     return affectedCount === 1;
+  }
+
+  public listUserOrders(uid: string, offset: number, limit: number) {
+    return c2cOrderRepository.findAndCount({
+      where: {
+        [Op.or]: [ { uid }, { toid: uid } ],
+        status: { [Op.gt]: 0 }
+      },
+      offset, limit,
+      order: [ 'dtime', 'DESC' ]
+    });
   }
 }
 
