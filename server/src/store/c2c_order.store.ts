@@ -4,6 +4,8 @@ import { Op, Transaction } from 'sequelize';
 import BaseStore from './base.store';
 import { c2cOrderRepository } from '@models/index';
 
+const dateFormat = require('dateformat');
+
 export enum OrderStatus {
   SELL = 1,
   BUY = 2,
@@ -19,7 +21,9 @@ class C2COrderStore extends BaseStore {
 
   private getOrderId() {
     const now = new Date();
-    return 'GS'/* TODO */;
+    const [ x, n ] = process.hrtime();
+    const m = ('' + n).substr(0, 6);
+    return 'GS' + dateFormat(now, 'yyyymmddHHMMss') + m + _.random(100, 999);
   }
 
   public async findOne(params: {
