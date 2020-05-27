@@ -229,7 +229,7 @@ class SeedsC2CService extends BaseService {
       throw new Exception(ErrCode.INVALID_OPERATION, '今日撤单次数已达上限');
 
     const order = await c2cOrderStore.findOne({
-      id: oid, status: OrderStatus.MATCH, uid
+      id: oid, status: OrderStatus.MATCH, toid: uid
     });
     if (!order)
       throw new Exception(ErrCode.ORDER_NOT_FOUND, '订单不存在或状态变化');
