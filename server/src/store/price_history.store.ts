@@ -1,6 +1,6 @@
 
 import BaseStore from './base.store';
-import { priceHistoryRepository } from '@models/';
+import { priceHistoryRepository } from '@models/index';
 
 class PriceHistoryStore extends BaseStore {
 

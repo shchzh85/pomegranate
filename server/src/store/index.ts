@@ -12,3 +12,4 @@ export * from './config.store';
 export * from './deal.store';
 export * from './c2c_order.store';
 export * from './c2c_shiming.store';
+export * from './price_history.store';
