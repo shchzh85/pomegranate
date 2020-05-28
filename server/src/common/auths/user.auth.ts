@@ -1,6 +1,6 @@
 import { Next, Middleware } from 'koa';
 import * as _ from 'lodash';
-import { ErrCode } from '../enums';
+import { Code } from '../enums';
 
 interface Opts { }
 
@@ -12,7 +12,7 @@ export function userAuth(opts?: Opts): Middleware {
       ctx.status = 401;
       ctx.body = {
         success: false,
-        error: { code: ErrCode.UNAUTHORIZATION, message: 'unauthorization' },
+        error: { code: Code.UNAUTHORIZATION, message: 'unauthorization' },
       };
       return;
     }

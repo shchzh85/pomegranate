@@ -5,7 +5,7 @@ import { Sequelize } from 'sequelize-typescript';
 import BaseStore from './base.store';
 import { userRepository, coinKindRepository, walletRepository } from '@models/index'
 import { Exception } from '@common/exceptions';
-import { ErrCode } from '@common/enums';
+import { Code } from '@common/enums';
 import { sequelize } from '@common/dbs';
 import { md5 } from '@common/utils';
 import { redisStore } from './redis.store';
@@ -31,14 +31,14 @@ class UserStore extends BaseStore {
     const { username, password, dpassword, invitecode } = params;
     const parent = await userRepository.findOne({ where: { invitecode } });
     if (!parent)
-      throw new Exception(ErrCode.INVALID_INVITE_CODE, '邀请码未找到');
+      throw new Exception(Code.INVALID_INVITE_CODE, '邀请码未找到');
 
     const ids = parent.tops.split(',');
     ids.push(parent.id);
 
     const wallets = await coinKindRepository.findAll();
     if (_.isEmpty(wallets))
-      throw new Exception(ErrCode.SERVER_ERROR, '钱包配置未找到');
+      throw new Exception(Code.SERVER_ERROR, '钱包配置未找到');
 
     do {
       const code = _.random(10000000, 99999999);
@@ -83,12 +83,12 @@ class UserStore extends BaseStore {
         await transaction?.rollback();
         if (e instanceof UniqueConstraintError) {
           if (_.get(e.fields, 'username'))
-            throw new Exception(ErrCode.USERNAME_EXIST, '账号已存在');
+            throw new Exception(Code.USERNAME_EXIST, '账号已存在');
           else if (_.get(e.fields, 'invitecode'))
             continue;
         }
 
-        throw new Exception(e.code || ErrCode.SERVER_ERROR, e.code ? e.message : 'server error.');
+        throw new Exception(e.code || Code.SERVER_ERROR, e.code ? e.message : 'server error.');
       }
     } while (true);
   }
@@ -99,11 +99,11 @@ class UserStore extends BaseStore {
     });
 
     if (!user)
-      throw new Exception(ErrCode.USERNAME_NOT_FOUND, '账号不存在');
+      throw new Exception(Code.USERNAME_NOT_FOUND, '账号不存在');
     if (md5(password + user.utime) !== user.password)
-      throw new Exception(ErrCode.INVALID_PASSWORD, '密码错误');
+      throw new Exception(Code.INVALID_PASSWORD, '密码错误');
     if (user.ustatus == 1)
-      throw new Exception(ErrCode.USER_LOCKED, '用户被冻结');
+      throw new Exception(Code.USER_LOCKED, '用户被冻结');
 
     const now = Math.floor(Date.now() / 1000);
     await userRepository.update({
@@ -122,10 +122,10 @@ class UserStore extends BaseStore {
   public async updateLoginPasswd(uid: string, password: string, dpassword: string) {
     const u = await userRepository.findByPk(uid);
     if (!u)
-      throw new Exception(ErrCode.USER_NOT_AUTHORIZED, '用户不存在');
+      throw new Exception(Code.USER_NOT_AUTHORIZED, '用户不存在');
 
     if (md5(dpassword + u.utime) != u.dpassword)
-      throw new Exception(ErrCode.INVALID_PASSWORD, '交易密码错误');
+      throw new Exception(Code.INVALID_PASSWORD, '交易密码错误');
 
     const [ rows ] = await userRepository.update({ password: md5(password + u.utime) }, {
       where: { id: uid }
@@ -147,7 +147,7 @@ class UserStore extends BaseStore {
   public async forgotPassword(username: string, password: string) {
     const u = await userRepository.findOne({ where: { username } });
     if (!u)
-      throw new Exception(ErrCode.USERNAME_NOT_FOUND, '用户不存在');
+      throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
 
     const [ rows ] = await userRepository.update({
       password: md5(password + u.utime)
@@ -161,7 +161,7 @@ class UserStore extends BaseStore {
   public async checkTradePassword(uid: string, password: string) {
     const u = await userRepository.findByPk(uid);
     if (!u)
-      throw new Exception(ErrCode.USERNAME_NOT_FOUND, '用户不存在');
+      throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
   
     return md5(password + u.utime) == u.dpassword;
   }

@@ -1,6 +1,6 @@
 import { Next } from 'koa';
 import Joi from '@hapi/joi';
-import { ErrCode } from '@common/enums';
+import { Code } from '@common/enums';
 
 interface Opts {
   schema?: Joi.ObjectSchema<any>;
@@ -34,7 +34,7 @@ export function paramValidate(opts: Opts) {
         ctx.status = 400;
         ctx.body = {
           success: false,
-          error: { code: ErrCode.BAD_PARAMS, message: error.message },
+          error: { code: Code.BAD_PARAMS, message: error.message },
         };
         return;
       }

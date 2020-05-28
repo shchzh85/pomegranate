@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
 import { Exception } from '@common/exceptions';
-import { ErrCode } from '@common/enums';
+import { Code } from '@common/enums';
 import BaseService from './base.service';
 import { userStore, RegisterParams, redisStore, userSessionStore, configStore } from '@store/index';
 import { sendSms } from '@common/utils';
@@ -44,15 +44,15 @@ class UserService extends BaseService {
 
     const webStatus = await configStore.getNumber('web_status');
     if (webStatus == 0)
-      throw new Exception(ErrCode.SERVER_ERROR, '服务器维护中');
+      throw new Exception(Code.SERVER_ERROR, '服务器维护中');
 
     const ver = configStore.get('version');
     if (version != ver)
-      throw new Exception(ErrCode.SERVER_ERROR, '版本已经更新,请手动下载最新版本！');
+      throw new Exception(Code.SERVER_ERROR, '版本已经更新,请手动下载最新版本！');
 
     const check = await this.checkRegisterSMS(username, yzm);
     if (!check)
-      throw new Exception(ErrCode.INVALID_SMS_CODE, '验证码错误');
+      throw new Exception(Code.INVALID_SMS_CODE, '验证码错误');
 
     const user = await userStore.login(username, password);
 
@@ -76,11 +76,11 @@ class UserService extends BaseService {
     const { dpassword, yzm } = params;
     const u = await userStore.findById(uid);
     if (!u)
-      throw new Exception(ErrCode.USER_NOT_AUTHORIZED, '用户不存在');
+      throw new Exception(Code.USER_NOT_AUTHORIZED, '用户不存在');
 
     const checked = await this.checkRegisterSMS(u.username, yzm);
     if (!checked)
-      throw new Exception(ErrCode.INVALID_SMS_CODE, '验证码错误');
+      throw new Exception(Code.INVALID_SMS_CODE, '验证码错误');
 
     await userStore.updateTradePasswd(uid, dpassword, u.utime);
   }
@@ -89,7 +89,7 @@ class UserService extends BaseService {
     const { username, password, scode } = params;
     const checked = await this.checkRegisterSMS(username, scode);
     if (!checked)
-      throw new Exception(ErrCode.INVALID_SMS_CODE, '验证码错误');
+      throw new Exception(Code.INVALID_SMS_CODE, '验证码错误');
 
     await userStore.forgotPassword(username, password);
   }
@@ -110,24 +110,24 @@ class UserService extends BaseService {
 
     const message = await configStore.getNumber('message', 0);
     if (message == 0)
-      throw new Exception(ErrCode.SERVER_ERROR, '信息开关关闭');
+      throw new Exception(Code.SERVER_ERROR, '信息开关关闭');
 
     if (type == 'forgot') {
       const u = await userStore.findByUsername(phone);
       if (!u)
-        throw new Exception(ErrCode.USERNAME_NOT_FOUND, '用户名不存在');
+        throw new Exception(Code.USERNAME_NOT_FOUND, '用户名不存在');
     } else if (type == 'register') {
       const u = await userStore.findByUsername(phone);
       if (u)
-        throw new Exception(ErrCode.USERNAME_EXIST, '用户已注册');
+        throw new Exception(Code.USERNAME_EXIST, '用户已注册');
     } else
-      throw new Exception(ErrCode.SERVER_ERROR, 'unknown type');
+      throw new Exception(Code.SERVER_ERROR, 'unknown type');
 
     const valid = await redisStore.exists('sms_out_' + phone);
     if (valid)
-      throw new Exception(ErrCode.SMS_FREQUENTLY, '请1分钟之后再次发送!');
+      throw new Exception(Code.SMS_FREQUENTLY, '请1分钟之后再次发送!');
 
-    const code = _.random(100000, 999999);
+    const code = '' + _.random(100000, 999999);
     await redisStore.setex('sms_out_' + phone, code, 60);
     await redisStore.setex('sms_' + phone, code, 300);
 
@@ -136,8 +136,8 @@ class UserService extends BaseService {
     const pass = await configStore.get('msm_secretkey');
     const ret = await sendSms({ user, pass, phone, content });
     console.log(ret);
-    if (ret != 1)
-      throw new Exception(ErrCode.SERVER_ERROR, '服务器繁忙,请重新发送');
+//    if (ret != 1)
+//      throw new Exception(Code.SERVER_ERROR, '服务器繁忙,请重新发送');
   }
 
   public async checkRegisterSMS(phone: string, code: string) {
@@ -163,7 +163,7 @@ class UserService extends BaseService {
   public async getUser(uid: string) {
     const u = await userStore.findById(uid);
     if (!u)
-      throw new Exception(ErrCode.USER_NOT_AUTHORIZED, '用户不存在');
+      throw new Exception(Code.USER_NOT_AUTHORIZED, '用户不存在');
 
     return {
       ..._.pick(u, ['username','utime','ustatus','lastlog','pid','userlevel','shiming','zhitui_num','group_member_num']),

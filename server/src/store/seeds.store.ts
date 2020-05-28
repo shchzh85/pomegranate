@@ -5,7 +5,7 @@ import { Sequelize } from 'sequelize-typescript';
 import BaseStore from './base.store';
 import { userRepository, coinKindRepository, walletRepository, questsRepository } from '@models/index'
 import { Exception } from '@common/exceptions';
-import { ErrCode } from '@common/enums';
+import { Code } from '@common/enums';
 import { sequelize } from '@common/dbs';
 
 export interface GetFTParams {

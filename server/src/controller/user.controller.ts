@@ -4,7 +4,7 @@ import { Context } from 'koa';
 import BaseController from '@controller/base.controller';
 import { userService } from '@service/index';
 import { Exception } from '@common/exceptions';
-import { ErrCode } from '@common/enums';
+import { Code } from '@common/enums';
 
 class UserController extends BaseController {
 
