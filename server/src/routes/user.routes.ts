@@ -62,7 +62,12 @@ const routes: Route[] = [
         .trim()
         .pattern(fieldReg.password.reg())
         .required()
-        .error(new Error(fieldReg.password.message()))
+        .error(new Error(fieldReg.password.message())),
+      version: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('请输入版本号.'))
     }),
     action: userController.login
   },
