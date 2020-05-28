@@ -5,12 +5,12 @@ import { userController } from '@controller/index';
 import { userAuth } from '@common/auths';
 import fieldReg from '@common/field_reg';
 
-const prefix = '';
+const prefix = '/v1/user/';
 
 const routes: Route[] = [
   {
     name: 'register',
-    path: '/oauth/register',
+    path: '/register',
     method: RequestMethod.POST,
     middlewares: [],
     params: Joi.object({
@@ -41,13 +41,13 @@ const routes: Route[] = [
         .string()
         .pattern(fieldReg.smsCode.reg({ len: 6 }))
         .required()
-        .error(new Error(fieldReg.smsCode.message({ len: 6 }))),      
+        .error(new Error(fieldReg.smsCode.message({ len: 6 })))
     }),
     action: userController.register
   },
   {
     name: 'login',
-    path: '/oauth/login',
+    path: '/login',
     method: RequestMethod.POST,
     middlewares: [],
     params: Joi.object({
@@ -68,14 +68,14 @@ const routes: Route[] = [
   },
   {
     name: 'logout',
-    path: '/oauth/logout',
+    path: '/logout',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: userController.logout
   },
   {
-    name: 'updateLoginPasswd',
-    path: '/oauth/updateLoginPasswd',
+    name: 'setLoginPasswd',
+    path: '/setLoginPasswd',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({
@@ -95,8 +95,8 @@ const routes: Route[] = [
     action: userController.updateLoginPasswd
   },
   {
-    name: 'updateTradePasswd',
-    path: '/oauth/updateTradePasswd',
+    name: 'setTradePasswd',
+    path: '/setTradePasswd',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({
@@ -113,6 +113,71 @@ const routes: Route[] = [
         .error(new Error(fieldReg.smsCode.message({ len: 6 })))
     }),
     action: userController.updateTradePasswd
+  },
+  {
+    name: 'send SMS',
+    path: '/sendSms',
+    method: RequestMethod.POST,
+    params: Joi.object({
+      phone: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.phone.reg())
+        .required()
+        .error(new Error(fieldReg.phone.message())),
+      type: Joi
+        .string()
+        .trim()
+        .pattern(/^forgot$|^register$/)
+        .error(new Error('必须指定短信类型'))
+    }),
+    action: userController.sendSms
+  },
+  {
+    name: 'check username exists',
+    path: '/userExists',
+    method: RequestMethod.POST,
+    params: Joi.object({
+      phone: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.phone.reg())
+        .required()
+        .error(new Error(fieldReg.phone.message()))
+    }),
+    action: userController.userExists
+  },
+  {
+    name: 'reset password',
+    path: '/forgotPassword',
+    method: RequestMethod.POST,
+    params: Joi.object({
+      username: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.phone.reg())
+        .required()
+        .error(new Error(fieldReg.phone.message())),
+      password: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message())),
+      scode: Joi
+        .string()
+        .pattern(fieldReg.smsCode.reg({ len: 6 }))
+        .required()
+        .error(new Error(fieldReg.smsCode.message({ len: 6 })))
+    }),
+    action: userController.resetPassword
+  },
+  {
+    name: 'get user',
+    path: '/getUser',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: userController.getUser
   }
 ];
 

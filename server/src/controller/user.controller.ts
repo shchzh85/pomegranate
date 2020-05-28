@@ -45,6 +45,23 @@ class UserController extends BaseController {
   public updateTradePasswd(ctx: Context) {
     return userService.updateTradePasswd(ctx.uid, ctx.params);
   }
+
+  public sendSms(ctx: Context) {
+    return userService.sendSMS(ctx.params);
+  }
+
+  public userExists(ctx: Context) {
+    const { phone } = ctx.params;
+    return userService.userExists(phone);
+  }
+
+  public resetPassword(ctx: Context) {
+    return userService.forgotPass(ctx.params);
+  }
+
+  public getUser(ctx: Context) {
+    return userService.getUser(ctx.uid);
+  }
 }
 
 export const userController = new UserController();

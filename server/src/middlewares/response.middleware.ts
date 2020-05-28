@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { ErrCode } from '@common/enums';
+import { Code } from '@common/enums';
 import { logger } from '@common/utils';
 
 interface Params {
@@ -10,20 +10,16 @@ export function response({ action }: Params) {
   return async (ctx: any) => {
     try {
       const data = await action(ctx);
-      ctx.body = data ? { success: true, data } : { success: true };
+      ctx.body = data ? { code: Code.OK, data } : { code: Code.OK };
     } catch (e) {
-
-      let eSource = e.source || '';
-      let eMessage = e.message || 'unknow';
-      let eParams = e.params ? JSON.stringify(e.params) : '';
+      const eSource = e.source || '';
+      const eMessage = e.message || 'unknow';
+      const eParams = e.params ? JSON.stringify(e.params) : '';
       logger.error(`${eSource} ${eMessage} ${eParams} ${ctx.path} ${JSON.stringify(ctx.params)} ${ctx.user?.id}`);
 
       ctx.body = {
-        success: false,
-        error: {
-          code: e.code || ErrCode.SERVER_ERROR,
-          message: e.code ? e.message : 'server error.',
-        },
+        code: e.code || Code.SERVER_ERROR,
+        message: e.code ? e.message : 'server error.'
       };
     }
   };

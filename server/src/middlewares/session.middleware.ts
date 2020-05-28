@@ -6,7 +6,6 @@ import { userService } from '@service/index';
 
 const START_SERVER = process.env.START_SERVER || 'user';
 const prefix = START_SERVER.endsWith('_') ? START_SERVER : `${START_SERVER}_`;
-const domain = process.env.DOMAIN || '0xf0.cc';
 
 interface Opts {}
 
@@ -21,8 +20,7 @@ export function session(app: Koa, opts?: Opts) {
     renew: true,
     store: new Store(),
     secure: false,
-    prefix,
-    //domain,
+    prefix
   }, app);
 }
 

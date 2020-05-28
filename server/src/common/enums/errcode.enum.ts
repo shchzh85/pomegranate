@@ -1,4 +1,5 @@
-export enum ErrCode {
+export enum Code {
+  OK = 0,
   BAD_PARAMS = 400,
   UNAUTHORIZATION = 401,
   FORBIDDEN = 403,
@@ -20,5 +21,7 @@ export enum ErrCode {
   ORDER_NOT_FOUND = 1014,
   WALLET_NOT_FOUND = 1015,
   USER_LOCK_FAILED = 1016,
-  USER_NOT_FOUND = 1017
+  USER_NOT_FOUND = 1017,
+  INVALID_SMS_CODE = 1018,
+  SMS_FREQUENTLY = 1019
 };

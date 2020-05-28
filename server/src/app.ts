@@ -1,6 +1,4 @@
 import Koa from 'koa';
-import path from 'path';
-
 import {
   logger,
   cors,

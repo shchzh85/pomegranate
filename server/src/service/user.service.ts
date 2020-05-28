@@ -4,6 +4,7 @@ import { Exception } from '@common/exceptions';
 import { ErrCode } from '@common/enums';
 import BaseService from './base.service';
 import { userStore, RegisterParams, redisStore, userSessionStore, configStore } from '@store/index';
+import { sendSms } from '@common/utils';
 
 const PREFIX = 'cy:session:';
 const EXPIRE_SECONDS = 60 * 60 * 24;
@@ -49,7 +50,9 @@ class UserService extends BaseService {
     if (version != ver)
       throw new Exception(ErrCode.SERVER_ERROR, '版本已经更新,请手动下载最新版本！');
 
-    // TODO: 验证码匹配
+    const check = await this.checkRegisterSMS(username, yzm);
+    if (!check)
+      throw new Exception(ErrCode.INVALID_SMS_CODE, '验证码错误');
 
     const user = await userStore.login(username, password);
 
@@ -64,48 +67,110 @@ class UserService extends BaseService {
 
   }
 
-  public updateLoginPasswd(uid: string, params: any) {
+  public async updateLoginPasswd(uid: string, params: any) {
     const { password, dpassword } = params;
-    return userStore.updateLoginPasswd(uid, password, dpassword);
+    await userStore.updateLoginPasswd(uid, password, dpassword);
   }
 
   public async updateTradePasswd(uid: string, params: any) {
     const { dpassword, yzm } = params;
-    // TODO: check yzm
+    const u = await userStore.findById(uid);
+    if (!u)
+      throw new Exception(ErrCode.USER_NOT_AUTHORIZED, '用户不存在');
 
-    return userStore.updateTradePasswd(uid, dpassword, yzm);
+    const checked = await this.checkRegisterSMS(u.username, yzm);
+    if (!checked)
+      throw new Exception(ErrCode.INVALID_SMS_CODE, '验证码错误');
+
+    await userStore.updateTradePasswd(uid, dpassword, u.utime);
   }
 
-  //找回登陆密码
-  public async forgotPass(username: string, input_zmy: string, password: string) {
+  public async forgotPass(params: any) {
+    const { username, password, scode } = params;
+    const checked = await this.checkRegisterSMS(username, scode);
+    if (!checked)
+      throw new Exception(ErrCode.INVALID_SMS_CODE, '验证码错误');
 
-    /**
-     * {"username":"15172611264","password":"1","yzm":"1234"}
-     * 1.判断找回的账号是否存在.
-     * 2.判断传入的短信验证码是否正确.
-     * 3.如果正确,用新登陆密码替换旧的.
-     * 
-     */
-    const server_yzm = await redisStore.get(username + 'msm');
-    if (input_zmy == server_yzm) {
-      return userStore.forgotPassword(username, password);
-    }else{
-      throw new Exception(ErrCode.INVALID_INVITE_CODE, '短信验证码错误');
-    }
-
+    await userStore.forgotPassword(username, password);
   }
 
-  //返回当前的版本号
   public getVer() {
-    //返回当前版本号 config表里的 version 字段
-    return redisStore.get('app_ver')
+    return redisStore.get('app_ver');
   }
 
-  //返回图形验证码
-  public yanzhengma() {
+  public getCaptcha(username: string) {
+    const key = 'cy:captcha:' + username;
 
   }
 
+  public async sendSMS(params: any) {
+    const { phone, type } = params;
+
+    // TODO: check captcha
+
+    const message = await configStore.getNumber('message', 0);
+    if (message == 0)
+      throw new Exception(ErrCode.SERVER_ERROR, '信息开关关闭');
+
+    if (type == 'forgot') {
+      const u = await userStore.findByUsername(phone);
+      if (!u)
+        throw new Exception(ErrCode.USERNAME_NOT_FOUND, '用户名不存在');
+    } else if (type == 'register') {
+      const u = await userStore.findByUsername(phone);
+      if (u)
+        throw new Exception(ErrCode.USERNAME_EXIST, '用户已注册');
+    } else
+      throw new Exception(ErrCode.SERVER_ERROR, 'unknown type');
+
+    const valid = await redisStore.exists('sms_out_' + phone);
+    if (valid)
+      throw new Exception(ErrCode.SMS_FREQUENTLY, '请1分钟之后再次发送!');
+
+    const code = _.random(100000, 999999);
+    await redisStore.setex('sms_out_' + phone, code, 60);
+    await redisStore.setex('sms_' + phone, code, 300);
+
+    const content = `您的验证码为${code}，在5分钟内有效。`;
+    const user = await configStore.get('msm_appkey');
+    const pass = await configStore.get('msm_secretkey');
+    const ret = await sendSms({ user, pass, phone, content });
+    console.log(ret);
+    if (ret != 1)
+      throw new Exception(ErrCode.SERVER_ERROR, '服务器繁忙,请重新发送');
+  }
+
+  public async checkRegisterSMS(phone: string, code: string) {
+    const msm = await configStore.getNumber('message', 0);
+    if (msm == 0)
+      return true;
+
+    const key = 'sms_' + phone;
+    const scode = await redisStore.get(key);
+    if (_.isEmpty(scode))
+      return false;
+
+    const ret = scode == code;
+    await redisStore.del(key);
+    return ret;
+  }
+
+  public async userExists(phone: string) {
+    const u = await userStore.findByUsername(phone);
+    return !_.isNil(u);
+  }
+
+  public async getUser(uid: string) {
+    const u = await userStore.findById(uid);
+    if (!u)
+      throw new Exception(ErrCode.USER_NOT_AUTHORIZED, '用户不存在');
+
+    return {
+      ..._.pick(u, ['username','utime','ustatus','lastlog','pid','userlevel','shiming','zhitui_num','group_member_num']),
+      sunshine_group: u.sunshine,
+      sunshine: u.sunshine + u.sunshine_1
+    };
+  }
 }
 
 export const userService = new UserService();

@@ -23,6 +23,10 @@ class UserStore extends BaseStore {
     return userRepository.findByPk(Number(uid));
   }
 
+  public findByUsername(username: string) {
+    return userRepository.findOne({ where: { username } });
+  }
+
   public async create(params: RegisterParams) {
     const { username, password, dpassword, invitecode } = params;
     const parent = await userRepository.findOne({ where: { invitecode } });
@@ -130,13 +134,9 @@ class UserStore extends BaseStore {
     return rows === 1;
   }
 
-  public async updateTradePasswd(uid: string, yzm: string, dpassword: string) {
-    const u = await userRepository.findByPk(uid);
-    if (!u)
-      throw new Exception(ErrCode.USER_NOT_AUTHORIZED, '用户不存在');
-
+  public async updateTradePasswd(uid: string, dpassword: string, utime: number) {
     const [ rows ] = await userRepository.update({
-      dpassword: md5(dpassword + u.utime)
+      dpassword: md5(dpassword + utime)
     }, {
       where: { id: uid }
     });
@@ -144,22 +144,26 @@ class UserStore extends BaseStore {
     return rows === 1;
   }
 
-  public async forgotPassword(uid: string, password: string) {
-/*
-    var utime = redisStore.get(uid).utime;
-    const [rows] = await userRepository.update({ password }, {
-      where: {
-        id: uid,
-        password: md5(password + utime)
-      }
+  public async forgotPassword(username: string, password: string) {
+    const u = await userRepository.findOne({ where: { username } });
+    if (!u)
+      throw new Exception(ErrCode.USERNAME_NOT_FOUND, '用户不存在');
+
+    const [ rows ] = await userRepository.update({
+      password: md5(password + u.utime)
+    }, {
+      where: { id: u.id }
     });
 
-    if (rows === 0) {
-      throw new Exception(ErrCode.SERVER_ERROR, '用户不存在');
-    }
-
     return rows === 1;
-*/
+  }
+
+  public async checkTradePassword(uid: string, password: string) {
+    const u = await userRepository.findByPk(uid);
+    if (!u)
+      throw new Exception(ErrCode.USERNAME_NOT_FOUND, '用户不存在');
+  
+    return md5(password + u.utime) == u.dpassword;
   }
 
   public async addSunshine(uids: string[], cnt: number, transaction?: Transaction) {
