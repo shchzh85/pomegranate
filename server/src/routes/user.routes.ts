@@ -37,7 +37,7 @@ const routes: Route[] = [
         .pattern(fieldReg.scode.reg())
         .required()
         .error(new Error(fieldReg.scode.message())),
-      messagecode: Joi
+      scode: Joi
         .string()
         .pattern(fieldReg.smsCode.reg({ len: 6 }))
         .required()

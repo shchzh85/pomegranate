@@ -15,6 +15,7 @@ export interface RegisterParams {
   password: string;
   dpassword: string;
   invitecode: string;
+  scode: string;
 }
 
 class UserStore extends BaseStore {

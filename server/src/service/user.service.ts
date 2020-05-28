@@ -35,8 +35,13 @@ class UserService extends BaseService {
     await userSessionStore.destroy(uid, token);
   }
 
-  public register(params: RegisterParams) {
-    return userStore.create(params);
+  public async register(params: RegisterParams) {
+    const { username, scode } = params;
+    const checked = await this.checkRegisterSMS(username, scode);
+    if (!checked)
+      throw new Exception(Code.INVALID_SMS_CODE, '验证码错误');
+
+    return await userStore.create(params);
   }
 
   public async login(params: any) {
