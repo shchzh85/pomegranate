@@ -37,6 +37,11 @@ class UserService extends BaseService {
 
   public async register(params: RegisterParams) {
     const { username, scode } = params;
+
+    const can = await configStore.getNumber('register', 0);
+    if (can == 0)
+      throw new Exception(Code.REGISTER_CLOSED, '注册关闭');
+
     const checked = await this.checkRegisterSMS(username, scode);
     if (!checked)
       throw new Exception(Code.INVALID_SMS_CODE, '验证码错误');
@@ -51,13 +56,11 @@ class UserService extends BaseService {
     if (webStatus == 0)
       throw new Exception(Code.SERVER_ERROR, '服务器维护中');
 
-    const ver = configStore.get('version');
+    const ver = await configStore.get('version');
     if (version != ver)
       throw new Exception(Code.SERVER_ERROR, '版本已经更新,请手动下载最新版本！');
 
-    const check = await this.checkRegisterSMS(username, yzm);
-    if (!check)
-      throw new Exception(Code.INVALID_SMS_CODE, '验证码错误');
+    // TODO: check captcha
 
     const user = await userStore.login(username, password);
 
