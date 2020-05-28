@@ -139,10 +139,9 @@ class UserService extends BaseService {
     const content = `您的验证码为${code}，在5分钟内有效。`;
     const user = await configStore.get('msm_appkey');
     const pass = await configStore.get('msm_secretkey');
-    const ret = await sendSms({ user, pass, phone, content });
-    console.log(ret);
-//    if (ret != 1)
-//      throw new Exception(Code.SERVER_ERROR, '服务器繁忙,请重新发送');
+    const sent = await sendSms({ user, pass, phone, content });
+    if (!sent)
+      throw new Exception(Code.SERVER_ERROR, '服务器繁忙,请重新发送');
   }
 
   public async checkRegisterSMS(phone: string, code: string) {

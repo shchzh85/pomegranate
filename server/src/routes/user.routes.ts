@@ -5,7 +5,7 @@ import { userController } from '@controller/index';
 import { userAuth } from '@common/auths';
 import fieldReg from '@common/field_reg';
 
-const prefix = '/v1/user/';
+const prefix = '/v1/user';
 
 const routes: Route[] = [
   {
