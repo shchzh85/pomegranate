@@ -12,7 +12,7 @@ import {
     { unique: true, fields: ['username'], name: 'username' }
   ]
 })
-export class C2CShimingModel extends Model<C2CShimingModel> {
+export class C2cShimingModel extends Model<C2cShimingModel> {
 
   @Column({
       allowNull: false

@@ -18,7 +18,7 @@ import {
     { name: 'price', fields: ['price'] }
   ]
 })
-export class C2COrderModel extends Model<C2COrderModel> {
+export class C2cOrderModel extends Model<C2cOrderModel> {
 
   @Column({
     allowNull: false

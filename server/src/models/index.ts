@@ -11,8 +11,8 @@ import { QuestLevelBonusModel } from './quest_level_bonus.model';
 import { CoinLogModel } from './coin_log.model';
 import { QuestRewardModel } from './quest_reward.model';
 import { ConfigModel } from './config.model';
-import { C2COrderModel } from './c2c_order.model';
-import { C2CShimingModel } from './c2c_shiming.model';
+import { C2cOrderModel } from './c2c_order.model';
+import { C2cShimingModel } from './c2c_shiming.model';
 import { DealModel } from './deal.model';
 import { PriceHistoryModel } from './price_history.model';
 
@@ -28,6 +28,6 @@ export const coinLogRepository = sequelize.getRepository<CoinLogModel>(CoinLogMo
 export const questRewardRepository = sequelize.getRepository<QuestRewardModel>(QuestRewardModel);
 export const configRepository = sequelize.getRepository<ConfigModel>(ConfigModel);
 export const dealRepository = sequelize.getRepository<DealModel>(DealModel);
-export const c2cOrderRepository = sequelize.getRepository<C2COrderModel>(C2COrderModel);
-export const c2cShimingRepository = sequelize.getRepository<C2CShimingModel>(C2CShimingModel);
+export const c2cOrderRepository = sequelize.getRepository<C2cOrderModel>(C2cOrderModel);
+export const c2cShimingRepository = sequelize.getRepository<C2cShimingModel>(C2cShimingModel);
 export const priceHistoryRepository = sequelize.getRepository<PriceHistoryModel>(PriceHistoryModel);
