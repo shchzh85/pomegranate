@@ -53,14 +53,14 @@ class Store {
 
 class ExternalKey {
   public get(ctx: Koa.Context) {
-    const auth: string = _.get(ctx.request.header, 'Authorization');
-    if (!_.isEmpty(auth) && _.startsWith(auth, 'Bearer'))
+    const auth = ctx.request.get('Authorization');
+    if (!_.isEmpty(auth) && _.startsWith(auth, 'Bearer '))
       return auth.substr(7);
 
     return '';
   }
 
   public set(ctx: Koa.Context, value: any) {
-    _.set(ctx, 'response.header.Authorization', 'Bearer ' + value);
+    ctx.response.set('Authorization', 'Bearer ' + value);
   }
 }
