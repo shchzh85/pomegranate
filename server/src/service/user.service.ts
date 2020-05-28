@@ -81,12 +81,12 @@ class UserService extends BaseService {
   }
 
   public async updateTradePasswd(uid: string, params: any) {
-    const { dpassword, yzm } = params;
+    const { dpassword, scode } = params;
     const u = await userStore.findById(uid);
     if (!u)
       throw new Exception(Code.USER_NOT_AUTHORIZED, '用户不存在');
 
-    const checked = await this.checkRegisterSMS(u.username, yzm);
+    const checked = await this.checkRegisterSMS(u.username, scode);
     if (!checked)
       throw new Exception(Code.INVALID_SMS_CODE, '验证码错误');
 
