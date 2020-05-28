@@ -19,6 +19,7 @@ export function session(app: Koa, opts?: Opts) {
     rolling: false,
     renew: true,
     store: new Store(),
+    externalKey: new ExternalKey(),
     secure: false,
     prefix
   }, app);
@@ -48,5 +49,18 @@ class Store {
     const { service } = this.getService(key);
     await service.destorySession(key);
   }
+}
 
+class ExternalKey {
+  public get(ctx: Koa.Context) {
+    const auth: string = _.get(ctx.request.header, 'Authorization');
+    if (!_.isEmpty(auth) && _.startsWith(auth, 'Bearer'))
+      return auth.substr(7);
+
+    return '';
+  }
+
+  public set(ctx: Koa.Context, value: any) {
+    _.set(ctx, 'response.header.Authorization', 'Bearer ' + value);
+  }
 }
