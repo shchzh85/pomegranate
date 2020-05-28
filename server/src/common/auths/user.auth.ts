@@ -11,8 +11,8 @@ export function userAuth(opts?: Opts): Middleware {
     if (_.isNil(uid)) {
       ctx.status = 401;
       ctx.body = {
-        success: false,
-        error: { code: Code.UNAUTHORIZATION, message: 'unauthorization' },
+        code: Code.UNAUTHORIZATION,
+        message: 'unauthorization'
       };
       return;
     }

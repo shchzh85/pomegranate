@@ -33,8 +33,8 @@ export function paramValidate(opts: Opts) {
       if (error) {
         ctx.status = 400;
         ctx.body = {
-          success: false,
-          error: { code: Code.BAD_PARAMS, message: error.message },
+          code: Code.BAD_PARAMS,
+          message: error.message
         };
         return;
       }
