@@ -135,15 +135,15 @@ async function work() {
         {
             name: 'android_update',
             value: '1'
-        }
+        },
         {
             name: 'ios_update',
             value: '0'
-        }
+        },
         {
             name: 'package_url',
             value: 'https://'
-        }
+        },
         {
             name: 'hot_update_url',
             value: 'http://120.24.52.2:9103/update/202005280007.wgt'
