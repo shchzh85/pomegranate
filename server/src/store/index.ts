@@ -13,3 +13,6 @@ export * from './deal.store';
 export * from './c2c_order.store';
 export * from './c2c_shiming.store';
 export * from './price_history.store';
+export * from './banner.store';
+export * from './news.store';
+export * from './business_college.store';

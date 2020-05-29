@@ -15,6 +15,10 @@ import { C2cOrderModel } from './c2c_order.model';
 import { C2cShimingModel } from './c2c_shiming.model';
 import { DealModel } from './deal.model';
 import { PriceHistoryModel } from './price_history.model';
+import { BannerModel } from './banner.model';
+import { NewsModel } from './news.model';
+import { BusinessCollegeModel } from './business_college.model';
+import { QrcodeModel }  from './qrcode.model';
 
 export const userRepository = sequelize.getRepository<UserModel>(UserModel);
 export const userSessionRepository = sequelize.getRepository<UserSessionModel>(UserSessionModel);
@@ -31,3 +35,7 @@ export const dealRepository = sequelize.getRepository<DealModel>(DealModel);
 export const c2cOrderRepository = sequelize.getRepository<C2cOrderModel>(C2cOrderModel);
 export const c2cShimingRepository = sequelize.getRepository<C2cShimingModel>(C2cShimingModel);
 export const priceHistoryRepository = sequelize.getRepository<PriceHistoryModel>(PriceHistoryModel);
+export const bannerRepository = sequelize.getRepository<BannerModel>(BannerModel);
+export const newsRepository = sequelize.getRepository<NewsModel>(NewsModel);
+export const businessCollegeRepository = sequelize.getRepository<BusinessCollegeModel>(BusinessCollegeModel);
+export const qrcodeRepository = sequelize.getRepository<QrcodeModel>(QrcodeModel);

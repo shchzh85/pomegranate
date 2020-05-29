@@ -1,7 +1,16 @@
-import { promisify } from 'util';
 
+import * as _ from 'lodash';
+import { promisify } from 'util';
 import BaseStore from '@store/base.store';
 import { redisClient } from '@common/dbs';
+
+export enum RedisKeyType {
+  STRING,
+  HASH,
+  LIST,
+  SET,
+  SORTED_SET
+}
 
 class RedisStore extends BaseStore {
 
@@ -133,6 +142,24 @@ class RedisStore extends BaseStore {
 
   public async zscore(key: string, member: string) {
     return promisify(redisClient.zscore).bind(redisClient)(key, member);
+  }
+
+  public async remembers(key: string, getCB: Function, expire?: number) {
+    const ex = _.defaultTo(expire, 0);
+    let ret = await this.get(key);
+    if (_.isEmpty(ret)) {
+      const data = await getCB();
+      if (!_.isNil(data)) {
+        const t = typeof(data);
+        ret = (t == 'object') ? JSON.stringify(data) : '' + data;
+        if (ex > 0)
+          await this.setex(key, ret, ex);
+        else
+          await this.set(key, ret);
+      }
+    }
+
+    return ret;
   }
 }
 
