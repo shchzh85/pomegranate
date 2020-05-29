@@ -1,12 +1,12 @@
-import Router from 'koa-router';
 
+import Router from 'koa-router';
 import { Route } from '../common/interfaces';
 import userRoutes from './user.routes';
 import { response, paramValidate } from '@middlewares/index';
 import seedsRoutes from './seeds.routes';
+import apiRoutes from './api.routes';
 
-// 这里需要加
-const routes: Route[] = [ ...userRoutes, ...seedsRoutes, ];
+const routes: Route[] = [ ...userRoutes, ...seedsRoutes, ...apiRoutes ];
 
 const router = new Router();
 

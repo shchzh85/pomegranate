@@ -22,7 +22,7 @@ class UserService extends BaseService {
 
   public async getSession(token: string) {
     const uid = await redisStore.get(PREFIX + token);
-    return { uid };
+    return !_.isEmpty(uid) ? { uid } : null;
   }
 
   public async destorySession(token: string) {
