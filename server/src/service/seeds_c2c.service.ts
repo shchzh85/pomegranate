@@ -331,13 +331,13 @@ class SeedsC2CService extends BaseService {
     };
   }
 
-  public async shiming(uid: string, params: any) {
+  public async cetificate(uid: string, params: any) {
     const user = await userStore.findById(uid);
     if (!user)
       throw new Exception(Code.USER_NOT_FOUND, '用户不存在');
 
     const { dpassword, mz, bank, zhihang, cardno, img1, img2 } = params;
-    if (user.dpassword !== md5(dpassword))
+    if (user.dpassword !== md5(dpassword + user.utime))
       throw new Exception(Code.BAD_PARAMS, '交易密码错误');
       
     await c2cShimingStore.create({
@@ -353,7 +353,7 @@ class SeedsC2CService extends BaseService {
     });
   }
 
-  public async getC2CUser(uid: string, params: any) {
+  public async getSeller(uid: string, params: any) {
     const { oid } = params;
     const order: any = await c2cOrderStore.findOne({ orderid: oid });
     if (!order)
@@ -382,9 +382,9 @@ class SeedsC2CService extends BaseService {
     return { nowPrice };
   }
 
-  public async getShiming(uid: string, params: any) {
-    const shiming = await c2cShimingStore.findByUid(uid);
-    return { shiming };
+  public async getCertification(uid: string, params: any) {
+    const certification = await c2cShimingStore.findByUid(uid);
+    return { certification };
   }
 
   public async getSeedPriceLine(uid: string, params: any) {

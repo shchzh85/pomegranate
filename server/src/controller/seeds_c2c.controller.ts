@@ -44,20 +44,20 @@ class SeedsC2CController extends BaseController {
     return seedC2CService.getUserC2CList(ctx.uid, ctx.params);
   }
 
-  public shiming(ctx: Context) {
-    return seedC2CService.shiming(ctx.uid, ctx.params);   
+  public cetificate(ctx: Context) {
+    return seedC2CService.cetificate(ctx.uid, ctx.params);   
   }
 
-  public getC2CUser(ctx: Context) {
-    return seedC2CService.getC2CUser(ctx.uid, ctx.params);
+  public getSeller(ctx: Context) {
+    return seedC2CService.getSeller(ctx.uid, ctx.params);
   }
 
   public getSeedPriceHis(ctx: Context) {
     return seedC2CService.getSeedPriceHis(ctx.uid, ctx.params);
   }
 
-  public getShiming(ctx: Context) {
-    return seedC2CService.getShiming(ctx.uid, ctx.params);
+  public getCertification(ctx: Context) {
+    return seedC2CService.getCertification(ctx.uid, ctx.params);
   }
 
   public getSeedPriceLine(ctx: Context) {

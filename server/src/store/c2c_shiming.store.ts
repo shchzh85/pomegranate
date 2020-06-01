@@ -22,7 +22,7 @@ class C2CShimingStore extends BaseStore {
     wximg: string,
     smdate: Date
   }) {
-    return c2cShimingRepository.create(params);
+    return c2cShimingRepository.upsert(params);
   }
 }
 

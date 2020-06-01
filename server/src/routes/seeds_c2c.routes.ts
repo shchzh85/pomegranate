@@ -131,7 +131,7 @@ const routes: Route[] = [
   },
   {
     name: '当前所有订单',
-    path: '/getC2CList',
+    path: '/list',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({
@@ -153,31 +153,90 @@ const routes: Route[] = [
   },
   {
     name: '当前订单详情',
-    path: '/getC2COrder',
+    path: '/orderDetail',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
+    params: Joi.object({
+      oid: Joi
+        .string()
+        .required()
+        .error(new Error('oid是必传字段.'))
+    }),
     action: seedsC2CController.getC2COrder
   },
   {
     name: '已经匹配的订单',
-    path: '/getC2CUserOrder',
+    path: '/myOrders',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
+    params: Joi.object({
+      start: Joi
+        .number()
+        .min(0),
+      len: Joi
+        .number()
+        .min(1)
+    }),
     action: seedsC2CController.getUserC2CList
   },
   {
     name: '填写收款地址',
-    path: '/shiming',
+    path: '/certificate',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.shiming
+    params: Joi.object({
+      dpassword: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message())),
+      mz: Joi
+        .string()
+        .trim()
+        .required()
+        .min(2)
+        .error(new Error('名字是必传字段.')),
+      bank: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('银行是必传字段.')),
+      zhihang: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('支行是必传字段.')),
+      cardno: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('卡号是必传字段.')),
+      img1: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('支付宝二维码是必传字段.')),
+      img2: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('微信二维码是必传字段.'))
+    }),
+    action: seedsC2CController.cetificate
   },
   {
     name: '获取付款人信息',
-    path: '/getC2CUser',
+    path: '/getSeller',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.getC2CUser
+    params: Joi.object({
+      oid: Joi
+        .string()
+        .required()
+        .error(new Error('oid是必传字段.'))
+    }),
+    action: seedsC2CController.getSeller
   },
   {
     name: '价格历史',
@@ -188,10 +247,10 @@ const routes: Route[] = [
   },
   {
     name: '实名',
-    path: '/getshiming',
+    path: '/getCertification',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.getShiming
+    action: seedsC2CController.getCertification
   },
   {
     name: '实名',
