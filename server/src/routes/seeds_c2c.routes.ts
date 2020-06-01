@@ -54,7 +54,7 @@ const routes: Route[] = [
     middlewares: [ userAuth() ],
     params: Joi.object({
       oid: Joi
-        .number()
+        .string()
         .required()
         .error(new Error('oid是必传字段.'))
     }),
@@ -65,6 +65,23 @@ const routes: Route[] = [
     path: '/pay',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
+    params: Joi.object({
+      oid: Joi
+        .string()
+        .required()
+        .error(new Error('oid是必传字段.')),
+      dpassword: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message())),
+      img: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('img是必传字段.'))
+    }),
     action: seedsC2CController.pay
   },
   {
@@ -72,6 +89,18 @@ const routes: Route[] = [
     path: '/confirm',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
+    params: Joi.object({
+      oid: Joi
+        .string()
+        .required()
+        .error(new Error('oid是必传字段.')),
+      dpassword: Joi
+        .string()
+        .trim()
+        .pattern(fieldReg.password.reg())
+        .required()
+        .error(new Error(fieldReg.password.message()))
+    }),
     action: seedsC2CController.confirm
   },
   {
