@@ -161,6 +161,11 @@ class RedisStore extends BaseStore {
 
     return ret;
   }
+
+  public async remember(key: string, getCB: Function, expire?: number) {
+    const ret = await this.remembers(key, getCB, expire);
+    return JSON.parse(ret);
+  }
 }
 
 export const redisStore = new RedisStore();

@@ -7,8 +7,8 @@ import { qrcodeStore } from '@store/qrcode.store';
 
 class ApiService extends BaseService {
 
-  public banners() {
-    return redisStore.remembers('news_banners', () => bannerStore.list());
+  public async banners() {
+    return redisStore.remember('news_banners', () => bannerStore.list());
   }
 
   public async news(params: any) {
@@ -16,7 +16,7 @@ class ApiService extends BaseService {
     const len = _.defaultTo(params.len, 5);
     const offset = (start - 1) * len;
     const key = 'cy:news:p' + start;
-    const list = await redisStore.remembers(key, async () => {
+    const list = await redisStore.remember(key, async () => {
       const news = await newsStore.list(offset, len);
       news.forEach(v => v.content = _.replace(v.content, /[\n|\r|\r\n|&nbsp;]/g, ''));
       return news;
@@ -28,7 +28,7 @@ class ApiService extends BaseService {
   public async newsDetail(params: any) {
     const { id } = params;
     const key = 'cy:news:' + id;
-    const news = await redisStore.remembers(key, async () => {
+    const news = await redisStore.remember(key, async () => {
       const ret = await newsStore.findById(id);
       if (!ret)
         throw new Exception(Code.SERVER_ERROR, '新闻不存在');
@@ -41,12 +41,12 @@ class ApiService extends BaseService {
 
   public businessCollege() {
     const key = 'cy:business_college';
-    return redisStore.remembers(key, () => businessCollegeStore.list());
+    return redisStore.remember(key, () => businessCollegeStore.list());
   }
 
   public kefuQrcode() {
     const key = 'cy:kefu_qrcode';
-    return redisStore.remembers(key, () => qrcodeStore.findOne());
+    return redisStore.remember(key, () => qrcodeStore.findOne());
   }
 }
 
