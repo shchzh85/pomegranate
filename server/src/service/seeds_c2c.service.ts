@@ -170,7 +170,7 @@ class SeedsC2CService extends BaseService {
       throw new Exception(Code.BAD_PARAMS, '交易密码错误');
 
     const order = await c2cOrderStore.findOne({
-        id: oid,
+        orderid: oid,
         status: OrderStatus.MATCH,
         toid: uid
     });
@@ -194,7 +194,7 @@ class SeedsC2CService extends BaseService {
       throw new Exception(Code.BAD_PARAMS, '交易密码错误');
 
     const order = await c2cOrderStore.findOne({
-      id: oid, status: OrderStatus.PAID, uid
+      orderid: oid, status: OrderStatus.PAID, uid
     });
     if (!order)
       throw new Exception(Code.ORDER_NOT_FOUND, '订单不存在或状态变化');
@@ -229,7 +229,7 @@ class SeedsC2CService extends BaseService {
       throw new Exception(Code.INVALID_OPERATION, '今日撤单次数已达上限');
 
     const order = await c2cOrderStore.findOne({
-      id: oid, status: OrderStatus.MATCH, toid: uid
+      orderid: oid, status: OrderStatus.MATCH, toid: uid
     });
     if (!order)
       throw new Exception(Code.ORDER_NOT_FOUND, '订单不存在或状态变化');
@@ -268,7 +268,7 @@ class SeedsC2CService extends BaseService {
       throw new Exception(Code.USER_LOCKED, '用户已冻结');
 
     const order = await c2cOrderStore.findOne({
-      id: oid, status: [ OrderStatus.MATCH, OrderStatus.PAID ], uid
+      orderid: oid, status: [ OrderStatus.MATCH, OrderStatus.PAID ], uid
     });
     if (!order)
       throw new Exception(Code.ORDER_NOT_FOUND, '订单不存在或状态变化');
@@ -310,7 +310,7 @@ class SeedsC2CService extends BaseService {
 
   public async getC2COrder(uid: string, params: any) {
     const { oid } = params;
-    const order: any = await c2cOrderStore.findOne({ id: oid });
+    const order: any = await c2cOrderStore.findOne({ orderid: oid });
     if (order) {
       const us = await c2cShimingStore.findAll([ order.uid, order.toid ]);
       order['seller'] = _.find(us, u => u.uid == order.uid);
@@ -355,7 +355,7 @@ class SeedsC2CService extends BaseService {
 
   public async getC2CUser(uid: string, params: any) {
     const { oid } = params;
-    const order: any = await c2cOrderStore.findOne({ id: oid });
+    const order: any = await c2cOrderStore.findOne({ orderid: oid });
     if (!order)
       return null;
       

@@ -30,9 +30,9 @@ class C2COrderStore extends BaseStore {
     uid?: string;
     toid?: number | string;
     status?: number | number[];
-    id?: number;
+    orderid?: string;
   }) {
-    const { uid, toid, status, id } = params;
+    const { uid, toid, status, orderid } = params;
     const where: any = {};
     if (!_.isNil(uid))
       _.assign(where, { uid });
@@ -40,8 +40,8 @@ class C2COrderStore extends BaseStore {
       _.assign(where, { toid });
     if (!_.isNil(status))
       _.assign(where, { status });
-    if (!_.isNil(id))
-      _.assign(where, { id });
+    if (!_.isNil(orderid))
+      _.assign(where, { orderid });
 
     return await c2cOrderRepository.findOne({ where });
   }
@@ -70,44 +70,44 @@ class C2COrderStore extends BaseStore {
     return c2cOrderRepository.create(data, { transaction });
   }
 
-  public async pay(id: number, img: string) {
+  public async pay(orderid: string, imgs: string) {
     const [ affectedCount ] = await c2cOrderRepository.update({
-      status: OrderStatus.PAID, img
+      status: OrderStatus.PAID, imgs, fktime: Math.floor(Date.now() / 1000)
     }, {
-      where: { id, status: OrderStatus.MATCH }
+      where: { orderid, status: OrderStatus.MATCH }
     });
 
     return affectedCount === 1;
   }
 
-  public async confirm(id: number, uid: string, transaction?: Transaction) {
-    const now = Date.now();
+  public async confirm(orderid: string, uid: string, transaction?: Transaction) {
+    const now = Math.floor(Date.now() / 1000);
     const [ affectedCount ] = await c2cOrderRepository.update({
       status: OrderStatus.DONE, sktime: now
     }, {
-      where: { id, status: OrderStatus.PAID, uid },
+      where: { orderid, status: OrderStatus.PAID, uid },
       transaction
     });
 
     return affectedCount === 1;
   }
 
-  public async revoke(id: number, transaction?: Transaction) {
+  public async revoke(orderid: number, transaction?: Transaction) {
     const [ affectedCount ] = await c2cOrderRepository.update({
       status: OrderStatus.REVOKED
     }, {
-      where: { id, status: OrderStatus.MATCH },
+      where: { orderid, status: OrderStatus.MATCH },
       transaction
     });
 
     return affectedCount === 1;
   }
 
-  public async complaint(id: number, uid: string, transaction?: Transaction) {
+  public async complaint(orderid: number, uid: string, transaction?: Transaction) {
     const [ affectedCount ] = await c2cOrderRepository.update({
-      status: OrderStatus.COMPLAINT, fktime: Date.now()
+      status: OrderStatus.COMPLAINT, fktime: Math.floor(Date.now() / 1000)
     }, {
-      where: { id, uid, status: [ OrderStatus.MATCH, OrderStatus.PAID ] },
+      where: { orderid, uid, status: [ OrderStatus.MATCH, OrderStatus.PAID ] },
       transaction
     });
 
