@@ -203,7 +203,7 @@ class RedisStore extends BaseStore {
 
   public async spop(key: string) {
     return new Promise((resolve, rejects) => {
-      redisClient.sadd(key, (err, reply) => {
+      redisClient.spop(key, (err, reply) => {
         if (err)
           rejects(err);
         else
