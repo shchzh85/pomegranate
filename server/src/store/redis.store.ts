@@ -190,8 +190,15 @@ class RedisStore extends BaseStore {
     });
   }
 
-  public async srem(key: string, member: string) {
-    return promisify(redisClient.srem).bind(redisClient)(key, member);
+  public async srem(key: string, members: string[]) {
+    return new Promise((resolve, rejects) => {
+      redisClient.srem(key, members, (err, reply) => {
+        if (err)
+          rejects(err);
+        else
+          resolve(reply);
+      });
+    });
   }
 
   public async spop(key: string) {
