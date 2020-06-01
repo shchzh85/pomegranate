@@ -4,7 +4,7 @@ require('module-alias/register');
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 import { sequelize } from '@common/dbs';
-import { userRepository, coinKindRepository, configRepository } from '@models/index';
+import { userRepository, coinKindRepository, configRepository, bannerRepository, newsRepository, businessCollegeRepository, qrcodeRepository } from '@models/index';
 
 async function work() {
     await sequelize.sync({ force: true });
@@ -157,6 +157,54 @@ async function work() {
             value: ''
         }
     ]);
+
+    await bannerRepository.bulkCreate([
+        {
+            title: '1',
+            banner: '1fd6a0e0c15743100a258afdffbca4e9.jpg',
+            ctime: 1590203185,
+            utime: 1590203185
+        },
+        {
+            title: '2',
+            banner: '0c471e7f1c7590cda7e28e84b1eb55db.jpg',
+            ctime: 1590203185,
+            utime: 1590203185
+        }
+    ]);
+
+    await newsRepository.bulkCreate([
+        {
+            title: '111',
+            content: '<p>sfsdfsdfsdfsdfdsfsd</p>',
+            ctime: 1590203185,
+            utime: 1590203185
+        },
+        {
+            title: '333',
+            content: '<p>sfsdfsdfsdfsdfdsfsd</p>',
+            ctime: 1590203185,
+            utime: 1590203185
+        }
+    ]);
+
+    await businessCollegeRepository.bulkCreate([
+        {
+            title: '关于学习内容的通知',
+            description: '今年春天，奶奶家阳台上的花盆里不知怎么的，冒出了两株苦瓜树，我可从来没见过苦瓜树，忽然，一个想法在我脑海中隐隐出现了。为了观察苦瓜树，我每天中午一放了学就去奶奶家认真打量它。',
+            cover: '1fd6a0e0c15743100a258afdffbca4e9.jpg',
+            audio: '3919e0bd3028a1ca6fc732b42eb163db.mp3',
+            ctime: 1590202346,
+            utime: 1590202346
+        }
+    ]);
+
+    await qrcodeRepository.create({
+        qrcode: '1cbdc6c8ac48186486138ad6cfc9a87e.png',
+        email: '24624508091@qq.com',
+        ctime: 1590202346,
+        utime: 1590202346
+    });
 }
 
 work()

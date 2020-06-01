@@ -253,7 +253,7 @@ const routes: Route[] = [
     action: seedsC2CController.getCertification
   },
   {
-    name: '实名',
+    name: '价格线',
     path: '/getPriceLine',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
