@@ -5,8 +5,9 @@ import userRoutes from './user.routes';
 import { response, paramValidate } from '@middlewares/index';
 import seedsRoutes from './seeds.routes';
 import apiRoutes from './api.routes';
+import c2cRoutes from './seeds_c2c.routes';
 
-const routes: Route[] = [ ...userRoutes, ...seedsRoutes, ...apiRoutes ];
+const routes: Route[] = [ ...userRoutes, ...seedsRoutes, ...apiRoutes, ...c2cRoutes ];
 
 const router = new Router();
 
