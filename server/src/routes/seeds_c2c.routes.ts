@@ -5,12 +5,12 @@ import { seedsC2CController } from '@controller/index';
 import { userAuth } from '@common/auths';
 import fieldReg from '@common/field_reg';
 
-const prefix = '';
+const prefix = '/v1/c2c';
 
 const routes: Route[] = [
   {
     name: '挂买',
-    path: '/seedc2cbuy',
+    path: '/buy',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({
@@ -26,11 +26,11 @@ const routes: Route[] = [
         .required()
         .error(new Error(fieldReg.password.message()))     
     }),
-    action: seedsC2CController.c2cbuy
+    action: seedsC2CController.buy
   },
   {
     name: '点击购买',
-    path: '/seedc2cSellit',
+    path: '/sell',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({
@@ -45,11 +45,11 @@ const routes: Route[] = [
         .required()
         .error(new Error(fieldReg.password.message()))
     }),
-    action: seedsC2CController.c2cSellit
+    action: seedsC2CController.sell
   },
   {
     name: '撤销挂单',
-    path: '/seedc2cCxdd',
+    path: '/cancel',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({
@@ -58,7 +58,35 @@ const routes: Route[] = [
         .required()
         .error(new Error('oid是必传字段.'))
     }),
-    action: seedsC2CController.cxdd
+    action: seedsC2CController.cancel
+  },
+  {
+    name: '付款',
+    path: '/pay',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: seedsC2CController.pay
+  },
+  {
+    name: '确认',
+    path: '/confirm',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: seedsC2CController.confirm
+  },
+  {
+    name: '投诉',
+    path: '/complaint',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: seedsC2CController.complaint
+  },
+  {
+    name: '匹配后撤销',
+    path: '/revoke',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: seedsC2CController.revoke
   },
   {
     name: '当前所有订单',
@@ -69,59 +97,31 @@ const routes: Route[] = [
   },
   {
     name: '当前订单详情',
-    path: '/appGetC2COrder',
+    path: '/getC2COrder',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: seedsC2CController.getC2COrder
   },
   {
     name: '已经匹配的订单',
-    path: '/appGetC2CUserOrder',
+    path: '/getC2CUserOrder',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: seedsC2CController.getUserC2CList
   },
   {
     name: '填写收款地址',
-    path: '/seedc2cshiming',
+    path: '/shiming',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: seedsC2CController.shiming
   },
   {
     name: '获取付款人信息',
-    path: '/seedGetC2CUser',
+    path: '/getC2CUser',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: seedsC2CController.getC2CUser
-  },
-  {
-    name: '付款',
-    path: '/seedc2cfukuan',
-    method: RequestMethod.POST,
-    middlewares: [ userAuth() ],
-    action: seedsC2CController.c2cPay
-  },
-  {
-    name: '确认',
-    path: '/seedc2cquren',
-    method: RequestMethod.POST,
-    middlewares: [ userAuth() ],
-    action: seedsC2CController.c2cConfirm
-  },
-  {
-    name: '投诉',
-    path: '/seedc2ctousu',
-    method: RequestMethod.POST,
-    middlewares: [ userAuth() ],
-    action: seedsC2CController.c2cComplaint
-  },
-  {
-    name: '匹配后撤销',
-    path: '/seedc2cchexiao',
-    method: RequestMethod.POST,
-    middlewares: [ userAuth() ],
-    action: seedsC2CController.c2cRevoke
   },
   {
     name: '价格历史',
@@ -132,14 +132,14 @@ const routes: Route[] = [
   },
   {
     name: '实名',
-    path: '/seedc2cgetshiming',
+    path: '/getshiming',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: seedsC2CController.getShiming
   },
   {
     name: '实名',
-    path: '/seedc2cgetPriceLine',
+    path: '/getPriceLine',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: seedsC2CController.getSeedPriceLine

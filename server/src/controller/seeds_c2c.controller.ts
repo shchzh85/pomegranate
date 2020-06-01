@@ -4,16 +4,32 @@ import { seedC2CService } from '@service/index';
 
 class SeedsC2CController extends BaseController {
 
-  public c2cbuy(ctx: Context) {
-    return seedC2CService.c2cbuy(ctx.uid, ctx.params);
+  public buy(ctx: Context) {
+    return seedC2CService.buy(ctx.uid, ctx.params);
   }
 
-  public c2cSellit(ctx: Context) {
-    return seedC2CService.c2cSellit(ctx.uid, ctx.params);
+  public sell(ctx: Context) {
+    return seedC2CService.sell(ctx.uid, ctx.params);
   }
 
-  public cxdd(ctx: Context) {
-    return seedC2CService.cxdd(ctx.uid, ctx.params);
+  public cancel(ctx: Context) {
+    return seedC2CService.cancel(ctx.uid, ctx.params);
+  }
+
+  public pay(ctx: Context) {
+    return seedC2CService.pay(ctx.uid, ctx.params);
+  }
+
+  public confirm(ctx: Context) {
+    return seedC2CService.confirm(ctx.uid, ctx.params);
+  }
+
+  public complaint(ctx: Context) {
+    return seedC2CService.complaint(ctx.uid, ctx.params);
+  }
+
+  public revoke(ctx: Context) {
+    return seedC2CService.revoke(ctx.uid, ctx.params);
   }
 
   public getC2CList(ctx: Context) {
@@ -34,22 +50,6 @@ class SeedsC2CController extends BaseController {
 
   public getC2CUser(ctx: Context) {
     return seedC2CService.getC2CUser(ctx.uid, ctx.params);
-  }
-
-  public c2cPay(ctx: Context) {
-    return seedC2CService.c2cPay(ctx.uid, ctx.params);
-  }
-
-  public c2cConfirm(ctx: Context) {
-    return seedC2CService.c2cConfirm(ctx.uid, ctx.params);
-  }
-
-  public c2cComplaint(ctx: Context) {
-    return seedC2CService.c2cComplaint(ctx.uid, ctx.params);
-  }
-
-  public c2cRevoke(ctx: Context) {
-    return seedC2CService.c2cRevoke(ctx.uid, ctx.params);
   }
 
   public getSeedPriceHis(ctx: Context) {
