@@ -4,7 +4,7 @@ require('module-alias/register');
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 import { sequelize } from '@common/dbs';
-import { userRepository, coinKindRepository, configRepository, bannerRepository, newsRepository, businessCollegeRepository, qrcodeRepository } from '@models/index';
+import { userRepository, coinKindRepository, configRepository, bannerRepository, newsRepository, businessCollegeRepository, qrcodeRepository, questVideoRepository } from '@models/index';
 
 async function work() {
     await sequelize.sync({ force: true });
@@ -207,6 +207,25 @@ async function work() {
         ctime: now,
         utime: now
     });
+
+    await questVideoRepository.bulkCreate([
+        {
+            title: '哈哈哈哈哈哈',
+            uid: 0,
+            url: 'https://ossvdo.reechi.cn/180363224.mp4',
+            date: now,
+            text: '达成',
+            objects: '180363224.mp4'
+        },
+        {
+            title: '测试测试',
+            uid: 0,
+            url: 'https://ossvdo.reechi.cn/180388017.mp4',
+            date: now,
+            text: '怕怕怕怕怕',
+            objects: '180388017.mp4'
+        }
+    ]);
 }
 
 work()
