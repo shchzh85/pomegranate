@@ -63,7 +63,7 @@ class C2COrderStore extends BaseStore {
   }, transaction?: Transaction) {
     const data = {
       ...params,
-      order_id: this.getOrderId(),
+      orderid: this.getOrderId(),
       amount: params.num * params.price
     };
 
