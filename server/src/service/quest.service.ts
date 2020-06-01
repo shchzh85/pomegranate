@@ -281,8 +281,9 @@ class QuestService extends BaseService {
     public async getVideo(uid: string) {
         const key = USER_VIDEO_PREFIX + uid;
         const exists = await redisStore.exists(key);
+        let videoes;
         if (!exists) {
-            const videoes = await questVideoStore.findAll();
+            videoes = await questVideoStore.findAll();
             const vids = videoes.map((v: any) => '' + v.id);
             _.shuffle(vids);
             await redisStore.sadd(key, vids);
@@ -290,7 +291,10 @@ class QuestService extends BaseService {
 
         await redisStore.expire(key, 3600);
         const vid = await redisStore.spop(key);
-        return { vid: Number(vid) || 0 };
+        if (!videoes)
+            videoes = await questVideoStore.findAll();
+
+        return { video: _.find(videoes, v => v.id == vid) };
     }
 
     public async videoCompleted(uid: string, params: any) {
