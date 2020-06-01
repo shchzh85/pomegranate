@@ -121,7 +121,7 @@ class C2COrderStore extends BaseStore {
         status: { [Op.gt]: 0 }
       },
       offset, limit,
-      order: [ 'dtime', 'DESC' ]
+      order: [ ['dtime', 'DESC'] ]
     });
   }
 }

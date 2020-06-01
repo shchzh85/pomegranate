@@ -239,8 +239,8 @@ const routes: Route[] = [
     action: seedsC2CController.getSeller
   },
   {
-    name: '价格历史',
-    path: '/getSeedPriceHis',
+    name: '价格',
+    path: '/price',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: seedsC2CController.getSeedPriceHis

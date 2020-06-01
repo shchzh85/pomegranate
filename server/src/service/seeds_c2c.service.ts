@@ -310,14 +310,15 @@ class SeedsC2CService extends BaseService {
 
   public async getC2COrder(uid: string, params: any) {
     const { oid } = params;
-    const order: any = await c2cOrderStore.findOne({ orderid: oid });
+    let seller, buyer;
+    const order = await c2cOrderStore.findOne({ orderid: oid });
     if (order) {
       const us = await c2cShimingStore.findAll([ order.uid, order.toid ]);
-      order['seller'] = _.find(us, u => u.uid == order.uid);
-      order['buyer'] = _.find(us, u => u.uid == order.toid);
+      seller = _.find(us, u => u.uid == order.uid);
+      buyer = _.find(us, u => u.uid == order.toid);
     }
 
-    return order;
+    return { order, seller, buyer };
   }
 
   public async getUserC2CList(uid: string, params: any) {

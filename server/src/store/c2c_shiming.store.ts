@@ -1,14 +1,15 @@
 import BaseStore from './base.store';
+import { Op } from 'sequelize';
 import { c2cShimingRepository } from '@models/index';
 
 class C2CShimingStore extends BaseStore {
 
-  public findByUid(uid: string) {
+  public findByUid(uid: string | number) {
     return c2cShimingRepository.findOne({ where: { uid } });
   }
 
-  public findAll(uids: number[]) {
-      return c2cShimingRepository.findAll({ where: { uid: uids } });
+  public async findAll(uids: number[]) {
+    return c2cShimingRepository.findAll({ where: { uid: uids } });
   }
 
   public create(params: {
