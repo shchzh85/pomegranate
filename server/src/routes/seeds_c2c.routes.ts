@@ -131,9 +131,24 @@ const routes: Route[] = [
   },
   {
     name: '当前所有订单',
-    path: '/appGetC2CList',
+    path: '/getC2CList',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
+    params: Joi.object({
+      listType: Joi
+        .string()
+        .required()
+        .pattern(/^buy$|^sell$/)
+        .error(new Error('listType是必传字段.')),
+      search: Joi
+        .string(),
+      start: Joi
+        .number()
+        .min(0),
+      len: Joi
+        .number()
+        .min(1)
+    }),
     action: seedsC2CController.getC2CList
   },
   {
