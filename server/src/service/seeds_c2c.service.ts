@@ -42,7 +42,7 @@ class SeedsC2CService extends BaseService {
       throw new Exception(Code.ORDER_BUY_EXISTS, '存在买单,禁止购买');
 
     const price = await configStore.getNumber('c2cPrice', 0.35);
-    const now = Date.now();
+    const now = Math.floor(Date.now() / 1000);
 
     // TODO: orderid should be unique
     const order = await dealStore.create({
@@ -80,7 +80,7 @@ class SeedsC2CService extends BaseService {
     const order = await dealStore.findActiveOrderById(oid);
     if (!order)
       throw new Exception(Code.ORDER_NOT_FOUND, '订单不存在');
-    if (uid == user.id)
+    if (user.id == order.uid)
       throw new Exception(Code.INVALID_OPERATION, '自己不能购买自己的订单');
 
     if (user.c2c_flg == 1)
@@ -107,7 +107,7 @@ class SeedsC2CService extends BaseService {
       if (!inc)
         throw new Exception(Code.INVALID_OPERATION, '卖出次数达到上限');
 
-      const now = Date.now();
+      const now = Math.floor(Date.now() / 1000);
       // 2. 写入order, TODO: orderid should be unique
       await c2cOrderStore.create({
         uid,
@@ -123,10 +123,10 @@ class SeedsC2CService extends BaseService {
         dtime: now,
         paytype: order.paytype,
         cid: 1
-      });
+      }, transaction);
 
       // 3. 更新deal
-      const deal = await dealStore.deal(oid, order.num);
+      const deal = await dealStore.deal(oid, order.num, transaction);
       if (!deal)
         throw new Exception(Code.INVALID_OPERATION, '订单金额不够');
 

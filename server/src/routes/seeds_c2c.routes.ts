@@ -35,7 +35,7 @@ const routes: Route[] = [
     middlewares: [ userAuth() ],
     params: Joi.object({
       oid: Joi
-        .number()
+        .string()
         .required()
         .error(new Error('oid是必传字段.')),
       dpassword: Joi

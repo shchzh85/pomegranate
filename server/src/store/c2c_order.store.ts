@@ -60,14 +60,14 @@ class C2COrderStore extends BaseStore {
     dtime: number,
     paytype: string,
     cid: number
-  }) {
+  }, transaction?: Transaction) {
     const data = {
       ...params,
       order_id: this.getOrderId(),
       amount: params.num * params.price
     };
 
-    return c2cOrderRepository.create(data);
+    return c2cOrderRepository.create(data, { transaction });
   }
 
   public async pay(id: number, img: string) {

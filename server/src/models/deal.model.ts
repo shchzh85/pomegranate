@@ -18,9 +18,7 @@ export class DealModel extends Model<DealModel> {
   @Column
   public uname!: string;
 
-  @Column({
-    allowNull: false
-  })
+  @Column
   public toid!: number;
 
   @Column

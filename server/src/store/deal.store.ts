@@ -1,6 +1,6 @@
 
 import * as _ from 'lodash';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import BaseStore from './base.store';
 import { dealRepository } from '@models/index';
 import { Sequelize } from 'sequelize-typescript';
@@ -20,9 +20,9 @@ class DealStore extends BaseStore {
     });
   }
 
-  public findActiveOrderById(id: number) {
+  public findActiveOrderById(orderid: string) {
     return dealRepository.findOne({
-      where: { id, status: { [Op.lt]: DealStatus.DONE } }
+      where: { orderid, status: { [Op.lt]: DealStatus.DONE } }
     });
   }
 
@@ -52,25 +52,26 @@ class DealStore extends BaseStore {
     cid: number,
     paytype: string,
     orderid: number
-  }) {
+  }, transaction?: Transaction) {
     const data = { ...params, amount: params.num * params.price, all_num: params.num };
-    return dealRepository.create(data);
+    return dealRepository.create(data, { transaction });
   }
 
-  public async deal(id: number, cnt: number) {
+  public async deal(orderid: number, cnt: number, transaction?: Transaction) {
     const [ affectedCount ] = await dealRepository.update({
       num: Sequelize.literal('num-' + cnt)
     }, {
-      where: { id, num: { [Op.gte]: cnt } }
+      where: { orderid, num: { [Op.gte]: cnt } },
+      transaction
     });
 
     return affectedCount === 1;
   }
 
-  public async updateStatus(id: number, status: number) {
+  public async updateStatus(orderid: number, status: number, transaction?: Transaction) {
       const [ affectedCount ] = await dealRepository.update({
           status
-      }, { where: { id } });
+      }, { where: { orderid }, transaction });
 
       return affectedCount === 1;
   }
