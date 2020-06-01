@@ -59,7 +59,8 @@ class DealStore extends BaseStore {
 
   public async deal(orderid: number, cnt: number, transaction?: Transaction) {
     const [ affectedCount ] = await dealRepository.update({
-      num: Sequelize.literal('num-' + cnt)
+      num: Sequelize.literal('num-' + cnt),
+      status: DealStatus.DONE
     }, {
       where: { orderid, num: { [Op.gte]: cnt } },
       transaction
