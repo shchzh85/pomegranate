@@ -24,13 +24,11 @@ const routes: Route[] = [
       start: Joi
         .number()
         .greater(0)
-        .required()
-        .error(new Error('start不能为空')),
+        .error(new Error('start > 0')),
       len: Joi
         .number()
         .greater(0)
-        .required()
-        .error(new Error('len不能为空'))
+        .error(new Error('len > 0'))
     }),
     action: apiController.news
   },
@@ -40,11 +38,11 @@ const routes: Route[] = [
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({
-        id: Joi
-          .number()
-          .min(0)
-          .required()
-          .error(new Error('id不能为空')),
+      id: Joi
+        .number()
+        .min(0)
+        .required()
+        .error(new Error('id不能为空')),
     }),
     action: apiController.newsDetail
   },
@@ -56,8 +54,8 @@ const routes: Route[] = [
     action: apiController.businessCollege
   },
   {
-    name: 'kefuQrcode',
-    path: '/kefuQrcode',
+    name: 'Customer Support Qrcode',
+    path: '/CSQrcode',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: apiController.kefuQrcode
