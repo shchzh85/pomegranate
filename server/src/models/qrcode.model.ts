@@ -25,14 +25,12 @@ export class QrcodeModel extends Model<QrcodeModel> {
   public email!: string;
 
   @Column({
-    allowNull: false,
-    defaultValue: 0
+    allowNull: false
   })
   public ctime!: Date;
 
   @Column({
-    allowNull: false,
-    defaultValue: 0
+    allowNull: false
   })
   public utime!: Date;
 }

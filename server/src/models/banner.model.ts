@@ -25,14 +25,12 @@ export class BannerModel extends Model<BannerModel> {
   public banner!: string;
 
   @Column({
-    allowNull: false,
-    defaultValue: 0
+    allowNull: false
   })
-  public ctime!: number;
+  public ctime!: Date;
 
   @Column({
-    allowNull: false,
-    defaultValue: 0
+    allowNull: false
   })
-  public utime!: number;
+  public utime!: Date;
 }

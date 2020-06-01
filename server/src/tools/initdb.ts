@@ -9,6 +9,8 @@ import { userRepository, coinKindRepository, configRepository, bannerRepository,
 async function work() {
     await sequelize.sync({ force: true });
 
+    const now = new Date();
+
     await userRepository.create({
         username: 'root',
         password: '111111',
@@ -162,14 +164,14 @@ async function work() {
         {
             title: '1',
             banner: '1fd6a0e0c15743100a258afdffbca4e9.jpg',
-            ctime: 1590203185,
-            utime: 1590203185
+            ctime: now,
+            utime: now
         },
         {
             title: '2',
             banner: '0c471e7f1c7590cda7e28e84b1eb55db.jpg',
-            ctime: 1590203185,
-            utime: 1590203185
+            ctime: now,
+            utime: now
         }
     ]);
 
@@ -177,14 +179,14 @@ async function work() {
         {
             title: '111',
             content: '<p>sfsdfsdfsdfsdfdsfsd</p>',
-            ctime: 1590203185,
-            utime: 1590203185
+            ctime: now,
+            utime: now
         },
         {
             title: '333',
             content: '<p>sfsdfsdfsdfsdfdsfsd</p>',
-            ctime: 1590203185,
-            utime: 1590203185
+            ctime: now,
+            utime: now
         }
     ]);
 
@@ -194,16 +196,16 @@ async function work() {
             description: '今年春天，奶奶家阳台上的花盆里不知怎么的，冒出了两株苦瓜树，我可从来没见过苦瓜树，忽然，一个想法在我脑海中隐隐出现了。为了观察苦瓜树，我每天中午一放了学就去奶奶家认真打量它。',
             cover: '1fd6a0e0c15743100a258afdffbca4e9.jpg',
             audio: '3919e0bd3028a1ca6fc732b42eb163db.mp3',
-            ctime: 1590202346,
-            utime: 1590202346
+            ctime: now,
+            utime: now
         }
     ]);
 
     await qrcodeRepository.create({
         qrcode: '1cbdc6c8ac48186486138ad6cfc9a87e.png',
         email: '24624508091@qq.com',
-        ctime: 1590202346,
-        utime: 1590202346
+        ctime: now,
+        utime: now
     });
 }
 
