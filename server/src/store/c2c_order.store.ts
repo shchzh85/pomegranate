@@ -92,7 +92,7 @@ class C2COrderStore extends BaseStore {
     return affectedCount === 1;
   }
 
-  public async revoke(orderid: number, transaction?: Transaction) {
+  public async revoke(orderid: string, transaction?: Transaction) {
     const [ affectedCount ] = await c2cOrderRepository.update({
       status: OrderStatus.REVOKED
     }, {
@@ -103,7 +103,7 @@ class C2COrderStore extends BaseStore {
     return affectedCount === 1;
   }
 
-  public async complaint(orderid: number, uid: string, transaction?: Transaction) {
+  public async complaint(orderid: string, uid: string, transaction?: Transaction) {
     const [ affectedCount ] = await c2cOrderRepository.update({
       status: OrderStatus.COMPLAINT, fktime: Math.floor(Date.now() / 1000)
     }, {

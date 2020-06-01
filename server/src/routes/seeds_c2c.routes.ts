@@ -108,6 +108,12 @@ const routes: Route[] = [
     path: '/complaint',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
+    params: Joi.object({
+      oid: Joi
+        .string()
+        .required()
+        .error(new Error('oid是必传字段.'))
+    }),
     action: seedsC2CController.complaint
   },
   {
@@ -115,6 +121,12 @@ const routes: Route[] = [
     path: '/revoke',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
+    params: Joi.object({
+      oid: Joi
+        .string()
+        .required()
+        .error(new Error('oid是必传字段.'))
+    }),
     action: seedsC2CController.revoke
   },
   {

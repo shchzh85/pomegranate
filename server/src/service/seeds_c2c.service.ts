@@ -221,10 +221,10 @@ class SeedsC2CService extends BaseService {
 
   public async revoke(uid: string, params: any) {
     const user = await userStore.findById(uid);
+    const { oid } = params;
     if (!user)
       throw new Exception(Code.USER_NOT_FOUND, '用户不存在');
 
-    const { oid } = params;
     if (user.weifukuan_num >= 3)
       throw new Exception(Code.INVALID_OPERATION, '今日撤单次数已达上限');
 
