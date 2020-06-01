@@ -82,6 +82,55 @@ const routes: Route[] = [
     method: RequestMethod.POST,
     action: questController.check_pay_face
   },
+  {
+    name: '随机获取一个视频',
+    path: '/getVideo',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: questController.getVideo
+  },
+  {
+    name: '视频播放完成',
+    path: '/videoCompleted',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+      vid: Joi
+        .number()
+        .greater(0)
+        .required()
+        .error(new Error('vid不能为空'))
+    }),
+    action: questController.videoCompleted
+  },
+  {
+    name: '获得点赞状态',
+    path: '/getVideoLiked',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+      vid: Joi
+        .number()
+        .greater(0)
+        .required()
+        .error(new Error('vid不能为空'))
+    }),
+    action: questController.getVideoLiked
+  },
+  {
+    name: '点赞',
+    path: '/setVideoLiked',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+      vid: Joi
+        .number()
+        .greater(0)
+        .required()
+        .error(new Error('vid不能为空'))
+    }),
+    action: questController.setVideoLiked
+  }
 ]
 
 export default routes.map(item => ({ ...item, path: `${prefix}${item.path}` }));

@@ -85,6 +85,10 @@ class RedisStore extends BaseStore {
     return promisify(redisClient.pexpire).bind(redisClient)(key, milliseconds);
   }
 
+  public async expire(key: string, seconds: number) {
+    return promisify(redisClient.expire).bind(redisClient)(key, seconds);
+  }
+
   public async zrangebyscore(key: string, min: number | string, max: number | string) {
     return await promisify(redisClient.zrangebyscore).bind(redisClient)(key, min, max) as string[];
   }
@@ -165,6 +169,40 @@ class RedisStore extends BaseStore {
   public async remember(key: string, getCB: Function, expire?: number) {
     const ret = await this.remembers(key, getCB, expire);
     return JSON.parse(ret);
+  }
+
+  public async scard(key: string) {
+    return promisify(redisClient.scard).bind(redisClient)(key);
+  }
+
+  public async sismember(key: string, member: string) {
+    return promisify(redisClient.sismember).bind(redisClient)(key, member);
+  }
+
+  public async sadd(key: string, members: string[]) {
+    return new Promise((resolve, rejects) => {
+      redisClient.sadd(key, members, (err, reply) => {
+        if (err)
+          rejects(err);
+        else
+          resolve(reply);
+      });
+    });
+  }
+
+  public async srem(key: string, member: string) {
+    return promisify(redisClient.srem).bind(redisClient)(key, member);
+  }
+
+  public async spop(key: string) {
+    return new Promise((resolve, rejects) => {
+      redisClient.sadd(key, (err, reply) => {
+        if (err)
+          rejects(err);
+        else
+          resolve(reply);
+      });
+    });
   }
 }
 

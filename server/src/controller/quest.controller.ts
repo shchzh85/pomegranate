@@ -5,8 +5,7 @@ import { questService } from '@service/index';
 class QuestController extends BaseController {
 
   public apply(ctx: Context) {
-    const uid = ctx.uid;
-    return questService.apply(uid, ctx.params);
+    return questService.apply(ctx.uid, ctx.params);
   }
 
   public levelUp(ctx: Context) {
@@ -41,6 +40,21 @@ class QuestController extends BaseController {
     //return await questService.check_pay_face();
   }
 
+  public getVideo(ctx: Context) {
+    return questService.getVideo(ctx.uid);
+  }
+
+  public videoCompleted(ctx: Context) {
+    return questService.videoCompleted(ctx.uid, ctx.params);
+  }
+
+  public async getVideoLiked(ctx: Context) {
+    return questService.getVideoLiked(ctx.uid, ctx.params);
+  }
+
+  public async setVideoLiked(ctx: Context) {
+    return questService.setVideoLiked(ctx.uid, ctx.params);
+  }
 }
 
 export const questController = new QuestController();

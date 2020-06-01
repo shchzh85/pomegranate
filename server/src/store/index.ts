@@ -16,3 +16,4 @@ export * from './price_history.store';
 export * from './banner.store';
 export * from './news.store';
 export * from './business_college.store';
+export * from './quest_video.store';

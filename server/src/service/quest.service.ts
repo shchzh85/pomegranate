@@ -3,9 +3,11 @@ import _ from 'lodash';
 import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 import BaseService from './base.service';
-import { userStore, questKindStore, questsStore, walletStore, questRewardStore, questTimesStore, questLevelBonusStore } from '@store/index';
+import { userStore, questKindStore, questsStore, walletStore, questRewardStore, questTimesStore, questLevelBonusStore, redisStore, questVideoStore } from '@store/index';
 import { sequelize } from '@common/dbs';
 import { md5 } from '@common/utils';
+
+const dateFormat = require('dateformat');
 
 interface LevelContext {
     cost: number;
@@ -40,6 +42,10 @@ const LEVEL_DEFINE: LevelContext[] = [
         sunshine2: 23000
     },
 ];
+
+const LIKED_VIDEO_PREFIX = 'cy:liked_video:';
+const USER_VIDEO_PREFIX = 'cy:user_video:';
+const VIDEO_TASK_PREFIX = 'cy:video_task:';
 
 class QuestService extends BaseService {
 
@@ -270,6 +276,54 @@ class QuestService extends BaseService {
             start, len,
             list: rows
         };
+    }
+
+    public async getVideo(uid: string) {
+        const key = USER_VIDEO_PREFIX + uid;
+        const exists = await redisStore.exists(key);
+        if (!exists) {
+            const videoes = await questVideoStore.findAll();
+            const vids = videoes.map(v => '' + v.id);
+            _.shuffle(vids);
+            await redisStore.sadd(key, vids);
+        }
+
+        await redisStore.expire(key, 3600);
+        const vid = await redisStore.spop(key);
+        return { vid: Number(vid) || 0 };
+    }
+
+    public async videoCompleted(uid: string, params: any) {
+        const key = VIDEO_TASK_PREFIX + uid + ':' + dateFormat(new Date(), 'yyyymmdd');
+        const exist = await redisStore.exists(key);
+        const count = await redisStore.scard(key);
+        if (count >= 6)
+            return { count };
+        
+        await redisStore.sadd(key, [ '' + Math.floor(Date.now() / 1000) ]);
+        if (!exist)
+            await redisStore.expire(key, 3600 * 24);
+
+        return { count: count + 1 };
+    }
+
+    public async getVideoLiked(uid: string, params: any) {
+        const { vid } = params;
+        const key = LIKED_VIDEO_PREFIX + vid;
+        const count = await redisStore.scard(key);
+        const status = await redisStore.sismember(key, uid);
+        return { count: Number(count) || 0, status };
+    }
+
+    public async setVideoLiked(uid: string, params: any) {
+        const { vid } = params;
+        const key = LIKED_VIDEO_PREFIX + vid;
+        const op = await redisStore.sadd(key, [ uid ]);
+        if (!op)
+            await redisStore.srem(key, uid);
+
+        const count = await redisStore.scard(key);
+        return { count: Number(count) || 0, op };
     }
 }
 
