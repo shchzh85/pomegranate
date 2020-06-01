@@ -9,7 +9,7 @@ import { sequelize } from '@common/dbs';
 import { c2cShimingStore } from '@store/c2c_shiming.store';
 import { priceHistoryStore } from '@store/price_history.store';
 
-class SeedsC2CService extends BaseService {
+class C2CService extends BaseService {
 
   public async buy(uid: string, params: any) {
     const user = await userStore.findById(uid);
@@ -396,4 +396,4 @@ class SeedsC2CService extends BaseService {
   }
 }
 
-export const seedC2CService = new SeedsC2CService();
+export const c2CService = new C2CService();

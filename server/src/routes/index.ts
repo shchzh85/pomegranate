@@ -3,11 +3,11 @@ import Router from 'koa-router';
 import { Route } from '../common/interfaces';
 import userRoutes from './user.routes';
 import { response, paramValidate } from '@middlewares/index';
-import seedsRoutes from './seeds.routes';
+import questRoutes from './quest.routes';
 import apiRoutes from './api.routes';
-import c2cRoutes from './seeds_c2c.routes';
+import c2cRoutes from './c2c.routes';
 
-const routes: Route[] = [ ...userRoutes, ...seedsRoutes, ...apiRoutes, ...c2cRoutes ];
+const routes: Route[] = [ ...userRoutes, ...questRoutes, ...apiRoutes, ...c2cRoutes ];
 
 const router = new Router();
 

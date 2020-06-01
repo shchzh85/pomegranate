@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import { Route } from '@common/interfaces';
 import { RequestMethod } from '@common/enums';
-import { seedsC2CController } from '@controller/index';
+import { c2CController } from '@controller/index';
 import { userAuth } from '@common/auths';
 import fieldReg from '@common/field_reg';
 
@@ -26,7 +26,7 @@ const routes: Route[] = [
         .required()
         .error(new Error(fieldReg.password.message()))     
     }),
-    action: seedsC2CController.buy
+    action: c2CController.buy
   },
   {
     name: '点击购买',
@@ -45,7 +45,7 @@ const routes: Route[] = [
         .required()
         .error(new Error(fieldReg.password.message()))
     }),
-    action: seedsC2CController.sell
+    action: c2CController.sell
   },
   {
     name: '撤销挂单',
@@ -58,7 +58,7 @@ const routes: Route[] = [
         .required()
         .error(new Error('oid是必传字段.'))
     }),
-    action: seedsC2CController.cancel
+    action: c2CController.cancel
   },
   {
     name: '付款',
@@ -82,7 +82,7 @@ const routes: Route[] = [
         .required()
         .error(new Error('img是必传字段.'))
     }),
-    action: seedsC2CController.pay
+    action: c2CController.pay
   },
   {
     name: '确认',
@@ -101,7 +101,7 @@ const routes: Route[] = [
         .required()
         .error(new Error(fieldReg.password.message()))
     }),
-    action: seedsC2CController.confirm
+    action: c2CController.confirm
   },
   {
     name: '投诉',
@@ -114,7 +114,7 @@ const routes: Route[] = [
         .required()
         .error(new Error('oid是必传字段.'))
     }),
-    action: seedsC2CController.complaint
+    action: c2CController.complaint
   },
   {
     name: '匹配后撤销',
@@ -127,7 +127,7 @@ const routes: Route[] = [
         .required()
         .error(new Error('oid是必传字段.'))
     }),
-    action: seedsC2CController.revoke
+    action: c2CController.revoke
   },
   {
     name: '当前所有订单',
@@ -149,7 +149,7 @@ const routes: Route[] = [
         .number()
         .min(1)
     }),
-    action: seedsC2CController.getC2CList
+    action: c2CController.getC2CList
   },
   {
     name: '当前订单详情',
@@ -162,7 +162,7 @@ const routes: Route[] = [
         .required()
         .error(new Error('oid是必传字段.'))
     }),
-    action: seedsC2CController.getC2COrder
+    action: c2CController.getC2COrder
   },
   {
     name: '已经匹配的订单',
@@ -177,7 +177,7 @@ const routes: Route[] = [
         .number()
         .min(1)
     }),
-    action: seedsC2CController.getUserC2CList
+    action: c2CController.getUserC2CList
   },
   {
     name: '填写收款地址',
@@ -223,7 +223,7 @@ const routes: Route[] = [
         .required()
         .error(new Error('微信二维码是必传字段.'))
     }),
-    action: seedsC2CController.cetificate
+    action: c2CController.cetificate
   },
   {
     name: '获取付款人信息',
@@ -236,28 +236,28 @@ const routes: Route[] = [
         .required()
         .error(new Error('oid是必传字段.'))
     }),
-    action: seedsC2CController.getSeller
+    action: c2CController.getSeller
   },
   {
     name: '价格',
     path: '/price',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.getSeedPriceHis
+    action: c2CController.getSeedPriceHis
   },
   {
     name: '实名',
     path: '/getCertification',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.getCertification
+    action: c2CController.getCertification
   },
   {
     name: '价格线',
     path: '/getPriceLine',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
-    action: seedsC2CController.getSeedPriceLine
+    action: c2CController.getSeedPriceLine
   }
 ]
 

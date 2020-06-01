@@ -41,19 +41,15 @@ const LEVEL_DEFINE: LevelContext[] = [
     },
 ];
 
-class SeedsService extends BaseService {
+class QuestService extends BaseService {
 
-    public async getFT(params: {
-        uid: string,
-        dpassword: string,
-        qid: number
-    }) {
-        const { uid, dpassword, qid } = params;
+    public async apply(uid: string, params: any) {
+        const { dpassword, qid } = params;
         const user = await userStore.findById(uid);
         if (!user)
             throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
 
-        if (md5(dpassword) !== user.dpassword)
+        if (md5(dpassword + user.utime) !== user.dpassword)
             throw new Exception(Code.INVALID_PASSWORD, '交易密码错误');
 
         if (user.ustatus !== 0)
@@ -213,14 +209,14 @@ class SeedsService extends BaseService {
         }
     }
 
-    public appGetQuestList() {
+    public listQuest() {
         return questKindStore.findAll({
             where: { actived: 0 },
             limit: 20
         });
     }
 
-    public appGetMyQuestList(uid: string) {
+    public listMyQuest(uid: string) {
         return questsStore.findByUid(uid);
     }
 
@@ -277,4 +273,4 @@ class SeedsService extends BaseService {
     }
 }
 
-export const seedsService = new SeedsService();
+export const questService = new QuestService();

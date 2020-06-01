@@ -1,4 +1,4 @@
 export * from './user.controller';
-export * from './seeds.controller';
-export * from './seeds_c2c.controller';
+export * from './quest.controller';
+export * from './c2c.controller';
 export * from './api.controller';
