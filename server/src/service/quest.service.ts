@@ -154,7 +154,7 @@ class QuestService extends BaseService {
         const questKinds = await questKindStore.findAll();
 
         let balance = activeWallet.num;
-        const uppers = tops.split(',');
+        const uppers = _.filter(tops.split(','), v => !_.isEmpty(v));
         const levels = _.range(userlevel + 1, 5);
         const valids = [];
 
@@ -212,7 +212,7 @@ class QuestService extends BaseService {
             }
 
             if (total > 0) {
-                const paid = await walletStore.pay(uid, CoinType.ACTIVE, balance, transaction);
+                const paid = await walletStore.pay(uid, CoinType.ACTIVE, total, transaction);
                 if (!paid)
                     throw new Exception(Code.BALANCE_NOT_ENOUGH, '钱包余额不足');
             }

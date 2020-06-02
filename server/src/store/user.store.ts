@@ -122,9 +122,9 @@ class UserStore extends BaseStore {
 
   public async levelUp(uid: string, userlevel: number, transaction?: Transaction) {
     const [ affectedCount ] = await userRepository.update({
-      id: uid, userlevel
+      userlevel
     }, {
-      where: { userleve: { [Op.lt]: userlevel } },
+      where: { id: uid, userlevel: { [Op.lt]: userlevel } },
       transaction
     });
 
