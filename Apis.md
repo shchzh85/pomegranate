@@ -1,92 +1,318 @@
-1.账号相关
+# API列表
 
-#### 注册,登陆,修改密码
+## 0. 概述
+HOST=IP:Port，例如HOST
 
-> 1.注册
->
-> 接口地址:/user/oauth/register
->
-> 传入参数:
->
-> > username 用户名
-> >
-> > password1 登录密码
-> >
-> > password2 重复登录密码
-> >
-> > dpassword1 交易密码
-> >
-> > dpassword2 重复交易密码
-> >
-> > invitecode 邀请码
-> >
-> > messagecode 短信验证码
->
-> 注册逻辑
->
-> > ````伪代码
-> > //判断注册开关
-> > if(注册开关关闭){
-> > 	return {msg:'注册关闭'}
-> > }
-> > //判断短信验证码
-> > if(短信开关开启){
-> > 	if(post.messagecode != 服务端生成的码){
-> > 		return {msg:'短信验证码错误'}
-> > 	}
-> > }
-> > //判断2次输入
-> > if(post.password1=post.password2){
-> > 	return {msg:'两次输入密码不一致'}
-> > }
-> > if(post.dpassword1=post.dpassword2){
-> > 	return {msg:'两次输入交易密码不一致'}
-> > }
-> > //判断上级是否存在
-> > //使用邀请码寻找上级
-> > var parent = findUserByInviteCode()
-> > //上级不存在
-> > if(empty(parent)){
-> > 	return {msg:'上级不存在'}
-> > }
-> > //注册逻辑
-> > var invitecode = 唯一邀请码
-> > ...
-> > 拼接insert data
-> > ...
-> > 开启DB事务
-> > try{
-> > 
-> > 	insert入数据库
-> > 
-> > }catch(SQLException e){
-> > 	//捕获用户名已存在
-> > 	回滚事务;
-> > 	return {msg:'用户名已存在'}
-> > }finally{
-> > 	
-> > }
-> > 给所有上级增加1名团队人数
-> > 
-> > 给用户生成数值为0的钱包.
-> > 
-> > 提交事务
-> > return {msg:'注册成功'}
-> > 
-> > ````
-> >
-> > 
+## 1. User
 
+### 1.1. 注册发送短信:  
+```
+http://HOST/v1/user/sendSms
+POST  'Content-Type: application/json'
+{
+  phone: '18700000001',
+  type: 'register' | 'forgot'
+}
+```
 
+### 1.2. 注册用户:  
+```
+http://HOST/v1/user/register
+POST  'Content-Type: application/json'
+{
+  username: string;  // 电话号码
+  password: string;  // 登录密码
+  dpassword: string;  // 交易密码
+  invitecode: string;  // 8位邀请码
+  scode: string;  // 短信验证码
+}
+```
 
-#### 通用API 获取用户数据,获取日志列表
+### 1.3. 登录
+```
+http://HOST/v1/user/login
+POST  'Content-Type: application/json'
+{
+  username: string;  // 电话号码
+  password: string;  // 登录密码
+  version: string;  // 版本号，默认"2.0.0"
+}
+```
 
-> Api.php
+### 1.4. 忘记密码
+```
+http://HOST/v1/user/forgotPassword
+POST  'Content-Type: application/json'
+{
+  username: string;  // 电话号码
+  password: string;  // 新密码
+  scode: string;  // 短信验证码
+}
+```
 
-#### 业务
+### 1.5. 修改登录密码
+```
+http://HOST/v1/user/setLoginPasswd  (必须处于登录状态)
+POST  'Content-Type: application/json'
+{
+  password: string;  // 新密码
+  dpassword: string;  // 交易密码
+}
+```
 
-> Seeds.php
+### 1.6. 修改交易密码
+```
+http://HOST/v1/user/setTradePasswd  (必须处于登录状态)
+POST  'Content-Type: application/json'
+{
+  dpassword: string;  // 新交易密码
+  scode: string;  // 短信验证码
+}
+```
 
-#### C2C
+### 1.7. 玩家是否存在
+```
+http://HOST/v1/user/userExists
+POST  'Content-Type: application/json'
+{
+  phone: string; // 手机号码
+}
+```
 
-> SeedC2c.php
+### 1.8. 查询自己的数据
+```
+http://HOST/v1/user/getUser  (必须处于登录状态)
+POST  'Content-Type: application/json'
+{}
+```
+
+### 1.9. 登出
+```
+http://HOST/v1/user/logout  (必须处于登录状态)
+POST  'Content-Type: application/json'
+{}
+```
+
+## 2. C2C
+
+### 2.1. 挂买单
+```
+http://HOST/v1/c2c/buy
+POST  'Content-Type: application/json'
+{
+  num: numbe;  // 金种子个数
+  dpasswod: string; // 交易密码
+}
+```
+
+### 2.2. 点击购买
+```
+http://HOST/v1/c2c/sell
+POST  'Content-Type: application/json'
+{
+  oid: string; // 订单ID
+  dpassword: string; // 交易密码
+}
+```
+
+### 2.3. 撤销挂单
+```
+http://HOST/v1/c2c/cancel
+POST  'Content-Type: application/json'
+{
+  oid: string; // 订单ID
+}
+```
+
+### 2.4. 付款
+```
+http://HOST/v1/c2c/pay
+POST  'Content-Type: application/json'
+{
+  oid: string; // 订单ID
+  dpassword: string; // 交易密码
+  img: string; // 付款凭证地址
+}
+```
+
+### 2.5. 确认
+```
+http://HOST/v1/c2c/confirm
+POST  'Content-Type: application/json'
+{
+  oid: string; // 订单ID
+  dpassword: string; // 交易密码
+}
+```
+
+### 2.6. 投诉
+```
+http://HOST/v1/c2c/complaint
+POST  'Content-Type: application/json'
+{
+  oid: string; // 订单ID
+}
+```
+
+### 2.7. 匹配后撤销
+```
+http://HOST/v1/c2c/revoke
+POST  'Content-Type: application/json'
+{
+  oid: string; // 订单ID
+}
+```
+
+### 2.8. 当前所有订单(未匹配)
+```
+http://HOST/v1/c2c/list
+POST  'Content-Type: application/json'
+{
+  listType: string; // buy | sell
+  search: string; // 手机号(可选)
+  start: number; // 分页(可选，默认0)
+  len: number; // limit(可选，默认10)
+}
+```
+
+### 2.9. 当前订单详情
+```
+http://HOST/v1/c2c/orderDetail
+POST  'Content-Type: application/json'
+{
+  oid: string; // 订单ID
+}
+```
+
+### 2.10. 已经匹配的订单
+```
+http://HOST/v1/c2c/myOrders
+POST  'Content-Type: application/json'
+{
+  start: number; // 分页(可选，默认0)
+  len: number; // limit(可选，默认10)
+}
+```
+
+### 2.11. 填写收款地址
+```
+http://HOST/v1/c2c/certificate
+POST  'Content-Type: application/json'
+{
+  dpassword: string; // 交易密码
+  mz: string; // 名字
+  bank: string; // 银行
+  zhihang: string; // 支行
+  cardno: string; //卡号
+  img1: string; // 支付宝二维码地址
+  img2: string; // 微信二维码地址
+}
+```
+
+### 2.12. 获取付款人信息
+```
+http://HOST/v1/c2c/getSeller
+POST  'Content-Type: application/json'
+{
+  oid: string; // 订单ID
+}
+```
+
+### 2.13. 获取实名信息
+```
+http://HOST/v1/c2c/getCertification
+POST  'Content-Type: application/json'
+{}
+```
+
+### 2.14 价格
+```
+http://HOST/v1/c2c/price
+POST  'Content-Type: application/json'
+{}
+```
+
+### 2.15 价格线
+```
+http://HOST/v1/c2c/getPriceLine
+POST  'Content-Type: application/json'
+{}
+```
+
+# 3. Infomation
+
+### 3.1. 获取资讯页顶部轮播图
+```
+http://HOST/v1/api/banners
+POST  'Content-Type: application/json'
+{}
+```
+
+### 3.2. 获取资讯列表（分页）
+```
+http://HOST/v1/api/news
+POST  'Content-Type: application/json'
+{
+  start: number; // 分页(可选，默认0)
+  len: number; // limit(可选，默认10)
+}
+```
+
+### 3.3. 获取资讯消息详情
+```
+http://HOST/v1/api/newsDetail
+POST  'Content-Type: application/json'
+{
+  id: number;
+}
+```
+
+### 3.4. 获取商学院信息列表
+```
+http://HOST/v1/api/businessCollege
+POST  'Content-Type: application/json'
+{}
+```
+
+### 3.5. 获取客服二维码和邮箱
+```
+http://HOST/v1/api/CSQrcode
+POST  'Content-Type: application/json'
+{}
+```
+
+# 4. Quest
+
+### 4.1. 随机获取一个视频
+```
+http://HOST/v1/quest/getVideo
+POST  'Content-Type: application/json'
+{}
+```
+
+### 4.2. 视频播放完成
+```
+http://HOST/v1/quest/videoCompleted
+POST  'Content-Type: application/json'
+{
+  vid: number; 
+}
+```
+
+### 4.3. 获得点赞状态
+```
+http://HOST/v1/quest/getVideoLiked
+POST  'Content-Type: application/json'
+{
+  vid: number; 
+}
+```
+
+### 4.4. 点赞
+```
+http://HOST/v1/quest/setVideoLiked
+POST  'Content-Type: application/json'
+{
+  vid: number; 
+}
+```
