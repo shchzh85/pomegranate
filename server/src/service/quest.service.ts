@@ -159,6 +159,7 @@ class QuestService extends BaseService {
         const valids = [];
 
         const bonus = await questLevelBonusStore.findAll(uid, levels);
+        let max = userlevel;
 
         for (let i = 0; i < levels.length; i++) {
             const lvl = levels[i];
@@ -167,13 +168,19 @@ class QuestService extends BaseService {
             if (sunshine < condition.sunshine || sunshine2 < condition.sunshine2)
                 break;
 
-            if (b) continue;
-            if (balance < condition.cost)
-                break;
+            if (!b) {
+                if (balance < condition.cost)
+                    break;
 
-            balance -= condition.cost;
-            valids.push(lvl);
+                balance -= condition.cost;
+                valids.push(lvl);
+            }
+
+            max = lvl;
         }
+
+        if (max == userlevel)
+            throw new Exception(Code.INVALID_OPERATION, '不满足升级条件');
 
         const getdate = new Date();
         const bonusData = valids.map(v => {
@@ -184,25 +191,35 @@ class QuestService extends BaseService {
             };
         });
 
+        const total = activeWallet.num - balance;
         const qids = valids.map(v => LEVEL_DEFINE[v - 1].qid);
         const kinds = _.filter(questKinds, q => qids.includes(q.id));
         const sunshines = _.sumBy(kinds, q => q.quest_sunshine);
-        
+
         let transaction;
         try {
             transaction = await sequelize.transaction();
 
-            await questLevelBonusStore.bulkCreate(bonusData, transaction);
+            if (_.size(bonusData) > 0)
+                await questLevelBonusStore.bulkCreate(bonusData, transaction);
 
-            await questsStore.bulkCreate(uid, kinds, transaction);
+            if (_.size(kinds) > 0)
+                await questsStore.bulkCreate(uid, kinds, transaction);
 
-            await userStore.addSunshine1([ uid ], sunshines, transaction);
+            if (sunshines > 0) {
+                await userStore.addSunshine1([ uid ], sunshines, transaction);
+                await userStore.addSunshine(uppers, sunshines, transaction);
+            }
 
-            await userStore.addSunshine(uppers, sunshines, transaction);
+            if (total > 0) {
+                const paid = await walletStore.pay(uid, CoinType.ACTIVE, balance, transaction);
+                if (!paid)
+                    throw new Exception(Code.BALANCE_NOT_ENOUGH, '钱包余额不足');
+            }
 
-            const paid = await walletStore.pay(uid, CoinType.ACTIVE, balance, transaction);
-            if (!paid)
-                throw new Exception(Code.BALANCE_NOT_ENOUGH, '钱包余额不足');
+            const up = await userStore.levelUp(uid, max, transaction);
+            if (!up)
+                throw new Exception(Code.INVALID_OPERATION, '升级失败');
 
             // TODO: add coin log
 

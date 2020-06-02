@@ -120,6 +120,17 @@ class UserStore extends BaseStore {
 
   }
 
+  public async levelUp(uid: string, userlevel: number, transaction?: Transaction) {
+    const [ affectedCount ] = await userRepository.update({
+      id: uid, userlevel
+    }, {
+      where: { userleve: { [Op.lt]: userlevel } },
+      transaction
+    });
+
+    return affectedCount === 1;
+  }
+
   public async updateLoginPasswd(uid: string, password: string, dpassword: string) {
     const u = await userRepository.findByPk(uid);
     if (!u)
