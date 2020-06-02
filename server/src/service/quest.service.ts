@@ -86,7 +86,7 @@ class QuestService extends BaseService {
             throw new Exception(Code.SERVER_ERROR, '钱包未找到');
 
         const useBank = bankWallet.num >= price;
-        const uppers = user.tops.split(',');
+        const uppers = _.filter(user.tops.split(','), v => !_.isEmpty(v));
 
         let transaction;
         try {
