@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 import BaseService from './base.service';
-import { userStore, questKindStore, questsStore, walletStore, questRewardStore, questTimesStore, questLevelBonusStore, redisStore, questVideoStore } from '@store/index';
+import { userStore, questKindStore, questsStore, walletStore, questRewardStore, questTimesStore, questLevelBonusStore, redisStore, questVideoStore, CoinType } from '@store/index';
 import { sequelize } from '@common/dbs';
 import { md5 } from '@common/utils';
 
@@ -81,41 +81,39 @@ class QuestService extends BaseService {
         if (balance < price)
             throw new Exception(Code.BALANCE_NOT_ENOUGH, '余额不足');
 
-        const bankWallet = _.find(wallets, v => v.coinid == 1);
+        const bankWallet = _.find(wallets, v => v.coinid == CoinType.BANK);
         if (!bankWallet)
             throw new Exception(Code.SERVER_ERROR, '钱包未找到');
 
         const useBank = bankWallet.num >= price;
         const uppers = user.tops.split(',');
 
-        // transaction start
         let transaction;
-
         try {
             transaction = await sequelize.transaction();
 
             // 1. add quest
             const quest = await questsStore.create(uid, questKind, transaction);
 
-            // 2. add sunshine for all uppers and me
+            // 2. add sunshine for all uppers
             const add = await userStore.addSunshine(uppers, questKind.quest_sunshine, transaction);
             if (!add)
                 throw new Exception(Code.SERVER_ERROR, '增加上级阳光值失败');
 
             // 3. decrease coin
             if (useBank) {
-                const paid = await walletStore.pay(uid, 2, price, transaction);
+                const paid = await walletStore.pay(uid, CoinType.BANK, price, transaction);
                 if (!paid)
                     throw new Exception(Code.BALANCE_NOT_ENOUGH, '仓储账户余额不足');
             } else {
                 if (bankWallet.num > 0) {
-                    const paid = await walletStore.pay(uid, 2, bankWallet.num, transaction);
+                    const paid = await walletStore.pay(uid, CoinType.BANK, bankWallet.num, transaction);
                     if (!paid)
                         throw new Exception(Code.BALANCE_NOT_ENOUGH, '仓储账户余额不足');
                 }
 
                 {
-                    const paid = await walletStore.pay(uid, 1, price - bankWallet.num, transaction);
+                    const paid = await walletStore.pay(uid, CoinType.ACTIVE, price - bankWallet.num, transaction);
                     if (!paid)
                         throw new Exception(Code.BALANCE_NOT_ENOUGH, '流通账户余额不足');
                 }
@@ -149,13 +147,13 @@ class QuestService extends BaseService {
             throw new Exception(Code.OPERATION_FORBIDDEN, '条件不足,升级失败');
 
         const sunshine2 = zhitui_num >= 3 ? (await userStore.getSunshine2(uid)) : 0;
-        const bankWallet = await walletStore.find(uid, 1);
-        if (!bankWallet)
+        const activeWallet = await walletStore.find(uid, CoinType.ACTIVE);
+        if (!activeWallet)
             throw new Exception(Code.SERVER_ERROR, '钱包未找到');
 
         const questKinds = await questKindStore.findAll();
 
-        let balance = bankWallet.num;
+        let balance = activeWallet.num;
         const uppers = tops.split(',');
         const levels = _.range(userlevel + 1, 5);
         const valids = [];
@@ -176,8 +174,6 @@ class QuestService extends BaseService {
             balance -= condition.cost;
             valids.push(lvl);
         }
-
-        balance = bankWallet.num;
 
         const getdate = new Date();
         const bonusData = valids.map(v => {
@@ -204,7 +200,9 @@ class QuestService extends BaseService {
 
             await userStore.addSunshine(uppers, sunshines, transaction);
 
-            await walletStore.pay(uid, 1, balance, transaction);
+            const paid = await walletStore.pay(uid, CoinType.ACTIVE, balance, transaction);
+            if (!paid)
+                throw new Exception(Code.BALANCE_NOT_ENOUGH, '钱包余额不足');
 
             // TODO: add coin log
 

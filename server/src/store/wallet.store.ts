@@ -6,6 +6,11 @@ import { Code } from '@common/enums';
 import { Transaction, Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 
+export enum CoinType {
+    ACTIVE = 1,
+    BANK = 2
+}
+
 class WalletStore extends BaseStore {
 
     public findByUid(uid: string) {
