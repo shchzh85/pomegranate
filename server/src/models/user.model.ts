@@ -175,7 +175,7 @@ export class UserModel extends Model<UserModel> {
     public weifukuan_num!: number;
 
     @Column({
-        type: DataType.DECIMAL(20, 2),
+        type: DataType.DECIMAL(20, 4),
         allowNull: false,
         defaultValue: 0,
         comment: '阳光'
@@ -183,7 +183,7 @@ export class UserModel extends Model<UserModel> {
     public sunshine!: number;
 
     @Column({
-        type: DataType.DECIMAL(20, 2),
+        type: DataType.DECIMAL(20, 4),
         allowNull: false,
         defaultValue: 0,
         comment: '自己的阳光值'
@@ -191,7 +191,7 @@ export class UserModel extends Model<UserModel> {
     public sunshine_1!: number;
 
     @Column({
-        type: DataType.DECIMAL(20, 2),
+        type: DataType.DECIMAL(20, 4),
         allowNull: false,
         defaultValue: 0
     })
@@ -205,7 +205,7 @@ export class UserModel extends Model<UserModel> {
     public c2c_flg!: number;
 
     @Column({
-        type: DataType.DECIMAL(20, 2),
+        type: DataType.DECIMAL(20, 4),
         allowNull: false,
         defaultValue: 0.5,
         comment: '手续费'

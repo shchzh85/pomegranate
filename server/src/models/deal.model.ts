@@ -25,25 +25,25 @@ export class DealModel extends Model<DealModel> {
   public toname!: string;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false
   })
   public price!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false
   })
   public num!: number;
   
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false
   })
   public amount!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false,
     defaultValue: 0
   })
@@ -78,7 +78,7 @@ export class DealModel extends Model<DealModel> {
   public orderid!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false
   })
   public all_num!: number;

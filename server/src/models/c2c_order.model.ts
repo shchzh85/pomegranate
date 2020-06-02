@@ -40,19 +40,19 @@ export class C2cOrderModel extends Model<C2cOrderModel> {
   public cid!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false
   })
   public price!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false
   })
   public num!: number;
   
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false
   })
   public amount!: number;
@@ -66,7 +66,7 @@ export class C2cOrderModel extends Model<C2cOrderModel> {
   public status!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false,
     defaultValue: 0,
     comment: '手续费，记录的是比例'

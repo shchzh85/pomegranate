@@ -27,7 +27,7 @@ export class WalletModel extends Model<WalletModel> {
   public coinid!: number;
 
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     defaultValue: 0,
     comment: '资产数量'
@@ -48,7 +48,7 @@ export class WalletModel extends Model<WalletModel> {
   public item1!: string;
 
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     defaultValue: 0,
     comment: '冻结金额'

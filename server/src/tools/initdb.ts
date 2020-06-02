@@ -4,7 +4,7 @@ require('module-alias/register');
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 import { sequelize } from '@common/dbs';
-import { userRepository, coinKindRepository, configRepository, bannerRepository, newsRepository, businessCollegeRepository, qrcodeRepository, questVideoRepository } from '@models/index';
+import { userRepository, coinKindRepository, configRepository, bannerRepository, newsRepository, businessCollegeRepository, qrcodeRepository, questVideoRepository, questKindRepository } from '@models/index';
 
 async function work() {
     await sequelize.sync({ force: true });
@@ -224,6 +224,87 @@ async function work() {
             date: now,
             text: '怕怕怕怕怕',
             objects: '180388017.mp4'
+        }
+    ]);
+
+    await questKindRepository.bulkCreate([
+        {
+            quest_name: '仁田',
+            quest_price: 10,
+            quest_reward: 12,
+            quest_max_times: 1,
+            quest_per_day_times: 6,
+            quest_need_days: 40,
+            quest_sunshine: 1,
+            quest_reward_persent: 0.2,
+            quest_per_day_give: 0.3,
+            quest_per_times_give: 0.05,
+            actived: -1
+        },
+        {
+            quest_name: '義田',
+            quest_price: 10,
+            quest_reward: 12,
+            quest_max_times: 8,
+            quest_per_day_times: 6,
+            quest_need_days: 40,
+            quest_sunshine: 1,
+            quest_reward_persent: 0.2,
+            quest_per_day_give: 0.3,
+            quest_per_times_give: 0.05,
+            actived: -1
+        },
+        {
+            quest_name: '礼田',
+            quest_price: 100,
+            quest_reward: 125,
+            quest_max_times: 8,
+            quest_per_day_times: 6,
+            quest_need_days: 40,
+            quest_sunshine: 10,
+            quest_reward_persent: 0.25,
+            quest_per_day_give: 3.125,
+            quest_per_times_give: 0.5208,
+            actived: -1
+        },
+        {
+            quest_name: '智田',
+            quest_price: 1000,
+            quest_reward: 1280,
+            quest_max_times: 5,
+            quest_per_day_times: 6,
+            quest_need_days: 40,
+            quest_sunshine: 100,
+            quest_reward_persent: 0.28,
+            quest_per_day_give: 32,
+            quest_per_times_give: 5.3333,
+            actived: -1
+        },
+        {
+            quest_name: '信田',
+            quest_price: 5000,
+            quest_reward: 6700,
+            quest_max_times: 2,
+            quest_per_day_times: 6,
+            quest_need_days: 40,
+            quest_sunshine: 500,
+            quest_reward_persent: 0.34,
+            quest_per_day_give: 167.5,
+            quest_per_times_give: 27.9167,
+            actived: -1
+        },
+        {
+            quest_name: '敬田',
+            quest_price: 10000,
+            quest_reward: 13500,
+            quest_max_times: 1,
+            quest_per_day_times: 6,
+            quest_need_days: 40,
+            quest_sunshine: 1000,
+            quest_reward_persent: 0.35,
+            quest_per_day_give: 337.5,
+            quest_per_times_give: 56.25,
+            actived: -1
         }
     ]);
 }

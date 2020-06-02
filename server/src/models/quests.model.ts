@@ -45,13 +45,13 @@ export class QuestsModel extends Model<QuestsModel> {
   public quest_left_days!: number;
   
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false
   })
   public quest_per_times_give!: number;
   
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false
   })
   public quest_reward_persent!: number;
@@ -74,14 +74,14 @@ export class QuestsModel extends Model<QuestsModel> {
   public quest_sunshine!: number;
   
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     defaultValue: 0
   })
   public quest_got!: number;
   
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     defaultValue: 0
   })

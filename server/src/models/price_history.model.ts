@@ -11,7 +11,7 @@ import {
 export class PriceHistoryModel extends Model<PriceHistoryModel> {
 
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false
   })
   public price!: number;

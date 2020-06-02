@@ -28,21 +28,21 @@ export class CoinLogModel extends Model<CoinLogModel> {
   public targetid!: number;
 
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     comment: '变动数量'
   })
   public num!: number;
 
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     comment: '变动前数量'
   })
   public oamount!: number;
 
   @Column({
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     comment: '变动后数量'
   })

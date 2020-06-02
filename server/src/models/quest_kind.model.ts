@@ -17,14 +17,14 @@ export class QuestKindModel extends Model<QuestKindModel> {
   public quest_name!: string;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false,
     comment: '价格'
   })
   public quest_price!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false,
     comment: '回报数量'
   })
@@ -49,28 +49,28 @@ export class QuestKindModel extends Model<QuestKindModel> {
   public quest_need_days!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false,
     comment: '返回阳光'
   })
   public quest_sunshine!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false,
     comment: '回报率'
   })
   public quest_reward_persent!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false,
     comment: '每日最多获取'
   })
   public quest_per_day_give!: number;
 
   @Column({
-    type: DataType.DECIMAL(20,2),
+    type: DataType.DECIMAL(20,4),
     allowNull: false,
     comment: '每次任务给予'
   })

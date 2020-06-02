@@ -29,7 +29,7 @@ export class CoinKindModel extends Model<CoinKindModel> {
 
   @Column({
     field: 'price',
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     comment: '货币价格'
   })
@@ -61,7 +61,7 @@ export class CoinKindModel extends Model<CoinKindModel> {
 
   @Column({
     field: 'buyfee',
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     comment: '购买手续费',
     defaultValue: 0
@@ -70,7 +70,7 @@ export class CoinKindModel extends Model<CoinKindModel> {
 
   @Column({
     field: 'sellfee',
-    type: DataType.DECIMAL(20, 2),
+    type: DataType.DECIMAL(20, 4),
     allowNull: false,
     comment: '卖出手续费',
     defaultValue: 0

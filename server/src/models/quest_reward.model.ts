@@ -20,7 +20,7 @@ export class QuestRewardModel extends Model<QuestRewardModel> {
 
   @Column({
     allowNull: false,
-    type: DataType.DECIMAL(20, 2)
+    type: DataType.DECIMAL(20, 4)
   })
   public reward!: number;
 
