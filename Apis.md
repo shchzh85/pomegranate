@@ -93,6 +93,13 @@ POST  'Content-Type: application/json'
 {}
 ```
 
+### 1.10. 查询自己的数据(带钱包)
+```
+http://HOST/v1/user/userDetail  (必须处于登录状态)
+POST  'Content-Type: application/json'
+{}
+```
+
 ## 2. C2C
 
 ### 2.1. 挂买单
