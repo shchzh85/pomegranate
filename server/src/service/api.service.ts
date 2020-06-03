@@ -15,12 +15,12 @@ class ApiService extends BaseService {
     const start = _.defaultTo(params.start, 1);
     const len = _.defaultTo(params.len, 5);
     const offset = (start - 1) * len;
-    const key = 'cy:news:p' + start;
+    const key = 'cy:news:p' + start + '_' + len;
     const list = await redisStore.remember(key, async () => {
       const news = await newsStore.list(offset, len);
       news.forEach(v => v.content = v.content.replace(/[\n|\r|\r\n]/g, '').replace(/<[^>]*>/g, ''));
       return news;
-    });
+    }, 2000);
 
     return { start, len, list };
   }
