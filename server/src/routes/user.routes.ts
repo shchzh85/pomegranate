@@ -183,6 +183,13 @@ const routes: Route[] = [
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: userController.getUser
+  },
+  {
+    name: 'user detail',
+    path: '/userDetail',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: userController.userDetail
   }
 ];
 

@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 import BaseService from './base.service';
-import { userStore, RegisterParams, redisStore, userSessionStore, configStore } from '@store/index';
+import { userStore, RegisterParams, redisStore, userSessionStore, configStore, walletStore, CoinType } from '@store/index';
 import { sendSms } from '@common/utils';
 
 const PREFIX = 'cy:session:';
@@ -176,6 +176,32 @@ class UserService extends BaseService {
       ..._.pick(u, ['username','utime','ustatus','lastlog','pid','userlevel','shiming','zhitui_num','group_member_num']),
       sunshine_group: u.sunshine,
       sunshine: u.sunshine + u.sunshine_1
+    };
+  }
+
+  public async userDetail(uid: string) {
+    const u = await userStore.findById(uid);
+    if (!u)
+      throw new Exception(Code.USER_NOT_AUTHORIZED, '用户不存在');
+
+    const wallets = await walletStore.findByUid(uid);
+    if (_.size(wallets) !== 2)
+      throw new Exception(Code.SERVER_ERROR, '钱包数量错误');
+
+    const activeWallet = _.find(wallets, v => v.coinid === CoinType.ACTIVE);
+    const bankWallet = _.find(wallets, v => v.coinid === CoinType.BANK);
+
+    if (!activeWallet || !bankWallet)
+      throw new Exception(Code.SERVER_ERROR, '钱包错误');
+
+    return {
+      ..._.pick(u, ['username','utime','ustatus','lastlog','pid','userlevel','shiming','zhitui_num','group_member_num']),
+      sunshine_group: u.sunshine,
+      sunshine: u.sunshine + u.sunshine_1,
+      wallets: {
+        balance: activeWallet.num,
+        bankBalance: bankWallet.num
+      }
     };
   }
 }

@@ -57,6 +57,10 @@ class UserController extends BaseController {
   public getUser(ctx: Context) {
     return userService.getUser(ctx.uid);
   }
+
+  public userDetail(ctx: Context) {
+    return userService.userDetail(ctx.uid);
+  }
 }
 
 export const userController = new UserController();
