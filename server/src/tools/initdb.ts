@@ -252,7 +252,7 @@ async function work() {
             quest_reward_persent: 0.2,
             quest_per_day_give: 0.3,
             quest_per_times_give: 0.05,
-            actived: -1
+            actived: 0
         },
         {
             quest_name: '礼田',
@@ -265,7 +265,7 @@ async function work() {
             quest_reward_persent: 0.25,
             quest_per_day_give: 3.125,
             quest_per_times_give: 0.5208,
-            actived: -1
+            actived: 0
         },
         {
             quest_name: '智田',
@@ -278,7 +278,7 @@ async function work() {
             quest_reward_persent: 0.28,
             quest_per_day_give: 32,
             quest_per_times_give: 5.3333,
-            actived: -1
+            actived: 0
         },
         {
             quest_name: '信田',
@@ -291,7 +291,7 @@ async function work() {
             quest_reward_persent: 0.34,
             quest_per_day_give: 167.5,
             quest_per_times_give: 27.9167,
-            actived: -1
+            actived: 0
         },
         {
             quest_name: '敬田',
@@ -304,7 +304,7 @@ async function work() {
             quest_reward_persent: 0.35,
             quest_per_day_give: 337.5,
             quest_per_times_give: 56.25,
-            actived: -1
+            actived: 0
         }
     ]);
 }

@@ -316,3 +316,48 @@ POST  'Content-Type: application/json'
   vid: number; 
 }
 ```
+
+### 4.5. 购买福田
+```
+http://HOST/v1/quest/apply
+POST  'Content-Type: application/json'
+{
+  dpassword: string; // 交易密码
+  qid: number; // 福田ID
+}
+```
+
+### 4.6. 升级
+```
+http://HOST/v1/quest/levelup
+POST  'Content-Type: application/json'
+{}
+```
+
+### 4.7. 福田列表
+```
+http://HOST/v1/quest/listQuest
+POST  'Content-Type: application/json'
+{}
+```
+
+### 4.8. 我的福田
+```
+http://HOST/v1/quest/listMyQuest
+POST  'Content-Type: application/json'
+{}
+```
+
+### 4.9. 水滴记录
+```
+http://HOST/v1/quest/waterlist
+POST  'Content-Type: application/json'
+{}
+```
+
+### 4.10. 我的团队
+```
+http://HOST/v1/quest/myGroup
+POST  'Content-Type: application/json'
+{}
+```
