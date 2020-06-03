@@ -16,8 +16,12 @@ export function paramValidate(opts: Opts) {
       !contentType.startsWith('multipart') &&
       !contentType.startsWith('application/json')
     ) {
-      ctx.status = 400;
-      ctx.body = 'content-type is not application/json';
+      ctx.status = 200;
+      ctx.body = {
+        code: Code.INVALID_HEADERS,
+        message: 'content-type is not application/json'
+      };
+
       return;
     }
 
@@ -31,7 +35,7 @@ export function paramValidate(opts: Opts) {
         allowUnknown: true, debug: process.env.NODE_ENV === 'development',
       });
       if (error) {
-        ctx.status = 400;
+        ctx.status = 200;
         ctx.body = {
           code: Code.BAD_PARAMS,
           message: error.message
