@@ -294,7 +294,7 @@ class QuestService extends BaseService {
 
         let transaction;
         try {
-            transaction = sequelize.transaction();
+            transaction = await sequelize.transaction();
 
             const settled = await questsStore.settle(ids, transaction);
             if (!settled)

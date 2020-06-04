@@ -20,7 +20,7 @@ export interface RegisterParams {
 
 class UserStore extends BaseStore {
 
-  public findById(uid: string) {
+  public findById(uid: string | number) {
     return userRepository.findByPk(Number(uid));
   }
 
