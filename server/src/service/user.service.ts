@@ -195,7 +195,7 @@ class UserService extends BaseService {
       throw new Exception(Code.SERVER_ERROR, '钱包错误');
 
     return {
-      ..._.pick(u, ['username','utime','ustatus','lastlog','pid','userlevel','shiming','zhitui_num','group_member_num']),
+      ..._.pick(u, ['username','utime','ustatus','lastlog','pid','userlevel','shiming','zhitui_num','group_member_num','fee']),
       sunshine_group: u.sunshine,
       sunshine: u.sunshine + u.sunshine_1,
       wallets: {
