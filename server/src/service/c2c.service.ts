@@ -443,6 +443,7 @@ class C2CService extends BaseService {
       oid,
       amount: order.amount,
       zfb: seller.zfbimg,
+      wx: seller.wximg,
       mz: seller.mz,
       bankname: seller.bank,
       zhihang: seller.zhihang,
