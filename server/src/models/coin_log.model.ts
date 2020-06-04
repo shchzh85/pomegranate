@@ -57,6 +57,7 @@ export class CoinLogModel extends Model<CoinLogModel> {
 
   @Column({
     allowNull: false,
+    defaultValue: '',
     comment: '目标用户名称'
   })
   public target!: string;
