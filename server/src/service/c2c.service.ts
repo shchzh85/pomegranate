@@ -261,7 +261,7 @@ class C2CService extends BaseService {
         namount: w.num,
         note: 'A0021',
         action: 'c2c1qr',
-        actionid: oid
+        actionid: order.id
       }, transaction);
 
       await transaction.commit();
@@ -320,7 +320,7 @@ class C2CService extends BaseService {
         namount: w.num,
         note: 'A0017',
         action: 'ppcx',
-        actionid: oid
+        actionid: order.id
       }, transaction);
 
       await transaction.commit();
