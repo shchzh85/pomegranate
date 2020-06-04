@@ -3,7 +3,13 @@ import * as _ from 'lodash';
 import BaseStore from './base.store';
 import { QuestKindModel } from '@models/quest_kind.model';
 import { questsRepository } from '@models/index';
-import { Transaction } from 'sequelize';
+import { Transaction, Op } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
+
+enum QuestStatus {
+    ACTIVE = 1,
+    SETTLED = 2
+}
 
 const QUEST_EXPIRE = 40 * 24 * 60 * 60 * 1000;
 
@@ -45,6 +51,51 @@ class QuestsStore extends BaseStore {
         return questsRepository.findAll({
             where: { uid }
         });
+    }
+
+    public findActive(uid: string) {
+        return questsRepository.findAll({
+            where: { uid, status: 1, quest_got: { [Op.lt]: Sequelize.literal('quest_all_got') } }
+        });
+    }
+
+    public async reward(ids: number[], transaction?: Transaction) {
+        const cnt = _.size(ids);
+        const [ affectedCount ] = await questsRepository.update({
+            quest_got: Sequelize.literal('quest_got+quest_per_times_give*quest_every_days'),
+            quest_left_days: Sequelize.literal('quest_left_days-1')
+        }, {
+            where: { id: ids, status: QuestStatus.ACTIVE, quest_got: { [Op.lte]: Sequelize.literal('quest_all_got-quest_per_times_give*quest_every_days') } },
+            transaction
+        });
+
+        return cnt === affectedCount;
+    }
+
+    public findSettable(uid: string) {
+        const now = new Date();
+        return questsRepository.findAll({
+            where: { uid, status: QuestStatus.ACTIVE, [Op.or]: [
+                { quest_end_date: { [Op.lt]: now } },
+                Sequelize.literal('quest_got=quest_all_got')
+            ]}
+        });
+    }
+
+    public async settle(ids: number[], transaction?: Transaction) {
+        const now = new Date();
+        const cnt = _.size(ids);
+        const [ affectedCount ] = await questsRepository.update({
+            status: QuestStatus.SETTLED
+        }, {
+            where: { status: QuestStatus.ACTIVE, [Op.or]: [
+                { quest_end_date: { [Op.lt]: now } },
+                Sequelize.literal('quest_got=quest_all_got')
+            ]},
+            transaction
+        });
+
+        return affectedCount === cnt;
     }
 }
 

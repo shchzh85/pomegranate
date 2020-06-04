@@ -189,6 +189,28 @@ class UserStore extends BaseStore {
     return affectedCount === _.size(uids);
   }
 
+  public async decSunshine(uids: string[], cnt: number, transaction?: Transaction) {
+    const [ affectedCount ] = await userRepository.update({
+      sunshine: Sequelize.literal('sunshine-' + cnt)
+    }, {
+      where: { id: uids, sunshine: { [Op.gte]: cnt } },
+      transaction
+    });
+
+    return affectedCount === _.size(uids);
+  }
+
+  public async decSunshine1(uid: string, cnt: number, transaction?: Transaction) {
+    const [ affectedCount ] = await userRepository.update({
+      sunshine_1: Sequelize.literal('sunshine_1-' + cnt)
+    }, {
+      where: { id: uid, sunshine_1: { [Op.gte]: cnt } },
+      transaction
+    });
+
+    return affectedCount === 1;
+  }
+
   public async addSunshine1(uids: string[], cnt: number, transaction?: Transaction) {
     const [ affectedCount ] = await userRepository.update({
       sunshine_1: Sequelize.literal('sunshine_1+' + cnt)

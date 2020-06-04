@@ -230,18 +230,99 @@ class QuestService extends BaseService {
         }
     }
 
-    settleQuest(uid: string) {
-        // 福田结算
+    public async reward(uid: string) {
+        const user = await userStore.findById(uid);
+        if (!user)
+            throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
 
-        // 1. 找出所有福田 quest_left_days > 0, quest_all_times > 0, status != 2
+        // 找出所有福田
+        const quests = await questsStore.findActive(uid);
+        if (_.size(quests) == 0)
+            return [];
 
-        // 2. 把福田收益加到wallet coinid=1
+        const qids = quests.map(v => v.id);
+        const total = _.sumBy(quests, v => v.quest_per_times_give * v.quest_every_days);
 
-        // 3. 福田收益的8%加到上级wallet coinid=2,  shiming=2
+        const parent = await userStore.findById(user.pid);
+        if (!parent)
+            throw new Exception(Code.SERVER_ERROR, '上级不存在，请联系客服');
 
-        // 4. add coin log
+        let transaction;
+        try {
+            transaction = await sequelize.transaction();
 
-        // 5. 更新福田的 quest_left_days > 0, quest_all_times > 0
+            // 1. 更新福田的 quest_left_days > 0, quest_all_times > 0
+            const reward = await questsStore.reward(qids, transaction);
+            if (!reward)
+                throw new Exception(Code.SERVER_ERROR, '分红失败，请联系客服');
+
+            // 2. 把福田收益加到wallet coinid=1
+            const accepted = await walletStore.accept(uid, CoinType.ACTIVE, total, transaction);
+            if (!accepted)
+                throw new Exception(Code.SERVER_ERROR, '分红失败，请联系客服2');
+
+            // 3. 福田收益的8%加到上级wallet coinid=2,  shiming=2
+            if (parent.shiming == 2) {
+                const accepted2 = await walletStore.accept(parent.id, CoinType.BANK, total * 0.08, transaction);
+                if (!accepted2)
+                    throw new Exception(Code.SERVER_ERROR, '分红失败，请联系客服3');
+            }
+
+            // 4. add coin log
+            
+            await transaction.commit();
+            return qids;
+        } catch (e) {
+            await transaction?.rollback();
+            throw e;
+        }
+    }
+
+    // 福田结算/出局
+    public async settle(uid: string) {
+        const user = await userStore.findById(uid);
+        if (!user)
+            throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
+
+        const quests = await questsStore.findSettable(uid);
+        if (_.size(quests) == 0)
+            return [];
+
+        const tops = _.filter(user.tops.split(','), v => !_.isEmpty(v));
+        const ids = quests.map(v => v.id);
+        const total = _.sumBy(quests, v => v.quest_sunshine);
+
+        let transaction;
+        try {
+            transaction = sequelize.transaction();
+
+            const settled = await questsStore.settle(ids, transaction);
+            if (!settled)
+                throw new Exception(Code.SERVER_ERROR, '出局失败');
+
+            // 1. 上级阳光值减少
+            const dec = await userStore.decSunshine(tops, total, transaction)
+            if (!dec)
+                throw new Exception(Code.SERVER_ERROR, '减少上级阳光值失败');
+
+            // 2. 自己阳光值1减少
+            const dec2 = await userStore.decSunshine1(uid, total, transaction);
+            if (!dec2)
+                throw new Exception(Code.SERVER_ERROR, '减少自己阳光值1失败');
+
+            // 3. quest_times增加
+            await questTimesStore.addTimes(uid, ids, transaction);
+
+            await transaction.commit();
+            return ids;
+        } catch (e) {
+            await transaction?.rollback();
+            throw e;
+        }
+    }
+
+    public async demote() {
+        // 降级
     }
 
     public listQuest() {
@@ -329,7 +410,7 @@ class QuestService extends BaseService {
     public async videoCompleted(uid: string, params: any) {
         const key = VIDEO_TASK_PREFIX + uid + ':' + dateFormat(new Date(), 'yyyymmdd');
         const exist = await redisStore.exists(key);
-        const count = await redisStore.scard(key);
+        let count = await redisStore.scard(key);
         if (count >= 6)
             return { count };
         
@@ -337,7 +418,19 @@ class QuestService extends BaseService {
         if (!exist)
             await redisStore.expire(key, 3600 * 24);
 
-        return { count: count + 1 };
+        count = await redisStore.scard(key);
+        const ret: any = { count };
+        if (count == 6) {
+            const rewardIds = await this.reward(uid);
+            if (!_.isEmpty(rewardIds)) {
+                _.assign(ret, rewardIds);
+                const settleIds = await this.settle(uid);
+                if (!_.isEmpty(settleIds))
+                    _.assign(ret, settleIds);
+            }
+        }
+
+        return ret;
     }
 
     public async getVideoLiked(uid: string, params: any) {

@@ -86,4 +86,11 @@ export class QuestsModel extends Model<QuestsModel> {
     defaultValue: 0
   })
   public quest_all_got!: number;
+
+  @Column({
+    allowNull: false,
+    defaultValue: 1,
+    comment: '1:未出局\n2：已出局'
+  })
+  public status!: number;
 }

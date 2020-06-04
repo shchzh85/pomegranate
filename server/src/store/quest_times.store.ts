@@ -1,8 +1,10 @@
 
+import * as _ from 'lodash';
 import BaseStore from './base.store';
 import { questTimesRepository } from '@models/index';
 import { Sequelize } from 'sequelize-typescript';
 import { Transaction, Op } from 'sequelize';
+
 
 class QuestTimesStore extends BaseStore {
 
@@ -24,6 +26,17 @@ class QuestTimesStore extends BaseStore {
         });
 
         return affectedCount === 1;
+    }
+
+    public async addTimes(uid: string, quest_ids: number[], transaction?: Transaction) {
+        const [ affectedCount ] = await questTimesRepository.update({
+            quest_times: Sequelize.literal('quest_times+1')
+        }, {
+            where: { uid, quest_id: quest_ids, quest_times: { [Op.lt]: 6 } },
+            transaction
+        });
+
+        return affectedCount === _.size(quest_ids);
     }
 }
 
