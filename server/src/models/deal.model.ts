@@ -6,7 +6,10 @@ import {
 } from 'sequelize-typescript';
   
 @Table({
-  tableName: 'tpz_dealtp1'
+  tableName: 'tpz_dealtp1',
+  indexes: [
+    { unique: true, fields: ['orderid'], name: 'orderid' }
+  ]
 })
 export class DealModel extends Model<DealModel> {
 
@@ -75,7 +78,7 @@ export class DealModel extends Model<DealModel> {
   public paytype!: string;
 
   @Column
-  public orderid!: number;
+  public orderid!: string;
 
   @Column({
     type: DataType.DECIMAL(20,4),

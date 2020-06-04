@@ -5,6 +5,8 @@ import BaseStore from './base.store';
 import { dealRepository } from '@models/index';
 import { Sequelize } from 'sequelize-typescript';
 
+const dateFormat = require('dateformat');
+
 export enum DealStatus {
   INIT = 0,
   PARTIAL = 1,
@@ -13,6 +15,13 @@ export enum DealStatus {
 }
 
 class DealStore extends BaseStore {
+  
+  private getOrderId() {
+    const now = new Date();
+    const [ x, n ] = process.hrtime();
+    const m = ('' + n).substr(0, 6);
+    return 'DS' + dateFormat(now, 'yyyymmddHHMMss') + m + _.random(100, 999);
+  }
 
   public findActiveBuyOrder(uid: string) {
     return dealRepository.findOne({
@@ -50,14 +59,13 @@ class DealStore extends BaseStore {
     dtime: number,
     stime: number,
     cid: number,
-    paytype: string,
-    orderid: number
+    paytype: string
   }, transaction?: Transaction) {
-    const data = { ...params, amount: params.num * params.price, all_num: params.num };
+    const data = { ...params, amount: params.num * params.price, all_num: params.num, orderid: this.getOrderId() };
     return dealRepository.create(data, { transaction });
   }
 
-  public async deal(orderid: number, cnt: number, transaction?: Transaction) {
+  public async deal(orderid: string, cnt: number, transaction?: Transaction) {
     const [ affectedCount ] = await dealRepository.update({
       num: Sequelize.literal('num-' + cnt),
       status: DealStatus.DONE
@@ -69,7 +77,7 @@ class DealStore extends BaseStore {
     return affectedCount === 1;
   }
 
-  public async updateStatus(orderid: number, status: number, transaction?: Transaction) {
+  public async updateStatus(orderid: string, status: number, transaction?: Transaction) {
       const [ affectedCount ] = await dealRepository.update({
           status
       }, { where: { orderid }, transaction });

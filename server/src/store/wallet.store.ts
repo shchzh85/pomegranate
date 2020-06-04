@@ -17,8 +17,8 @@ class WalletStore extends BaseStore {
         return walletRepository.findAll({ where: { uid } });
     }
 
-    public find(uid: string, coinid: number) {
-        return walletRepository.findOne({ where: { uid, coinid } });
+    public find(uid: string, coinid: number, transaction?: Transaction) {
+        return walletRepository.findOne({ where: { uid, coinid }, transaction });
     }
 
     public async pay(uid: string | number, coinid: number, count: number, transaction?: Transaction) {

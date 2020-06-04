@@ -1,13 +1,15 @@
 
 import * as _ from 'lodash';
 import BaseService from './base.service';
-import { configStore, userStore, c2cOrderStore, OrderStatus, DealStatus, dealStore, walletStore } from '@store/index';
+import { configStore, userStore, c2cOrderStore, OrderStatus, DealStatus, dealStore, walletStore, CoinType } from '@store/index';
 import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 import { md5 } from '@common/utils';
 import { sequelize } from '@common/dbs';
 import { c2cShimingStore } from '@store/c2c_shiming.store';
 import { priceHistoryStore } from '@store/price_history.store';
+import { UniqueConstraintError } from 'sequelize';
+import { coinLogStore, CoinLogNType } from '@store/coin_log.store';
 
 class C2CService extends BaseService {
 
@@ -44,22 +46,29 @@ class C2CService extends BaseService {
     const price = await configStore.getNumber('c2cPrice', 0.35);
     const now = Math.floor(Date.now() / 1000);
 
-    // TODO: orderid should be unique
-    const order = await dealStore.create({
-      uid,
-      uname: user.username,
-      price,
-      num,
-      sxf: 0,
-      status: 0,
-      dtime: now,
-      stime: 0,
-      cid: 1,
-      paytype: 'buy',
-      orderid: now
-    });
+    do {
+      try {
+        const order = await dealStore.create({
+          uid,
+          uname: user.username,
+          price,
+          num,
+          sxf: 0,
+          status: 0,
+          dtime: now,
+          stime: 0,
+          cid: 1,
+          paytype: 'buy'
+        });
 
-    return order;
+        return order;
+      } catch (e) {
+        if (e instanceof UniqueConstraintError)
+          continue;
+
+        throw e;
+      }
+    } while (true);
   }
 
   public async sell(uid: string, params: any) {
@@ -94,49 +103,71 @@ class C2CService extends BaseService {
     if (wallet.num < total)
       throw new Exception(Code.BALANCE_NOT_ENOUGH, '余额不足');
 
-    let transaction;
-    try {
-      transaction = await sequelize.transaction();
-      // 0. 扣钱
-      const paid = await walletStore.pay(uid, 1, total, transaction);
-      if (!paid)
-        throw new Exception(Code.BALANCE_NOT_ENOUGH, '余额不足');
+    do {
+      let transaction;
+      try {
+        transaction = await sequelize.transaction();
+        // 0. 扣钱
+        const paid = await walletStore.pay(uid, CoinType.ACTIVE, total, transaction);
+        if (!paid)
+          throw new Exception(Code.BALANCE_NOT_ENOUGH, '余额不足');
 
-      // 1. 增加每日卖出次数
-      const inc = await userStore.addSellTimes(uid, transaction);
-      if (!inc)
-        throw new Exception(Code.INVALID_OPERATION, '卖出次数达到上限');
+        const w = await walletStore.find(uid, CoinType.ACTIVE, transaction);
+        if (!w)
+          throw new Exception(Code.SERVER_ERROR, '钱包未找到');
 
-      const now = Math.floor(Date.now() / 1000);
-      // 2. 写入order, TODO: orderid should be unique
-      await c2cOrderStore.create({
-        uid,
-        uname: user.username,
-        toname: order.uname,
-        toid: order.uid,
-        buypid: order.id,
-        sellpid: 0,
-        num: order.num,
-        price: order.price,
-        fee: user.fee,
-        status: OrderStatus.REVIEW,
-        dtime: now,
-        paytype: order.paytype,
-        cid: 1
-      }, transaction);
+        // 1. 增加每日卖出次数
+        const inc = await userStore.addSellTimes(uid, transaction);
+        if (!inc)
+          throw new Exception(Code.INVALID_OPERATION, '卖出次数达到上限');
 
-      // 3. 更新deal
-      const deal = await dealStore.deal(oid, order.num, transaction);
-      if (!deal)
-        throw new Exception(Code.INVALID_OPERATION, '订单金额不够');
+        const now = Math.floor(Date.now() / 1000);
 
-      // 4. coin log, TODO
+        const o = await c2cOrderStore.create({
+          uid,
+          uname: user.username,
+          toname: order.uname,
+          toid: order.uid,
+          buypid: order.id,
+          sellpid: 0,
+          num: order.num,
+          price: order.price,
+          fee: user.fee,
+          status: OrderStatus.REVIEW,
+          dtime: now,
+          paytype: order.paytype,
+          cid: 1
+        }, transaction);
 
-      await transaction.commit();
-    } catch (e) {
-      await transaction?.rollback();
-      throw e;
-    }
+        // 3. 更新deal
+        const deal = await dealStore.deal(oid, order.num, transaction);
+        if (!deal)
+          throw new Exception(Code.INVALID_OPERATION, '订单金额不够');
+
+        // 4. coin log
+        await coinLogStore.create({
+          uid,
+          username: user.username,
+          num: total,
+          wtype: CoinType.ACTIVE,
+          ntype: CoinLogNType.DEC,
+          oamount: w.num + total,
+          namount: w.num,
+          note: 'A0200',
+          action: '匹配',
+          actionid: o.id
+        }, transaction);
+
+        await transaction.commit();
+        return;
+      } catch (e) {
+        await transaction?.rollback();
+        if (e instanceof UniqueConstraintError)
+          continue;
+
+        throw e;
+      }
+    } while (true);
   }
 
   public async cancel(uid: string, params: any) {
@@ -199,6 +230,10 @@ class C2CService extends BaseService {
     if (!order)
       throw new Exception(Code.ORDER_NOT_FOUND, '订单不存在或状态变化');
 
+    const touser = await userStore.findById(order.toid);
+    if (!touser)
+      throw new Exception(Code.USER_NOT_FOUND, '用户不存在');
+    
     let transaction;
     try {
       transaction = await sequelize.transaction();
@@ -210,7 +245,24 @@ class C2CService extends BaseService {
       if (!accepted)
         throw new Exception(Code.SERVER_ERROR, '收款失败');
 
-      // TODO: coin log
+      const w = await walletStore.find(order.toid, order.cid, transaction);
+      if (!w)
+        throw new Exception(Code.SERVER_ERROR, '钱包未找到');
+
+      await coinLogStore.create({
+        uid: order.toid,
+        username: touser.username,
+        target: user.username,
+        targetid: order.uid,
+        num: order.num,
+        wtype: order.cid,
+        ntype: CoinLogNType.ADD,
+        oamount: w.num - order.num,
+        namount: w.num,
+        note: 'A0021',
+        action: 'c2c1qr',
+        actionid: oid
+      }, transaction);
 
       await transaction.commit();
     } catch (e) {
@@ -234,6 +286,11 @@ class C2CService extends BaseService {
     if (!order)
       throw new Exception(Code.ORDER_NOT_FOUND, '订单不存在或状态变化');
 
+    const fromuser = await userStore.findById(order.uid);
+    if (!fromuser)
+      throw new Exception(Code.USER_NOT_FOUND, '用户不存在');
+
+    const total = order.num * (1 + order.fee);
     let transaction;
     try {
       transaction = await sequelize.transaction();
@@ -241,15 +298,30 @@ class C2CService extends BaseService {
       if (!revoked)
         throw new Exception(Code.ORDER_NOT_FOUND, '订单撤销失败');
 
-      const accepted = await walletStore.accept(order.uid, order.cid, order.num * (1 + order.fee), transaction);
+      const accepted = await walletStore.accept(order.uid, order.cid, total, transaction);
       if (!accepted)
         throw new Exception(Code.SERVER_ERROR, '退款失败');
+
+      const w = await walletStore.find(order.uid, order.cid, transaction);
+      if (!w)
+        throw new Exception(Code.SERVER_ERROR, '钱包未找到');
 
       const add = await userStore.addNotPayTimes(order.toid, transaction);
       if (!add)
         throw new Exception(Code.SERVER_ERROR, '增加未付款次数失败');
 
-      // TODO: coin log
+      await coinLogStore.create({
+        uid: order.uid,
+        username: fromuser.username,
+        num: total,
+        wtype: order.cid,
+        ntype: CoinLogNType.ADD,
+        oamount: w.num + total,
+        namount: w.num,
+        note: 'A0017',
+        action: 'ppcx',
+        actionid: oid
+      }, transaction);
 
       await transaction.commit();
     } catch (e) {

@@ -3,7 +3,21 @@ import _ from 'lodash';
 import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 import BaseService from './base.service';
-import { userStore, questKindStore, questsStore, walletStore, questRewardStore, questTimesStore, questLevelBonusStore, redisStore, questVideoStore, CoinType } from '@store/index';
+import {
+    userStore,
+    questKindStore,
+    questsStore,
+    walletStore,
+    questRewardStore,
+    questTimesStore,
+    questLevelBonusStore,
+    redisStore,
+    questVideoStore,
+    CoinType,
+    coinLogStore,
+    CoinLogNType,
+    CoinLogParams
+} from '@store/index';
 import { sequelize } from '@common/dbs';
 import { md5 } from '@common/utils';
 
@@ -101,25 +115,78 @@ class QuestService extends BaseService {
                 throw new Exception(Code.SERVER_ERROR, '增加上级阳光值失败');
 
             // 3. decrease coin
+            const logs: CoinLogParams[] = [];
             if (useBank) {
                 const paid = await walletStore.pay(uid, CoinType.BANK, price, transaction);
                 if (!paid)
                     throw new Exception(Code.BALANCE_NOT_ENOUGH, '仓储账户余额不足');
+
+                const w = await walletStore.find(uid, CoinType.BANK, transaction);
+                if (!w)
+                    throw new Exception(Code.SERVER_ERROR, '钱包未找到');
+
+                logs.push({
+                    uid,
+                    username: user.username,
+                    num: price,
+                    wtype: CoinType.BANK,
+                    ntype: CoinLogNType.DEC,
+                    oamount: w.num + price,
+                    namount: w.num,
+                    note: 'A0102',
+                    action: '领取福田',
+                    actionid: 0  // TODO
+                });
             } else {
                 if (bankWallet.num > 0) {
                     const paid = await walletStore.pay(uid, CoinType.BANK, bankWallet.num, transaction);
                     if (!paid)
                         throw new Exception(Code.BALANCE_NOT_ENOUGH, '仓储账户余额不足');
+
+                    const w = await walletStore.find(uid, CoinType.BANK, transaction);
+                    if (!w)
+                        throw new Exception(Code.SERVER_ERROR, '钱包未找到');
+
+                    logs.push({
+                        uid,
+                        username: user.username,
+                        num: bankWallet.num,
+                        wtype: CoinType.BANK,
+                        ntype: CoinLogNType.DEC,
+                        oamount: w.num + bankWallet.num,
+                        namount: w.num,
+                        note: 'A0102',
+                        action: '领取福田',
+                        actionid: 0  // TODO
+                    });
                 }
 
                 {
                     const paid = await walletStore.pay(uid, CoinType.ACTIVE, price - bankWallet.num, transaction);
                     if (!paid)
                         throw new Exception(Code.BALANCE_NOT_ENOUGH, '流通账户余额不足');
+                    
+                    const w = await walletStore.find(uid, CoinType.ACTIVE, transaction);
+                    if (!w)
+                        throw new Exception(Code.SERVER_ERROR, '钱包未找到');
+    
+                    logs.push({
+                        uid,
+                        username: user.username,
+                        num: bankWallet.num,
+                        wtype: CoinType.ACTIVE,
+                        ntype: CoinLogNType.DEC,
+                        oamount: w.num + price - bankWallet.num,
+                        namount: w.num,
+                        note: 'A0102',
+                        action: '领取福田',
+                        actionid: 0  // TODO
+                    });
                 }
             }
 
-            // 4. TODO: add coin log
+            // 4. add coin log
+            await coinLogStore.bulkCreate(logs, transaction);
 
             // 5. add my sunshine_1
             const add2 = await userStore.addSunshine1([ uid ], questKind.quest_sunshine, transaction);
@@ -215,13 +282,28 @@ class QuestService extends BaseService {
                 const paid = await walletStore.pay(uid, CoinType.ACTIVE, total, transaction);
                 if (!paid)
                     throw new Exception(Code.BALANCE_NOT_ENOUGH, '钱包余额不足');
+
+                const w = await walletStore.find(uid, CoinType.ACTIVE, transaction);
+                if (!w)
+                    throw new Exception(Code.SERVER_ERROR, '钱包未找到');
+
+                await coinLogStore.create({
+                    uid,
+                    username: user.username,
+                    num: total,
+                    wtype: CoinType.ACTIVE,
+                    ntype: CoinLogNType.DEC,
+                    oamount: w.num + total,
+                    namount: w.num,
+                    note: 'A0103',
+                    action: '升级',
+                    actionid: 0  // TODO
+                }, transaction);
             }
 
             const up = await userStore.levelUp(uid, max, transaction);
             if (!up)
                 throw new Exception(Code.INVALID_OPERATION, '升级失败');
-
-            // TODO: add coin log
 
             await transaction.commit();
         } catch (e) {
@@ -261,14 +343,47 @@ class QuestService extends BaseService {
             if (!accepted)
                 throw new Exception(Code.SERVER_ERROR, '分红失败，请联系客服2');
 
+            const w = await walletStore.find(uid, CoinType.ACTIVE, transaction);
+            if (!w)
+                throw new Exception(Code.SERVER_ERROR, '钱包未找到');
+
+            await coinLogStore.create({
+                uid,
+                username: user.username,
+                num: total,
+                wtype: CoinType.ACTIVE,
+                ntype: CoinLogNType.ADD,
+                oamount: w.num - total,
+                namount: w.num,
+                note: 'A0101',
+                action: '分红',
+                actionid: 0  // TODO
+            }, transaction);
+
             // 3. 福田收益的8%加到上级wallet coinid=2,  shiming=2
             if (parent.shiming == 2) {
-                const accepted2 = await walletStore.accept(parent.id, CoinType.BANK, total * 0.08, transaction);
+                const num = total * 0.08;
+                const accepted2 = await walletStore.accept(parent.id, CoinType.BANK, num, transaction);
                 if (!accepted2)
                     throw new Exception(Code.SERVER_ERROR, '分红失败，请联系客服3');
-            }
 
-            // 4. add coin log
+                const w2 = await walletStore.find(parent.id, CoinType.BANK, transaction);
+                if (!w2)
+                    throw new Exception(Code.SERVER_ERROR, '钱包未找到');
+
+                await coinLogStore.create({
+                    uid: parent.id,
+                    username: parent.username,
+                    num,
+                    wtype: CoinType.BANK,
+                    ntype: CoinLogNType.ADD,
+                    oamount: w2.num - num,
+                    namount: w2.num,
+                    note: 'A0101',
+                    action: '分红',
+                    actionid: 0  // TODO
+                }, transaction);
+            }
             
             await transaction.commit();
             return qids;
