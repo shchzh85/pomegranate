@@ -230,6 +230,20 @@ class QuestService extends BaseService {
         }
     }
 
+    settleQuest(uid: string) {
+        // 福田结算
+
+        // 1. 找出所有福田 quest_left_days > 0, quest_all_times > 0, status != 2
+
+        // 2. 把福田收益加到wallet coinid=1
+
+        // 3. 福田收益的8%加到上级wallet coinid=2,  shiming=2
+
+        // 4. add coin log
+
+        // 5. 更新福田的 quest_left_days > 0, quest_all_times > 0
+    }
+
     public listQuest() {
         return questKindStore.findAll({
             where: { actived: 0 },
