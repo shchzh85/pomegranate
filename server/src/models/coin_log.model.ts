@@ -23,6 +23,7 @@ export class CoinLogModel extends Model<CoinLogModel> {
 
   @Column({
     allowNull: false,
+    default: 0,
     comment: '目标用户id'
   })
   public targetid!: number;
