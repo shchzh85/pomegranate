@@ -46,12 +46,23 @@ class ApiService extends BaseService {
 
   public businessCollege() {
     const key = 'cy:business_college';
-    return redisStore.remember(key, () => businessCollegeStore.list());
+    return redisStore.remember(key, async () => {
+      const list = await businessCollegeStore.list();
+      list.forEach(v => {
+        v.cover = resUrl(v.cover);
+        v.audio = resUrl(v.audio);
+      });
+      return list;
+    });
   }
 
   public kefuQrcode() {
     const key = 'cy:kefu_qrcode';
-    return redisStore.remember(key, () => qrcodeStore.findOne());
+    return redisStore.remember(key, async () => {
+      const ret = await qrcodeStore.findOne();
+      ret.qrcode = resUrl(ret.qrcode);
+      return ret;
+    });
   }
 }
 
