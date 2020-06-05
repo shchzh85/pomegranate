@@ -48,12 +48,16 @@ class QuestController extends BaseController {
     return questService.videoCompleted(ctx.uid, ctx.params);
   }
 
-  public async getVideoLiked(ctx: Context) {
+  public getVideoLiked(ctx: Context) {
     return questService.getVideoLiked(ctx.uid, ctx.params);
   }
 
-  public async setVideoLiked(ctx: Context) {
+  public setVideoLiked(ctx: Context) {
     return questService.setVideoLiked(ctx.uid, ctx.params);
+  }
+
+  public listLog(ctx: Context) {
+    return questService.listLog(ctx.uid, ctx.params);
   }
 }
 

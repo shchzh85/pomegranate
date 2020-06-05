@@ -35,6 +35,10 @@ class CoinlogStore extends BaseStore {
   public create(data: CoinLogParams, transaction?: Transaction) {
     return coinLogRepository.create({ ...data, dtime: new Date() }, { transaction });
   }
+
+  public findAndCountAll(options?: any) {
+    return coinLogRepository.findAndCountAll(options);
+  }
 }
 
 export const coinLogStore = new CoinlogStore();

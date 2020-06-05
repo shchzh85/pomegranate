@@ -566,6 +566,31 @@ class QuestService extends BaseService {
         const count = await redisStore.scard(key);
         return { count: Number(count) || 0, op };
     }
+
+    public async listLog(uid: string, params: any) {
+        const user = await userStore.findById(uid);
+        if (!user)
+            throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
+            
+        const { coinid, start, len } = params;
+        const offset = _.defaultTo(start, 0);
+        const limit = _.defaultTo(len, 20);
+        const where: any = { uid };
+        
+        if (!_.isNil(coinid))
+            _.assign(where, { coinid });
+
+        const { rows, count } = await coinLogStore.findAndCountAll({
+            where, offset, limit, order: [[ 'id', 'DESC' ]]
+        });
+
+        return {
+            max: count,
+            start: offset,
+            len: limit,
+            list: rows
+        };
+    }
 }
 
 export const questService = new QuestService();

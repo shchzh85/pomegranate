@@ -130,6 +130,25 @@ const routes: Route[] = [
         .error(new Error('vid不能为空'))
     }),
     action: questController.setVideoLiked
+  },
+  {
+    name: '操作记录',
+    path: '/listLog',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+      coinid: Joi
+        .number()
+        .greater(0)
+        .error(new Error('coinid不能为空')),
+      start: Joi
+        .number()
+        .min(0),
+      len: Joi
+        .number()
+        .min(1)
+    }),
+    action: questController.listLog
   }
 ]
 
