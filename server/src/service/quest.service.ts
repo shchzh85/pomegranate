@@ -453,19 +453,20 @@ class QuestService extends BaseService {
     }
 
     public async listMyQuest(uid: string) {
-        const list: any[] = await questsStore.findByUid(uid);
+        const list = await questsStore.findByUid(uid);
         if (_.isEmpty(list))
             return list;
 
-        const kinds = await this.listQuest();
-        const m = {};
+        const key = 'cy:quest_kinds_all';
+        const kinds = await redisStore.remember(key, () => questKindStore.findAll(), 3600);
 
-        kinds.forEach(v => m[v.id] = m.quest_price);
-        list.forEach(v => {
-            v.quest_price = m[v.quest_id];
+        const m: {[key:number]: number} = {};
+
+        kinds.forEach((v: any) => m[v.id] = v.quest_price);
+
+        return list.map(v => {
+            return { ...v.get(), quest_price: m[v.quest_id] };
         });
-
-        return list;
     }
 
     public async waterList(uid: string, params: any) {
