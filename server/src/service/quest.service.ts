@@ -563,12 +563,15 @@ class QuestService extends BaseService {
         count = await redisStore.scard(key);
         const ret: any = { count };
         if (count == 6) {
-            const rewardIds = await this.reward(uid);
-            if (!_.isEmpty(rewardIds)) {
-                _.assign(ret, rewardIds);
-                const settleIds = await this.settle(uid);
-                if (!_.isEmpty(settleIds))
-                    _.assign(ret, settleIds);
+            const done = await userStore.setTaskCompleted(uid);
+            if (done) {
+                const rewardIds = await this.reward(uid);
+                if (!_.isEmpty(rewardIds)) {
+                    _.assign(ret, rewardIds);
+                    const settleIds = await this.settle(uid);
+                    if (!_.isEmpty(settleIds))
+                        _.assign(ret, settleIds);
+                }
             }
         }
 

@@ -285,6 +285,22 @@ class UserStore extends BaseStore {
 
     return affectedCount === _.size(uids);
   }
+
+  public async setTaskCompleted(uid: string) {
+    const [ affectedCount ] = await userRepository.update({
+      today_in_own: 6
+    }, { where: { uid } });
+
+    return affectedCount === 1;
+  }
+
+  public async getTaskCompleted(uid: string) {
+    const u = await this.findById(uid);
+    if (!u)
+      throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
+
+    return u.today_in_own === 6;
+  }
 }
 
 export const userStore = new UserStore();
