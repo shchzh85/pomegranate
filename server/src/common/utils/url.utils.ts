@@ -1,8 +1,9 @@
 
 import { configStore } from '@store/index';
 
+const OSS_URL = process.env.OSS_URL;
+
 export function resUrl(path: string)
 {
-    const host = configStore.get('app.aliyun_oss.url');
-    return 'https://' + host + '/' + path;
+    return 'https://' + OSS_URL + '/' + path;
 }
