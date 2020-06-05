@@ -552,7 +552,15 @@ class QuestService extends BaseService {
         if (!videoes)
             videoes = await questVideoStore.findAll();
 
-        return { video: _.find(videoes, v => v.id == vid) };
+        const video = _.find(videoes, v => v.id == vid);
+        if (!video)
+            throw new Exception(Code.SERVER_ERROR, '视频未找到');
+
+        const likeKey = LIKED_VIDEO_PREFIX + vid;
+        const count = await redisStore.scard(likeKey);
+        const status = await redisStore.sismember(likeKey, uid);
+
+        return { video, count, status };
     }
 
     public async videoCompleted(uid: string, params: any) {
