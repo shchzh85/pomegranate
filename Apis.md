@@ -368,3 +368,14 @@ http://HOST/v1/quest/myGroup
 POST  'Content-Type: application/json'
 {}
 ```
+
+### 4.11. 查看日志
+```
+http://HOST/v1/quest/listLog
+POST  'Content-Type: application/json'
+{
+  coinid: number; // 1: 流通钱包  2: 仓储钱包
+  start: number; // 分页(可选，默认0)
+  len: number; // limit(可选，默认20)
+}
+```
