@@ -60,6 +60,7 @@ class ApiService extends BaseService {
     const key = 'cy:kefu_qrcode';
     return redisStore.remember(key, async () => {
       const ret = await qrcodeStore.findOne();
+      if (!ret) return null;
       ret.qrcode = resUrl(ret.qrcode);
       return ret;
     });
