@@ -4,11 +4,16 @@ import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 import { redisStore, bannerStore, newsStore, businessCollegeStore } from '@store/index';
 import { qrcodeStore } from '@store/qrcode.store';
+import { resUrl } from '@common/utils/url.utils';
 
 class ApiService extends BaseService {
 
-  public async banners() {
-    return redisStore.remember('news_banners', () => bannerStore.list());
+  public banners() {
+    return redisStore.remember('news_banners', async () => {
+      const list = await bannerStore.list();
+      list.forEach(v => v.banner = resUrl(v.banner));
+      return list;
+    });
   }
 
   public async news(params: any) {

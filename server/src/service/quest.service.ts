@@ -16,7 +16,8 @@ import {
     CoinType,
     coinLogStore,
     CoinLogNType,
-    CoinLogParams
+    CoinLogParams,
+    configStore
 } from '@store/index';
 import { sequelize } from '@common/dbs';
 import { md5 } from '@common/utils';
