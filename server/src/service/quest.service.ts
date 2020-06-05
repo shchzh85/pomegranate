@@ -384,6 +384,10 @@ class QuestService extends BaseService {
                     actionid: 0  // TODO
                 }, transaction);
             }
+
+            const done = await userStore.setTaskCompleted(uid, transaction);
+            if (!done)
+                throw new Exception(Code.SERVER_ERROR, '任务完成失败');
             
             await transaction.commit();
             return qids;
@@ -563,15 +567,12 @@ class QuestService extends BaseService {
         count = await redisStore.scard(key);
         const ret: any = { count };
         if (count == 6) {
-            const done = await userStore.setTaskCompleted(uid);
-            if (done) {
-                const rewardIds = await this.reward(uid);
-                if (!_.isEmpty(rewardIds)) {
-                    _.assign(ret, rewardIds);
-                    const settleIds = await this.settle(uid);
-                    if (!_.isEmpty(settleIds))
-                        _.assign(ret, settleIds);
-                }
+            const rewardIds = await this.reward(uid);
+            if (!_.isEmpty(rewardIds)) {
+                _.assign(ret, rewardIds);
+                const settleIds = await this.settle(uid);
+                if (!_.isEmpty(settleIds))
+                    _.assign(ret, settleIds);
             }
         }
 
