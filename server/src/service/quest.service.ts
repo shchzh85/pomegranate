@@ -441,14 +441,27 @@ class QuestService extends BaseService {
     }
 
     public listQuest() {
-        return questKindStore.findAll({
+        const key = 'cy:quest_kinds';
+        return redisStore.remember(key, () => questKindStore.findAll({
             where: { actived: 0 },
             limit: 20
-        });
+        }), 3600);
     }
 
-    public listMyQuest(uid: string) {
-        return questsStore.findByUid(uid);
+    public async listMyQuest(uid: string) {
+        const list: any[] = await questsStore.findByUid(uid);
+        if (_.isEmpty(list))
+            return list;
+
+        const kinds = await this.listQuest();
+        const m = {};
+
+        kinds.forEach(v => m[v.id] = m.quest_price);
+        list.forEach(v => {
+            v.quest_price = m[v.quest_id];
+        });
+
+        return list;
     }
 
     public async waterList(uid: string, params: any) {
