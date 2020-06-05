@@ -289,7 +289,7 @@ class UserStore extends BaseStore {
   public async setTaskCompleted(uid: string, transaction?: Transaction) {
     const [ affectedCount ] = await userRepository.update({
       today_in_own: 6
-    }, { where: { uid, today_in_own: { [Op.lt]: 6 } }, transaction });
+    }, { where: { id: uid, today_in_own: { [Op.lt]: 6 } }, transaction });
 
     return affectedCount === 1;
   }
