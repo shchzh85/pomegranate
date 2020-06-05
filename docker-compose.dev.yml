@@ -8,7 +8,7 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
     ports:
-     - "13306:3306"
+     - "${DB_EXPOSE_PORT}:3306"
     command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
 
   redis:
@@ -34,6 +34,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - REDIS_HOST=${REDIS_HOST}
+      - OSS_URL=${OSS_URL}
     command: bash -c "npm run auto"
     links:
       - db
