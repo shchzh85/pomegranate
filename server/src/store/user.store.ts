@@ -244,6 +244,15 @@ class UserStore extends BaseStore {
     return userRepository.findAndCountAll(options);
   }
 
+  public countChildrenCertificated(uid: string) {
+    return userRepository.count({
+      where: {
+        pid: uid,
+        shiming: 2
+      }
+    });
+  }
+
   public async addSellTimes(uid: string, transaction?: Transaction) {
     const [ affectedCount ] = await userRepository.update({
       sell_times: Sequelize.literal('sell_times+1')

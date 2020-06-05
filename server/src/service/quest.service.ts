@@ -509,10 +509,24 @@ class QuestService extends BaseService {
             order: [ 'member_flg' ]
         });
 
+        const user = await userStore.findById(uid);
+        if (!user)
+            throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
+
+        const parent = await userStore.findById(user.pid);
+        if (!parent)
+            throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
+
+        const group_shiming_num = await userStore.countChildrenCertificated(uid);
+        const sunshine1 = await userStore.getSunshine2(uid);
+
         return {
             max: count,
             start, len,
-            list: rows
+            list: rows,
+            Topphone: parent.username,
+            group_shiming_num,
+            sunshine1
         };
     }
 
