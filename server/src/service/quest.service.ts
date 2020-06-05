@@ -578,7 +578,7 @@ class QuestService extends BaseService {
         const where: any = { uid };
         
         if (!_.isNil(coinid))
-            _.assign(where, { coinid });
+            _.assign(where, { wtype: coinid });
 
         const { rows, count } = await coinLogStore.findAndCountAll({
             where, offset, limit, order: [[ 'id', 'DESC' ]]
