@@ -19,6 +19,12 @@ export class QuestsModel extends Model<QuestsModel> {
   })
   public uid!: number;
 
+  @Column
+  public uname!: string;
+
+  @Column
+  public quest_name!: string;
+
   @Column({
     allowNull: false
   })

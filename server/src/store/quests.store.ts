@@ -13,7 +13,7 @@ enum QuestStatus {
 
 const QUEST_EXPIRE = 40 * 24 * 60 * 60 * 1000;
 
-function transfer(uid: string, qs: QuestKindModel[]) {
+function transfer(uid: string, uname: string, qs: QuestKindModel[]) {
     const now = new Date();
     const data = qs.map(q => {
         return {
@@ -28,7 +28,9 @@ function transfer(uid: string, qs: QuestKindModel[]) {
             quest_all_times: q.quest_per_day_times * q.quest_need_days,
             quest_got: 0,
             quest_all_got: q.quest_reward,
-            quest_sunshine: q.quest_sunshine
+            quest_sunshine: q.quest_sunshine,
+            uname,
+            quest_name: q.quest_name
         };
     });
 
@@ -37,13 +39,13 @@ function transfer(uid: string, qs: QuestKindModel[]) {
 
 class QuestsStore extends BaseStore {
 
-    public create(uid: string, q: QuestKindModel, transaction?: Transaction) {
-        const data = transfer(uid, [q]);
+    public create(uid: string, uname: string, q: QuestKindModel, transaction?: Transaction) {
+        const data = transfer(uid, uname, [q]);
         return questsRepository.create(data[0], { transaction });
     }
 
-    public bulkCreate(uid: string, qs: QuestKindModel[], transaction?: Transaction) {
-        const data = transfer(uid, qs);
+    public bulkCreate(uid: string, uname: string, qs: QuestKindModel[], transaction?: Transaction) {
+        const data = transfer(uid, uname, qs);
         return questsRepository.bulkCreate(data, { transaction });
     }
 

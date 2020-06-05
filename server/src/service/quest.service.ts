@@ -107,7 +107,7 @@ class QuestService extends BaseService {
             transaction = await sequelize.transaction();
 
             // 1. add quest
-            const quest = await questsStore.create(uid, questKind, transaction);
+            const quest = await questsStore.create(uid, user.username, questKind, transaction);
 
             // 2. add sunshine for all uppers
             const add = await userStore.addSunshine(uppers, questKind.quest_sunshine, transaction);
@@ -271,7 +271,7 @@ class QuestService extends BaseService {
                 await questLevelBonusStore.bulkCreate(bonusData, transaction);
 
             if (_.size(kinds) > 0)
-                await questsStore.bulkCreate(uid, kinds, transaction);
+                await questsStore.bulkCreate(uid, user.username, kinds, transaction);
 
             if (sunshines > 0) {
                 await userStore.addSunshine1([ uid ], sunshines, transaction);
