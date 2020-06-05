@@ -506,7 +506,7 @@ class QuestService extends BaseService {
         const start = _.defaultTo(params.start, 0);
         const len = _.defaultTo(params.len, 20);
         const { rows, count } = await userStore.findAndCount({
-            attributes: [ 'mz', 'group_member_num', 'sunshine', 'username' ],
+            attributes: [ 'mz', 'group_member_num', 'sunshine', 'username', 'today_in_own' ],
             where: { pid: uid },
             offset: start,
             limit: len,
