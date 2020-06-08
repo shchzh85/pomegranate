@@ -27,9 +27,12 @@ class AuthService extends BaseService {
   }
 
   public orderNotify(data: any) {
-    console.log(data);
+    const { out_trade_no, trade_no, total_amount } = data;
     const checked = checkNotifySign(data);
-    console.log(checked);
+    if (!checked)
+      console.log('orderNotify checkNotifySign fail');
+
+    
   }
 
 

@@ -9,7 +9,7 @@ class AuthController extends BaseController {
   }
 
   public orderNotify(ctx: Context) {
-    return authService.orderNotify(ctx.params);
+    return authService.orderNotify(ctx.request.body);
   }
 }
 
