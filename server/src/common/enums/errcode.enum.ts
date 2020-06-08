@@ -25,5 +25,8 @@ export enum Code {
   USER_NOT_FOUND = 1017,
   INVALID_SMS_CODE = 1018,
   SMS_FREQUENTLY = 1019,
-  REGISTER_CLOSED = 1020
+  REGISTER_CLOSED = 1020,
+
+  // Determine response code of admin,from 2000 to start
+  INVALID_TOKEN = 2000
 };

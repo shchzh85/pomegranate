@@ -6,3 +6,4 @@ export * from './response.middleware';
 export * from './param_validate.middleware';
 export * from './session.middleware';
 export * from './health_check.middleware';
+export * from './admin/verify_signature.middleware';

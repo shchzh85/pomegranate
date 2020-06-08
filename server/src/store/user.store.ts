@@ -244,6 +244,14 @@ class UserStore extends BaseStore {
     return userRepository.findAndCountAll(options);
   }
 
+  /**
+   * count
+   * @param options
+   */
+  public count(options?: any) {
+    return userRepository.count(options);
+  }
+
   public countChildrenCertificated(uid: string) {
     return userRepository.count({
       where: {
