@@ -5,7 +5,7 @@ import { prepay } from '@common/aliyun';
 import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 
-const dateFormat = require('dateFormat');
+const dateFormat = require('dateformat');
 
 class AuthService extends BaseService {
   private getOrderId() {
