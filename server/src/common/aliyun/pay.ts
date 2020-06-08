@@ -3,12 +3,12 @@ import fs from 'fs';
 import AlipaySdk from 'alipay-sdk';
 import { sign } from 'alipay-sdk/lib/util';
 
-const APPID = '2019070265734364';
+const APPID = '2019101768447665';
 const PRIVATE_KEY = fs.readFileSync('dist/config/app-private-key.pem', 'ascii');
 const PUBLIC_KEY = fs.readFileSync('dist/config/alipay-public-key.pem', 'ascii');
 
 const config = {
-  appId: '2019070265734364',
+  appId: APPID,
   privateKey: PRIVATE_KEY,
   alipayPublicKey: PUBLIC_KEY
 };
@@ -32,7 +32,8 @@ function formatUrl(url: string, params: any) {
     }
   }
 
-  return { execParams: params, url: requestUrl };
+  //return { execParams: params, url: requestUrl };
+  return requestUrl + '&biz_content=' + encodeURIComponent(params.biz_content);
 }
 
 export function prepay(out_trade_no: string, total_amount: number, notify_url: string, subject?: string) {
