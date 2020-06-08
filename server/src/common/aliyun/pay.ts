@@ -27,13 +27,13 @@ function formatUrl(url: string, params: any) {
   for (const key in params) {
     if (urlArgs.includes(key)) {
       const val = encodeURIComponent(params[key]);
-      requestUrl = `${requestUrl}${requestUrl.includes('?') ? '&' : '?'}${key}=${val}`;
+      requestUrl = `${requestUrl}&${key}=${val}`;  // ${requestUrl.includes('?') ? '&' : '?'}
       delete params[key];
     }
   }
 
   //return { execParams: params, url: requestUrl };
-  return requestUrl + '&biz_content=' + encodeURIComponent(params.biz_content);
+  return (requestUrl + '&biz_content=' + encodeURIComponent(params.biz_content)).substr(1);
 }
 
 export function prepay(out_trade_no: string, total_amount: number, notify_url: string, subject?: string) {
@@ -49,7 +49,7 @@ export function prepay(out_trade_no: string, total_amount: number, notify_url: s
   };
 
   const signData = sign(method, params, sdk.config);
-  return formatUrl(sdk.config.gateway || '', signData);
+  return formatUrl('', signData);
 }
 
 export function checkNotifySign(data: any) {
