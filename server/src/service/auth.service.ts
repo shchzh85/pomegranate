@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import BaseService from './base.service';
-import { prepay } from '@common/aliyun';
+import { prepay, checkNotifySign } from '@common/aliyun';
 import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 
@@ -24,6 +24,12 @@ class AuthService extends BaseService {
     const orderid = this.getOrderId();
 
     return prepay(orderid, 0.01, 'http://120.24.52.2:9000/v1/auth/orderNotify');
+  }
+
+  public orderNotify(data: any) {
+    console.log(data);
+    const checked = checkNotifySign(data);
+    console.log(checked);
   }
 
 

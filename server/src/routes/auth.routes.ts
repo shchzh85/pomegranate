@@ -13,6 +13,12 @@ const routes: Route[] = [
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: authController.prepay
+  },
+  {
+    name: 'orderNotify',
+    path: '/orderNotify',
+    method: RequestMethod.POST,
+    action: authController.orderNotify
   }
 ];
 

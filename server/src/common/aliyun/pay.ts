@@ -52,10 +52,7 @@ export function prepay(out_trade_no: string, total_amount: number, notify_url: s
   return formatUrl(sdk.config.gateway || '', signData);
 }
 
-export async function notify(out_trade_no: string) {
-
+export function checkNotifySign(data: any) {
+  return sdk.checkNotifySign(data);
 }
 
-export async function check(out_trade_no: string) {
-  
-}
