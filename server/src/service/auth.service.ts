@@ -43,13 +43,19 @@ class AuthService extends BaseService {
       console.log('orderNotify checkNotifySign fail');
 
     await authStore.pay(out_trade_no);
+
+    const order = await authStore.findByOrderId(out_trade_no);
+    if (order)
+      await userStore.pay(order.uid);
   }
 
   public async orderResult(uid: string, data: any) {
     const { orderid, rawdata } = data;
     const checked = checkResponseSign(rawdata);
-    if (checked)
+    if (checked) {
       await authStore.pay(orderid);
+      await userStore.pay(uid);
+    }
   }
 
   public getOrder(uid: string) {
