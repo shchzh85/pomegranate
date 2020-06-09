@@ -4,6 +4,7 @@ import { Route } from '@common/interfaces';
 import { RequestMethod } from '@common/enums';
 import { userAuth } from '@common/auths';
 import { apiController } from '@controller/index';
+import fieldReg from '@common/field_reg';
 
 const prefix = '/v1/api';
 
@@ -68,15 +69,18 @@ const routes: Route[] = [
     params: Joi.object({
       businessId: Joi
           .number()
+          .greater(0)
           .required()
           .error(new Error('请输入商户ID')),
       payPassword: Joi
           .string()
           .trim()
+          .pattern(fieldReg.password.reg())
           .required()
-          .error(new Error('支付密码格式不正确')),
+          .error(new Error(fieldReg.password.message())),
       payNumber: Joi
           .number()
+          .greater(0)
           .required()
           .error(new Error('请输入合法的支付数量')),
     }),

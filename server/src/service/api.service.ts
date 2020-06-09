@@ -81,18 +81,11 @@ class ApiService extends BaseService {
     if (user == null) {
       throw new Exception(Code.USER_NOT_FOUND, '用户没找到');
     }
-    if (! businessId) {
-      throw new Exception(Code.INVALID_BUSINESS_ID, '缺少商户id service');
-    }
-    if (! payPassword) {
-      throw new Exception(Code.INVALID_PAY_PASSWORD, '请输入支付密码');
-    }
+
     if (! userStore.checkPayPassword(user, payPassword)) {
       throw new Exception(Code.INVALID_PAY_PASSWORD, '支付密码不正确');
     }
-    if (! payNumber) {
-      throw new Exception(Code.INVALID_PAY_NUM, '请输入合法的支付数量');
-    }
+
     if (businessId == uid) {
       throw new Exception(Code.INVALID_PAY_NUM, '不能给自己转账');
     }
@@ -143,10 +136,10 @@ class ApiService extends BaseService {
           'ntype': CoinType.BANK,
           'oamount': userWallet.num, // 操作前余额
           'num': payNumber,
-          'namount': userWalletAfter?.num, // 操作后余额
+          'namount': userWalletAfter.num, // 操作后余额
           'note': 'A0008',
           'action': 'qrcodePayment',
-          'actionid': userWalletAfter?.id,
+          'actionid': userWalletAfter.id,
         },
         {
           'uid': businessUser.id,
@@ -155,20 +148,23 @@ class ApiService extends BaseService {
           'targetid': user.id,
           'wtype': CoinType.ACTIVE,
           'ntype': CoinType.BANK,
-          'oamount': businessUserWallet?.num, // 操作前余额
+          'oamount': businessUserWallet.num, // 操作前余额
           'num': payNumber,
-          'namount': businessUserWalletAfter?.num, // 操作后余额
+          'namount': businessUserWalletAfter.num, // 操作后余额
           'note': 'A0007', // 转入
           'action': 'qrcodePayment', // 操作函数
-          'actionid': businessUserWalletAfter?.id, // 操作记录的id
+          'actionid': businessUserWalletAfter.id, // 操作记录的id
         }
       ];
+
       const createResult = await coinLogStore.bulkCreate(logs, transaction);
-      if (! createResult) {
+      if (_.isEmpty(createResult)) {
         throw new Exception(Code.SERVER_ERROR, '创建流水失败');
       }
+
       await transaction.commit();
     } catch (e) {
+      await transaction?.rollback();
       throw e;
     }
   }
