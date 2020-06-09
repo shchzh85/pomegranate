@@ -18,7 +18,6 @@ const routes: Route[] = [
     name: 'orderNotify',
     path: '/orderNotify',
     method: RequestMethod.POST,
-    middlewares: [ userAuth() ],
     action: authController.orderNotify
   },
   {
@@ -49,7 +48,7 @@ const routes: Route[] = [
   },
   {
     name: 'get face token',
-    path: 'faceToken',
+    path: '/faceToken',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({
@@ -63,7 +62,7 @@ const routes: Route[] = [
   },
   {
     name: 'get face result',
-    path: 'faceResult',
+    path: '/faceResult',
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     params: Joi.object({

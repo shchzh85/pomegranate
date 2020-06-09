@@ -92,7 +92,7 @@ class AuthService extends BaseService {
       throw new Exception(Code.SERVER_ERROR, '用户ID和订单不匹配');
 
     const { VerifyStatus, Material } = await getResult(orderid);
-    if (VerifyStatus !== "1")
+    if (VerifyStatus !== 1)
       throw new Exception(Code.SERVER_ERROR, '认证失败: VerifyStatus=' + VerifyStatus);
 
     const { IdCardName, IdCardNumber } = Material;
