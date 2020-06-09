@@ -3,9 +3,12 @@ import fs from 'fs';
 import AlipaySdk from 'alipay-sdk';
 import { sign } from 'alipay-sdk/lib/util';
 
-const APPID = '2019101768447665';
-const PRIVATE_KEY = fs.readFileSync('dist/config/app-private-key.pem', 'ascii');
-const PUBLIC_KEY = fs.readFileSync('dist/config/alipay-public-key.pem', 'ascii');
+const APPID = process.env.ALIPAY_APPID;
+const ALIPAY_PRIVATE_KEY = process.env.ALIPAY_PRIVATE_KEY;
+const ALIPAY_PUBLIC_KEY = process.env.ALIPAY_PUBLIC_KEY;
+
+const PRIVATE_KEY = fs.readFileSync(ALIPAY_PRIVATE_KEY, 'ascii');
+const PUBLIC_KEY = fs.readFileSync(ALIPAY_PUBLIC_KEY, 'ascii');
 
 const config = {
   appId: APPID,
@@ -27,12 +30,11 @@ function formatUrl(url: string, params: any) {
   for (const key in params) {
     if (urlArgs.includes(key)) {
       const val = encodeURIComponent(params[key]);
-      requestUrl = `${requestUrl}&${key}=${val}`;  // ${requestUrl.includes('?') ? '&' : '?'}
+      requestUrl = `${requestUrl}&${key}=${val}`;
       delete params[key];
     }
   }
 
-  //return { execParams: params, url: requestUrl };
   return (requestUrl + '&biz_content=' + encodeURIComponent(params.biz_content)).substr(1);
 }
 
