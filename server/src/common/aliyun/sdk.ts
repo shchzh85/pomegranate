@@ -1,8 +1,8 @@
 
 const Core = require('@alicloud/pop-core');
 
-const ALI_FACE_ACCESS_KEY = process.env.ALI_FACE_ACCESS_KEY;
-const ALI_FACE_ACCESS_SECRET = process.env.ALI_FACE_ACCESS_SECRET;
+const ALI_FACE_ACCESS_KEY = process.env.ALI_FACE_ACCESS_KEY || '';
+const ALI_FACE_ACCESS_SECRET = process.env.ALI_FACE_ACCESS_SECRET || '';
 
 const client = new Core({
   accessKeyId: ALI_FACE_ACCESS_KEY,

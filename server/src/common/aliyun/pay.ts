@@ -3,9 +3,9 @@ import fs from 'fs';
 import AlipaySdk from 'alipay-sdk';
 import { sign } from 'alipay-sdk/lib/util';
 
-const APPID = process.env.ALIPAY_APPID;
-const ALIPAY_PRIVATE_KEY = process.env.ALIPAY_PRIVATE_KEY;
-const ALIPAY_PUBLIC_KEY = process.env.ALIPAY_PUBLIC_KEY;
+const APPID = process.env.ALIPAY_APPID || '';
+const ALIPAY_PRIVATE_KEY = process.env.ALIPAY_PRIVATE_KEY || '';
+const ALIPAY_PUBLIC_KEY = process.env.ALIPAY_PUBLIC_KEY || '';
 
 const PRIVATE_KEY = fs.readFileSync(ALIPAY_PRIVATE_KEY, 'ascii');
 const PUBLIC_KEY = fs.readFileSync(ALIPAY_PUBLIC_KEY, 'ascii');
