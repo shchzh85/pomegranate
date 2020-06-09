@@ -386,3 +386,13 @@ POST  'Content-Type: application/json'
   len: number; // limit(可选，默认20)
 }
 ```
+### 4.11. 查看日志
+```
+http://HOST/v1/api/qrcodePayment
+POST  'Content-Type: application/json'
+{
+  businessId: number; // 商户ID
+  payPassword: string; // 支付密码
+  payNumber: number; // 支付数量
+}
+```
