@@ -62,7 +62,7 @@ class AuthService extends BaseService {
     if (!order)
       throw new Exception(Code.ORDER_NOT_FOUND, '订单未找到');
 
-    if (uid != order.uid)
+    if (Number(uid) != order.uid)
       throw new Exception(Code.SERVER_ERROR, '用户ID和订单不匹配');
 
     if (order.status != AuthStatus.PAID)
@@ -88,7 +88,7 @@ class AuthService extends BaseService {
     if (!order)
       throw new Exception(Code.ORDER_NOT_FOUND, '订单未找到');
 
-    if (uid != order.uid)
+    if (Number(uid) != order.uid)
       throw new Exception(Code.SERVER_ERROR, '用户ID和订单不匹配');
 
     const { VerifyStatus, Material } = await getResult(orderid);
