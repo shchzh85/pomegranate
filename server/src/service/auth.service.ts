@@ -27,7 +27,7 @@ class AuthService extends BaseService {
 
     const exists = await authStore.findCanCheck(uid);
     if (exists)
-      return { order: exists };
+      return { orderid: exists.orderid };
 
     const orderid = this.getOrderId(uid);
     const order = await authStore.create(uid, user.username, orderid);
