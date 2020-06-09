@@ -20,7 +20,7 @@ import { NewsModel } from './news.model';
 import { BusinessCollegeModel } from './business_college.model';
 import { QrcodeModel }  from './qrcode.model';
 import { QuestVideoModel } from './quest_video.model';
-import { AuthModel } from './auth.mode';
+import { AuthModel } from './auth.model';
 
 export const userRepository = sequelize.getRepository<UserModel>(UserModel);
 export const userSessionRepository = sequelize.getRepository<UserSessionModel>(UserSessionModel);

@@ -18,3 +18,4 @@ export * from './news.store';
 export * from './business_college.store';
 export * from './quest_video.store';
 export * from './coin_log.store';
+export * from './auth.store';
