@@ -33,7 +33,7 @@ class AuthService extends BaseService {
     const order = await authStore.create(uid, user.username, orderid);
 
     const url = prepay(orderid, 0.01, 'http://120.24.52.2:9000/v1/auth/orderNotify');
-    return { url };
+    return { orderid, url };
   }
 
   public async orderNotify(data: any) {
