@@ -100,6 +100,13 @@ POST  'Content-Type: application/json'
 {}
 ```
 
+### 1.11. 查询自己的实名状态
+```
+http://HOST/v1/user/getAuthorization  (必须处于登录状态)
+POST  'Content-Type: application/json'
+{}
+```
+
 ## 2. C2C
 
 ### 2.1. 挂买单

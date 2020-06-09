@@ -204,6 +204,14 @@ class UserService extends BaseService {
       }
     };
   }
+
+  public async getAuthorization(uid: string) {
+    const u = await userStore.findById(uid);
+    if (!u)
+      throw new Exception(Code.USER_NOT_AUTHORIZED, '用户不存在');
+
+    return { authorization: u.shiming };
+  }
 }
 
 export const userService = new UserService();

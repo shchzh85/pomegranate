@@ -190,6 +190,13 @@ const routes: Route[] = [
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: userController.userDetail
+  },
+  {
+    name: 'get authorization',
+    path: '/getAuthorization',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: userController.getAuthorization
   }
 ];
 
