@@ -8,6 +8,8 @@ import { Code } from '@common/enums';
 import { authStore, AuthStatus, FACE_MAX_TIMES } from '@store/auth.store';
 
 const dateFormat = require('dateformat');
+const WEB_SERVER_HOST = process.env.WEB_SERVER_HOST || ''
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 class AuthService extends BaseService {
   private getOrderId(uid: string) {
@@ -31,8 +33,8 @@ class AuthService extends BaseService {
 
     const orderid = this.getOrderId(uid);
     const order = await authStore.create(uid, user.username, orderid);
-
-    const url = prepay(orderid, 0.01, 'http://120.24.52.2:9000/v1/auth/orderNotify');
+    const price = (NODE_ENV == 'development') ? 0.01 : _.random(130, 150) / 100;
+    const url = prepay(orderid, price, WEB_SERVER_HOST + '/v1/auth/orderNotify');
     return { orderid, url };
   }
 
