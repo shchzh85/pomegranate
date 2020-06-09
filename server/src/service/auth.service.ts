@@ -51,7 +51,7 @@ class AuthService extends BaseService {
 
   public async orderResult(uid: string, data: any) {
     const { orderid, rawdata } = data;
-    const checked = checkResponseSign(rawdata);
+    const checked = checkResponseSign(rawdata.replace(/\\/g, ''));
     if (checked) {
       await authStore.pay(orderid);
       await userStore.pay(uid);
