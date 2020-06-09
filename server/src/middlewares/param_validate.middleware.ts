@@ -11,6 +11,7 @@ export function paramValidate(opts: Opts) {
     const { schema } = opts;
     const contentType: string = ctx.headers['content-type'] || '';
 
+/*
     if (
       ctx.method === 'POST' &&
       !contentType.startsWith('multipart') &&
@@ -24,6 +25,7 @@ export function paramValidate(opts: Opts) {
 
       return;
     }
+*/
 
     if (schema) {
       const params = {

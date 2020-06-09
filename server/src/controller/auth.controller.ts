@@ -7,6 +7,10 @@ class AuthController extends BaseController {
   public prepay(ctx: Context) {
       return authService.doPrepay(ctx.uid);
   }
+
+  public orderNotify(ctx: Context) {
+    return authService.orderNotify(ctx.request.body);
+  }
 }
 
 export const authController = new AuthController();

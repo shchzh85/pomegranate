@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import BaseService from './base.service';
-import { prepay } from '@common/aliyun';
+import { prepay, checkNotifySign } from '@common/aliyun';
 import { Exception } from '@common/exceptions';
 import { Code } from '@common/enums';
 
@@ -15,7 +15,7 @@ class AuthService extends BaseService {
     return 'AP' + dateFormat(now, 'yyyymmddHHMMss') + m + _.random(100, 999);
   }
 
-  public async doPrepay(uid: string) {
+  public doPrepay(uid: string) {
 
     // 1. 判断是否已实名
 
@@ -23,8 +23,16 @@ class AuthService extends BaseService {
 
     const orderid = this.getOrderId();
 
-    console.log('orderid: ' + orderid);
-    await prepay(orderid, 0.01, 'http://120.24.52.2:9000/v1/auth/orderNotify');
+    return prepay(orderid, 0.01, 'http://120.24.52.2:9000/v1/auth/orderNotify');
+  }
+
+  public orderNotify(data: any) {
+    const { out_trade_no, trade_no, total_amount } = data;
+    const checked = checkNotifySign(data);
+    if (!checked)
+      console.log('orderNotify checkNotifySign fail');
+
+    
   }
 
 
