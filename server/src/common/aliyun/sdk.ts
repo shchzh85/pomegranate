@@ -1,17 +1,20 @@
 
 const Core = require('@alicloud/pop-core');
 
+const ALI_FACE_ACCESS_KEY = process.env.ALI_FACE_ACCESS_KEY || '';
+const ALI_FACE_ACCESS_SECRET = process.env.ALI_FACE_ACCESS_SECRET || '';
+const ALI_FACE_BIZ_TYPE = process.env.ALI_FACE_BIZ_TYPE || '';
+
 const client = new Core({
-  accessKeyId: 'LTAI4G9niULaoy1vNnoaZmmd',
-  accessKeySecret: '9fp8ZEd4yrZZnWf4ht2PRzzumRiePN',
+  accessKeyId: ALI_FACE_ACCESS_KEY,
+  accessKeySecret: ALI_FACE_ACCESS_SECRET,
   endpoint: 'https://cloudauth.aliyuncs.com',
   apiVersion: '2019-03-07'
 });
 
 const params = {
   "RegionId": "cn-hangzhou",
-  "BizType": "ciyinvertify"
-  //"BizId": "39ecf51e-2f81-4dc5-90ee-ff86125be683"
+  "BizType": ALI_FACE_BIZ_TYPE
 }
 
 const requestOption = {

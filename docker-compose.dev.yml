@@ -34,7 +34,6 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - REDIS_HOST=${REDIS_HOST}
-      - OSS_URL=${OSS_URL}
     command: bash -c "npm run auto"
     links:
       - db

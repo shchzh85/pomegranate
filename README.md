@@ -17,7 +17,6 @@ REDIS_HOST=redis
 WEB_SERVER_EXPOSE_PORT=9000
 DB_EXPOSE_PORT=13307
 
-OSS_URL=ossvdo.wsfuzi.cn
 ```
 
 ### 1.3. 启动docker-composer

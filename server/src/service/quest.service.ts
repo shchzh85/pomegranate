@@ -560,7 +560,10 @@ class QuestService extends BaseService {
         const count = await redisStore.scard(likeKey);
         const status = await redisStore.sismember(likeKey, uid);
 
-        return { video, count, status };
+        const taskKey = VIDEO_TASK_PREFIX + uid + ':' + dateFormat(new Date(), 'yyyymmdd');
+        const taskCnt = await redisStore.scard(taskKey);
+
+        return { video, count, status, left: taskCnt < 6 ? 6 - taskCnt : 0 };
     }
 
     public async videoCompleted(uid: string, params: any) {

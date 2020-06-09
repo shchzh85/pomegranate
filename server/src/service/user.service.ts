@@ -5,6 +5,7 @@ import { Code } from '@common/enums';
 import BaseService from './base.service';
 import { userStore, RegisterParams, redisStore, userSessionStore, configStore, walletStore, CoinType } from '@store/index';
 import { sendSms } from '@common/utils';
+import { authStore } from '@store/auth.store';
 
 const PREFIX = 'cy:session:';
 const EXPIRE_SECONDS = 60 * 60 * 24;
@@ -210,7 +211,17 @@ class UserService extends BaseService {
     if (!u)
       throw new Exception(Code.USER_NOT_AUTHORIZED, '用户不存在');
 
-    return { authorization: u.shiming };
+    let orderid;
+    const au = u.shiming;
+    if (au == 1) {
+      const order = await authStore.findCanCheck(uid);
+      if (!order)
+        throw new Exception(Code.SERVER_ERROR, '支付账单为找到');
+
+      orderid = order.orderid;
+    }
+
+    return { authorization: au, orderid };
   }
 }
 
