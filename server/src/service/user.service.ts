@@ -212,13 +212,16 @@ class UserService extends BaseService {
       throw new Exception(Code.USER_NOT_AUTHORIZED, '用户不存在');
 
     let orderid;
-    const ret = u.shiming;
-    if (ret == 1) {
+    const au = u.shiming;
+    if (au == 1) {
       const order = await authStore.findCanCheck(uid);
+      if (!order)
+        throw new Exception(Code.SERVER_ERROR, '支付账单为找到');
+
       orderid = order.orderid;
     }
 
-    return { authorization: u.shiming, orderid };
+    return { authorization: au, orderid };
   }
 }
 
