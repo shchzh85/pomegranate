@@ -318,6 +318,19 @@ class UserStore extends BaseStore {
 
     return affectedCount === 1;
   }
+
+  public async pay(uid: string) {
+    const [ affectedCount ] = await userRepository.update({
+      shiming: 1
+    }, {
+      where: {
+        id: uid,
+        shiming: 0
+      }
+    });
+
+    return affectedCount === 1;
+  }
 }
 
 export const userStore = new UserStore();
