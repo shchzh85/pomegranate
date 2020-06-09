@@ -306,7 +306,7 @@ class UserStore extends BaseStore {
     return u.today_in_own === 6;
   }
 
-  public async authorized(uid: string, cardno: string) {
+  public async authorized(uid: string | number, cardno: string) {
     const [ affectedCount ] = await userRepository.update({
       cardno,
       shiming: 2
@@ -319,7 +319,7 @@ class UserStore extends BaseStore {
     return affectedCount === 1;
   }
 
-  public async pay(uid: string) {
+  public async pay(uid: string | number) {
     const [ affectedCount ] = await userRepository.update({
       shiming: 1
     }, {
