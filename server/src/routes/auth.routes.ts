@@ -18,7 +18,62 @@ const routes: Route[] = [
     name: 'orderNotify',
     path: '/orderNotify',
     method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
     action: authController.orderNotify
+  },
+  {
+    name: 'orderResult',
+    path: '/orderResult',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+      orderid: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('orderid是必传字段.')),
+      rawdata: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('rawdata是必传字段.'))
+    }),
+    action: authController.orderResult
+  },
+  {
+    name: 'get order',
+    path: 'getOrder',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    action: authController.getOrder
+  },
+  {
+    name: 'get face token',
+    path: 'faceToken',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+      orderid: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('orderid是必传字段.'))
+    }),
+    action: authController.faceToken
+  },
+  {
+    name: 'get face result',
+    path: 'faceResult',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+      orderid: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('orderid是必传字段.'))
+    }),
+    action: authController.faceResult
   }
 ];
 

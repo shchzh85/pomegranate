@@ -56,3 +56,6 @@ export function checkNotifySign(data: any) {
   return sdk.checkNotifySign(data);
 }
 
+export function checkResponseSign(signstr: string) {
+  return sdk.checkResponseSign(signstr, 'alipay_trade_app_pay_response');
+}

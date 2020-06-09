@@ -28,6 +28,10 @@ class UserStore extends BaseStore {
     return userRepository.findOne({ where: { username } });
   }
 
+  public findByCardNo(cardno: string) {
+    return userRepository.findOne({ where: { cardno } });
+  }
+
   public async create(params: RegisterParams) {
     const { username, password, dpassword, invitecode } = params;
     const parent = await userRepository.findOne({ where: { invitecode } });
@@ -300,6 +304,19 @@ class UserStore extends BaseStore {
       throw new Exception(Code.USERNAME_NOT_FOUND, '用户不存在');
 
     return u.today_in_own === 6;
+  }
+
+  public async authorized(uid: string, cardno: string) {
+    const [ affectedCount ] = await userRepository.update({
+      cardno,
+      shiming: 2
+    }, {
+      where: {
+        id: uid
+      }
+    });
+
+    return affectedCount === 1;
   }
 }
 
