@@ -9,6 +9,7 @@ import { Code } from '@common/enums';
 import { sequelize } from '@common/dbs';
 import { md5 } from '@common/utils';
 import { redisStore } from './redis.store';
+import {UserModel} from "@models/user.model";
 
 export interface RegisterParams {
   username: string;
@@ -330,6 +331,15 @@ class UserStore extends BaseStore {
     });
 
     return affectedCount === 1;
+  }
+
+  /**
+   * Verify the payPassword,map the field `dpassword` of UserModel
+   * @param user
+   * @param payPassword
+   */
+  public checkPayPassword(user: UserModel, payPassword: string) {
+    return user.dpassword !== md5(payPassword + user.utime);
   }
 }
 

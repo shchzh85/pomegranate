@@ -1,6 +1,7 @@
 import { Context } from 'koa';
 import BaseController from '@controller/base.controller';
 import { apiService } from '@service/index';
+import * as _ from 'lodash';
 
 class ApiController extends BaseController {
 
@@ -22,6 +23,11 @@ class ApiController extends BaseController {
 
   public kefuQrcode(ctx: Context) {
     return apiService.kefuQrcode();
+  }
+
+  public qrcodePayment(ctx: Context) {
+    const uid = _.get(ctx, 'session.uid');
+    return apiService.qrcodePayment(uid, ctx.params);
   }
 }
 

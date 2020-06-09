@@ -246,4 +246,10 @@ export class UserModel extends Model<UserModel> {
         defaultValue: 0
     })
     public sell_times!: number;
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
+        field: 'is_shoukuan'
+    })
+    public is_payee!: boolean;
 }

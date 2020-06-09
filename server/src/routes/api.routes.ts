@@ -59,6 +59,28 @@ const routes: Route[] = [
     method: RequestMethod.POST,
     middlewares: [ userAuth() ],
     action: apiController.kefuQrcode
+  },
+  {
+    name: 'Qrcode payment',
+    path: '/qrcodePayment',
+    method: RequestMethod.POST,
+    middlewares: [ userAuth() ],
+    params: Joi.object({
+      businessId: Joi
+          .number()
+          .required()
+          .error(new Error('请输入商户ID')),
+      payPassword: Joi
+          .string()
+          .trim()
+          .required()
+          .error(new Error('支付密码格式不正确')),
+      payNumber: Joi
+          .number()
+          .required()
+          .error(new Error('请输入合法的支付数量')),
+    }),
+    action: apiController.qrcodePayment
   }
 ]
 

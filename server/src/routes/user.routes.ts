@@ -111,7 +111,7 @@ const routes: Route[] = [
         .pattern(fieldReg.password.reg())
         .required()
         .error(new Error(fieldReg.password.message())),
-      scode: Joi
+       scode: Joi
         .string()
         .pattern(fieldReg.smsCode.reg({ len: 6 }))
         .required()
