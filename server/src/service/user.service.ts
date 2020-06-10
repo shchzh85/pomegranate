@@ -109,11 +109,6 @@ class UserService extends BaseService {
     return redisStore.get('app_ver');
   }
 
-  public getCaptcha(username: string) {
-    const key = 'cy:captcha:' + username;
-
-  }
-
   public async sendSMS(params: any) {
     const { phone, type, captcha, captchaKey } = params;
 

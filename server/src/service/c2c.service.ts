@@ -39,9 +39,11 @@ class C2CService extends BaseService {
     if (matchOrder)
       throw new Exception(Code.ORDER_NOT_PAY, '存在未付款,禁止购买');
 
+/*  允许多个买单
     const activeBuyOrder = await dealStore.findActiveBuyOrder(uid);
     if (activeBuyOrder)
       throw new Exception(Code.ORDER_BUY_EXISTS, '存在买单,禁止购买');
+*/
 
     const price = await configStore.getNumber('c2cPrice', 0.35);
     const now = Math.floor(Date.now() / 1000);
