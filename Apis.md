@@ -11,7 +11,9 @@ http://HOST/v1/user/sendSms
 POST  'Content-Type: application/json'
 {
   phone: '18700000001',
-  type: 'register' | 'forgot'
+  type: 'register' | 'forgot',
+  captcha: string;  // 图形验证码
+  captchaKey: string; // 图形验证码Key  
 }
 ```
 
@@ -35,7 +37,9 @@ POST  'Content-Type: application/json'
 {
   username: string;  // 电话号码
   password: string;  // 登录密码
-  version: string;  // 版本号，默认"2.0.0"
+  version: string;  // 版本号，默认"2.0.0",
+  captcha: string;  // 图形验证码
+  captchaKey: string; // 图形验证码Key
 }
 ```
 
