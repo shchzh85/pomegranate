@@ -51,7 +51,7 @@ class UserService extends BaseService {
   }
 
   public async login(params: any) {
-    const { version, username, password, yzm } = params;
+    const { version, username, password, captcha, captchaKey } = params;
 
     const webStatus = await configStore.getNumber('web_status');
     if (webStatus == 0)
@@ -61,7 +61,9 @@ class UserService extends BaseService {
     if (version != ver)
       throw new Exception(Code.SERVER_ERROR, '版本已经更新,请手动下载最新版本！');
 
-    // TODO: check captcha
+    const v = await redisStore.get('thinkc2c_' + captchaKey);
+    if (v !== captcha)
+      throw new Exception(Code.INVALID_CAPTCHA, '验证码错误');
 
     const user = await userStore.login(username, password);
 
@@ -113,9 +115,11 @@ class UserService extends BaseService {
   }
 
   public async sendSMS(params: any) {
-    const { phone, type } = params;
+    const { phone, type, captcha, captchaKey } = params;
 
-    // TODO: check captcha
+    const v = await redisStore.get('thinkc2c_' + captchaKey);
+    if (v !== captcha)
+      throw new Exception(Code.INVALID_CAPTCHA, '验证码错误');
 
     const message = await configStore.getNumber('message', 0);
     if (message == 0)

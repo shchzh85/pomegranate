@@ -67,7 +67,18 @@ const routes: Route[] = [
         .string()
         .trim()
         .required()
-        .error(new Error('请输入版本号.'))
+        .error(new Error('请输入版本号.')),
+      captcha: Joi
+        .string()
+        .trim()
+        .required()
+        .pattern(fieldReg.smsCode.reg({ len: 4 }))
+        .error(new Error('请输入验证码.')),
+      captchaKey: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('请输入验证码Key'))
     }),
     action: userController.login
   },
@@ -134,7 +145,18 @@ const routes: Route[] = [
         .string()
         .trim()
         .pattern(/^forgot$|^register$/)
-        .error(new Error('必须指定短信类型'))
+        .error(new Error('必须指定短信类型')),
+      captcha: Joi
+        .string()
+        .trim()
+        .required()
+        .pattern(fieldReg.smsCode.reg({ len: 4 }))
+        .error(new Error('请输入验证码.')),
+      captchaKey: Joi
+        .string()
+        .trim()
+        .required()
+        .error(new Error('请输入验证码Key'))
     }),
     action: userController.sendSms
   },
