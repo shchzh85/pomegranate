@@ -386,7 +386,7 @@ POST  'Content-Type: application/json'
   len: number; // limit(可选，默认20)
 }
 ```
-### 4.11. 查看日志
+### 4.11. 线下支付
 ```
 http://HOST/v1/api/qrcodePayment
 POST  'Content-Type: application/json'
